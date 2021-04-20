@@ -1,1 +1,1 @@
-# ProxyThor
+# FeedAggregator
