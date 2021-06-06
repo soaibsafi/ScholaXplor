@@ -3,13 +3,10 @@ const bodyParser = require("body-parser");
 
 const app = express();
 
+var AuthController = require('./src/middleware/AuthController.js');
+app.use('/api/auth', AuthController);
 
 
-// parse requests of content-type: application/json
-app.use(bodyParser.json());
-
-// parse requests of content-type: application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }));
 
 // simple route
 app.get("/", (req, res) => {
