@@ -7,32 +7,26 @@ import 'bootstrap/dist/js/bootstrap.bundle.min';
 
 
  import login from './view/login';
+ import adminPanel from './view/admin/adminPanel'
 
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
-
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-
-function App() {
-
+export default class App extends React.Component {
+render(){
   return (
       <Router>
         <div className="App">
-          <div class="container py-4">
-            <div class="row">
-
+          <div className="container py-4">
+            <div className="row">
               <Route path="/" exact component={login} />
-              {/*<Route path="/studetnForm" component={studetnForm} />*/}
-              {/*<Route path="/edit/:employeeId" component={Edit} />*/}
-
+              <Route path="/adminpanel" exact component={adminPanel}/>
             </div>
           </div>
-
         </div>
       </Router>
   );
 }
-
-export default App;
+}
 
 
 
