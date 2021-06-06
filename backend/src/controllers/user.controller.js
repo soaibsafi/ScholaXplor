@@ -2,34 +2,6 @@ const User = require("../model/user.model");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 
-exports.findByCredentials = async (username, password) => {
-  const user = await User.findOne({ username: username });
-
-  if (!user) {
-    throw new Error("Unable to login!");
-  }
-
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) {
-    throw new Error("Unable to Login");
-  }
-
-  return user;
-};
-
-exports.generateAuthToken = async function () {
-  const user = this;
-  const token = jwt.sign({ _id: user.uid.toString() }, "newsecret");
-
-  user.tokens = user.tokens.concat({ token });
-  await user.save();
-
-  return token;
-};
-
-
-
-
 
 exports.findAll = (req, res) => {
   User.getAll((err, data) => {

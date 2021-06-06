@@ -3,10 +3,10 @@ const bodyParser = require("body-parser");
 
 const app = express();
 
-var AuthController = require('./src/middleware/AuthController.js');
-app.use('/api/auth', AuthController);
+app.use(express.json())
 
-
+const router = require('./src/routes/auth.routes');
+app.use('/', router);
 
 // simple route
 app.get("/", (req, res) => {
@@ -15,6 +15,7 @@ app.get("/", (req, res) => {
 
  require("./src/routes/example.routes")(app);
  require('./src/routes/user.routes')(app)
+ //require('./src/routes/auth.routes')(app)
 // set port, listen for requests
 app.listen(3000, () => {
   console.log("Server is running on port 3000.");
