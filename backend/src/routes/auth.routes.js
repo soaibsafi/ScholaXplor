@@ -39,14 +39,49 @@ module.exports = (app) => {
                     msg: "Registered!",
                   });
                 }
+<<<<<<< Updated upstream
               );
             }
           });
         }
+=======
+                return res.status(201).send({
+                  msg: "Registered!",
+                });
+              }
+            );
+          }
+        });
+      }
+    }
+  );
+});
+
+// routes/router.js
+router.post("/login", (req, res, next) => {
+  //console.log(req.body);
+  db.query(
+    `SELECT * FROM User WHERE username = ${db.escape(req.body.username)};`,
+    (err, result) => {
+      //console.log(result);
+      // user does not exists
+      if (err) {
+        throw err;
+        return res.status(400).send({
+          msg: err,
+        });
+      }
+
+      if (!result.length) {
+        return res.status(401).send({
+          msg: "Username or password is incorrect!",
+        });
+>>>>>>> Stashed changes
       }
     );
   });
 
+<<<<<<< Updated upstream
   app.post("/login", (req, res, next) => {
     //console.log(req.body);
     db.query(
@@ -62,6 +97,40 @@ module.exports = (app) => {
         }
 
         if (!result.length) {
+=======
+      // check password
+      bcrypt.compare(
+        req.body.password,
+        result[0]["password"],
+        (bErr, bResult) => {
+          // wrong password
+          if (bErr) {
+            throw bErr;
+            return res.status(401).send({
+              msg: "Username or password is incorrect!",
+            });
+          }
+
+          if (bResult) {
+            const token = jwt.sign(
+              {
+                username: result[0].username,
+                userId: result[0].id,
+                role: result[0].role,
+              },
+              "SECRETKEY",
+              {
+                expiresIn: "7d",
+              }
+            );
+
+            return res.status(200).send({
+              msg: "Logged in!",
+              token,
+              role: result[0].role
+            });
+          }
+>>>>>>> Stashed changes
           return res.status(401).send({
             msg: "Username or password is incorrect!",
           });
