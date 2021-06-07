@@ -40,11 +40,39 @@ module.exports = {
         'SECRETKEY'
       );
       req.userData = decoded;
+      console.log("Decoded: ",req.userData.role)
       next();
     } catch (err) {
       return res.status(401).send({
         msg: 'Your session is not valid!'
       });
     }
-  }
+  },
+
+  isAdminLoggedIn: (req, res, next) => {
+    console.log(req.headers.authorization);
+    try {
+      const token = req.headers.authorization.split(' ')[1];
+      const decoded = jwt.verify(
+        token,
+        'SECRETKEY'
+      );
+      req.userData = decoded;
+
+      if(req.userData.role != "Admin"){
+        return res.status(401).send({
+          msg: 'You are not authorized to see the data!'
+        });
+      }
+      
+      console.log("Decoded: ",req.userData.role)
+      next();
+    } catch (err) {
+      return res.status(401).send({
+        msg: 'Your session is not valid!'
+      });
+    }
+  },
+
+
 };
