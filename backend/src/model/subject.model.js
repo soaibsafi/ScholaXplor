@@ -9,23 +9,26 @@ const Subject = function (subject) {
 };
 
 Subject.getAll = (cid, result) => {
-  var query = "SELECT subjectname, status,(SELECT COUNT(ClassStudent.uid)FROM ClassStudent WHERE cid='"+cid+"') as totalstudent, (SELECT CONCAT(firstname, ' ',lastname) FROM User Where uid=(SELECT uid FROM Subject WHERE cid='"+cid+"')) as fullname FROM Subject WHERE cid='"+cid+"'"
-  sql.query(
-    query,
-    (err, res) => {
-      if (err) {
-        console.log("error: ", err);
-        result(null, err);
-        return;
-      }
-      console.log("class: ", res);
-      result(null, res);
+  var query =
+    "SELECT subjectname, status,(SELECT COUNT(ClassStudent.uid)FROM ClassStudent WHERE cid='" +
+    cid +
+    "') as totalstudent, (SELECT CONCAT(firstname, ' ',lastname) FROM User Where uid=(SELECT uid FROM Subject WHERE cid='" +
+    cid +
+    "')) as fullname FROM Subject WHERE cid='" +
+    cid +
+    "'";
+  sql.query(query, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
     }
-  );
+    console.log("class: ", res);
+    result(null, res);
+  });
 };
 
 Subject.update = (sid, subject, result) => {
-
   sql.query("SET FOREIGN_KEY_CHECKS=0;", (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -66,10 +69,66 @@ Subject.update = (sid, subject, result) => {
         }
       });
 
-      console.log("Updated Subject: ", { ...subject  });
+      console.log("Updated Subject: ", { ...subject });
       result(null, { ...subject });
     }
   );
-}
+};
+
+Subject.deleteOne = (sid, result) => {
+  res_count = 0;
+  sql.query(
+    "SELECT COUNT(tid) as count FROM Test WHERE sid = ?",
+    sid,
+    (err, res) => {
+      if (err) {
+        console.log("Error: ", err);
+        result(null, res);
+        return;
+      }
+      res_count = res[0].count;
+      console.log("Count: ", res_count);
+      //console.log(typeof(res))
+
+      if (!res_count) {
+        sql.query(
+          "DELETE FROM AssignedSubject WHERE sid = ?",
+          sid,
+          (err, res) => {
+            if (err) {
+              console.log("error: ", err);
+              result(null, err);
+              return;
+            }
+          }
+        );
+        sql.query("DELETE FROM Subject WHERE sid = ?", sid, (err, res) => {
+          if (err) {
+            console.log("error: ", err);
+            result(null, err);
+            return;
+          }
+        });
+        result(null, res);
+        return;
+      }
+
+      result(null, { msg: "Dependent Test. Can't Delete" });
+    }
+  );
+};
+
+Subject.create = (newSubject, result) => {
+    sql.query("INSERT INTO Subject SET ?", newSubject, (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(err, null);
+        return;
+      }
+  
+      console.log("Created Class: ", { ...newSubject });
+      result(null, { ...newSubject });
+    });
+  };
 
 module.exports = Subject;
