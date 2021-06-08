@@ -1,15 +1,29 @@
 import axios from "axios";
 
 const host = "http://localhost:3000/";
+var url;
 
 export async function login(data) {
-  var url = host + "login";
+  url = host + "login";
   try {
     const response = await axios.post(url,data);
-    // debugger;
     return response.data
   } catch (error) {
-    // debugger;
     console.error(error);
+  }
+}
+
+export async function checkUserType(token){
+  url = host + "secret-route";
+  debugger;
+  try{
+    const response = await  axios.get(url,{
+      headers: {
+        'Authorization': token
+      }
+    });
+    return response.data;
+  }catch(error){
+    console.log(error);
   }
 }

@@ -27,7 +27,10 @@ class loginView extends React.Component{
 
     login(data).then(response => {
       console.log(response);
-      if(response.status === 'SUCCESS' ) that.props.history.push(redirectpath)
+      if(response.status === 'SUCCESS' ) {
+
+        that.props.history.push({pathname:redirectpath, state: {token:response.token}});
+      }
       else alert("Login falied!")
     }).catch(err => {console.log(err)});
 
@@ -50,7 +53,7 @@ class loginView extends React.Component{
           <p>Username:</p>
           <input type='text' name='username' onChange={this.onChangeHandler}/>
           <p>Password:</p>
-          <input type='text' name='password' onChange={this.onChangeHandler}/>
+          <input type='password' name='password' onChange={this.onChangeHandler}/>
           <br/>
           <button style={{padding:'5px', marginTop:'10px'}} onClick={this.loginAction}>Login</button>
         </div>
