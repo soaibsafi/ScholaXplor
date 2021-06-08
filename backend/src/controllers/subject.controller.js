@@ -1,5 +1,5 @@
 const Subject = require("../model/subject.model");
-//const subjectRoutes = require("../routes/subject.routes");
+
 
 exports.getAllSubjectByClass = (req, res) => {
   Subject.getAll(req.params.classId, (err, data) => {
