@@ -24,4 +24,52 @@ Subject.getAll = (cid, result) => {
   );
 };
 
+Subject.update = (sid, subject, result) => {
+
+  sql.query("SET FOREIGN_KEY_CHECKS=0;", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+  });
+
+  sql.query("UPDATE AssignedSubject SET uid=?", subject.uid, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+  });
+
+  sql.query(
+    "UPDATE Subject SET subjectname = ?, status = ?, uid= ?, cid=? WHERE sid = ?",
+    [subject.subjectname, subject.status, subject.uid, subject.cid, sid],
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+
+      if (res.affectedRows == 0) {
+        // not found Customer with the id
+        result({ kind: "not_found" }, null);
+        return;
+      }
+
+      sql.query("SET FOREIGN_KEY_CHECKS=1;", (err, res) => {
+        if (err) {
+          console.log("error: ", err);
+          result(null, err);
+          return;
+        }
+      });
+
+      console.log("Updated Subject: ", { ...subject  });
+      result(null, { ...subject });
+    }
+  );
+}
+
 module.exports = Subject;
