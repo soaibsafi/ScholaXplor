@@ -2,6 +2,37 @@ const User = require("../model/user.model");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 
+//Create a user
+exports.createUser = (req, res) => {
+  // Validate request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  const newUser = new User({
+    uid: req.body.uid,
+    username: req.body.username,
+    password: req.body.password,
+    firstname: req.body.firstname,
+    lastname: req.body.lastname,
+    role: req.body.role
+  });
+
+  // Save User in the database
+  User.create(newUser, (err, data) => {
+    if (err)
+      res.status(200).send({
+        message:
+          err.message || "Some error occurred while creating the User.",
+        status: "FAILED",
+        statusCode: "SUCCESS"
+      });
+    else res.send(data);
+  });
+};
+
 
 exports.findAll = (req, res) => {
   User.getAll((err, data) => {
