@@ -48,21 +48,20 @@ module.exports = (app) => {
   });
 
   app.post("/login", (req, res, next) => {
-    //console.log(req.body);
     db.query(
       `SELECT * FROM User WHERE username = ${db.escape(req.body.username)};`,
       (err, result) => {
-        //console.log(result);
         // user does not exists
         if (err) {
           throw err;
-          return res.status(400).send({
+          return res.status(200).send({
+            status:"FAILED",
             msg: err,
           });
         }
-
         if (!result.length) {
-          return res.status(401).send({
+          return res.status(200).send({
+            status:"FAILED",
             msg: "Username or password is incorrect!",
           });
         }
@@ -75,7 +74,8 @@ module.exports = (app) => {
             // wrong password
             if (bErr) {
               throw bErr;
-              return res.status(401).send({
+              return res.status(200).send({
+                status:"FAILED",
                 msg: "Username or password is incorrect!",
               });
             }
@@ -94,12 +94,14 @@ module.exports = (app) => {
               );
 
               return res.status(200).send({
+                status:"SUCCESS",
                 msg: "Logged in!",
                 token,
                 role: result[0].role,
               });
             }
-            return res.status(401).send({
+            return res.status(200).send({
+              status:"FAILED",
               msg: "Username or password is incorrect!",
             });
           }
