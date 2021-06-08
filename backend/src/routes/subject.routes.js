@@ -5,6 +5,8 @@ module.exports = app => {
 
     app.get('/subjects/:classId', subject.getAllSubjectByClass)
     app.put('/subject/:subjectId', subject.updateSubjectById)
+    app.delete('/subject/:subjectId', subject.deleteSubjectById)
+    app.post('/subject/', subject.createSubject)
 
   };
   
