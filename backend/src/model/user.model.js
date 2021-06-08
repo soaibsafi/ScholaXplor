@@ -40,8 +40,29 @@ User.getAll = (result) => {
 
 
 User.findById = (userId, result) => {
-    //var query = "Select * from User where uid ='" +userId+ "'";
-    sql.query("SELECT * FROM User WHERE uid ='" +userId+ "'", (err, res) => {
+  //var query = "Select * from User where uid ='" +userId+ "'";
+  sql.query("SELECT * FROM User WHERE uid ='" +userId+ "'", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+
+    if (res.length) {
+      console.log("found customer: ", res[0]);
+      result(null, res[0]);
+      return;
+    }
+
+    // not found Customer with the id
+    result({ kind: "not_found" }, null);
+  });
+};
+
+
+User.getAllByRole = (role, result) => {
+    var query = "SELECT * FROM User WHERE role ='" +role+ "'";
+    sql.query(query, (err, res) => {
       if (err) {
         console.log("error: ", err);
         result(err, null);
@@ -49,8 +70,8 @@ User.findById = (userId, result) => {
       }
   
       if (res.length) {
-        console.log("found customer: ", res[0]);
-        result(null, res[0]);
+        console.log("found user: ", res);
+        result(null, res);
         return;
       }
   
