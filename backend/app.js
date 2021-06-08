@@ -16,6 +16,7 @@ app.get("/", (req, res) => {
 // Import All router
 require("./src/routes/user.routes")(app);
 require("./src/routes/auth.routes")(app);
+require("./src/routes/class.routes")(app);
 
 
 // set port, listen for requests
