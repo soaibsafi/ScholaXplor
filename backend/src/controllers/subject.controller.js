@@ -62,3 +62,14 @@ exports.createSubject = (req, res) => {
         else res.send(data);
       });
   };
+
+  exports.getAverageGradeBySubjectId = (req, res) => {
+    Subject.getAverageGrade(req.params.subjectId, (err, data) => {
+      if (err)
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while retrieving Subjects.",
+        });
+      else res.send(data);
+    });
+  };

@@ -119,16 +119,30 @@ Subject.deleteOne = (sid, result) => {
 };
 
 Subject.create = (newSubject, result) => {
-    sql.query("INSERT INTO Subject SET ?", newSubject, (err, res) => {
-      if (err) {
-        console.log("error: ", err);
-        result(err, null);
-        return;
-      }
-  
-      console.log("Created Class: ", { ...newSubject });
-      result(null, { ...newSubject });
-    });
-  };
+  sql.query("INSERT INTO Subject SET ?", newSubject, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+
+    console.log("Created Class: ", { ...newSubject });
+    result(null, { ...newSubject });
+  });
+};
+
+Subject.getAverageGrade = (subjectId, result) => {
+  var query =
+    "SELECT CONCAT(User.firstname, ' ', User.lastname) as name , TT.AVG_MARK FROM User INNER JOIN (SELECT AssignedSubject.uid as userid, T.AVG_MARK FROM AssignedSubject INNER JOIN (SELECT aid, AVG(marks) as AVG_MARK FROM result INNER JOIN (SELECT tid FROM Test WHERE sid = ?) as T ON result.tid = T.tid GROUP BY result.aid) as T ON AssignedSubject.aid = T.aid) as TT ON User.uid = TT.userid";
+  sql.query(query, subjectId, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    console.log("class: ", res);
+    result(null, res);
+  });
+};
 
 module.exports = Subject;
