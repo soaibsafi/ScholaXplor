@@ -4,7 +4,7 @@ module.exports = app => {
 
     const user = require("../controllers/user.controller.js");
 
-    app.post("/user/create", userMiddleware.isAdminLoggedIn, user.createUser);
+    app.post("/user/", userMiddleware.isAdminLoggedIn, user.createUser);
     
     app.get("/user/getUserByRole/:role", userMiddleware.isAdminLoggedIn, user.findUserByRole);
     

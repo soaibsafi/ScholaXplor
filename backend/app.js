@@ -26,6 +26,7 @@ require("./src/routes/user.routes")(app);
 require("./src/routes/auth.routes")(app);
 require("./src/routes/class.routes")(app);
 require("./src/routes/subject.routes")(app);
+require("./src/routes/test.routes")(app);
 
 // set port, listen for requests
 app.listen(3000, () => {
