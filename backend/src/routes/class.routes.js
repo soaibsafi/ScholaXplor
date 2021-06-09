@@ -9,5 +9,7 @@ module.exports = app => {
 
     app.delete('/class/:classId', class_c.deleteClassById)
 
+    app.get('/class/', class_c.getAllClass)
+
   };
   

@@ -65,3 +65,17 @@ exports.deleteClassById = (req, res) => {
       } else res.send({ message: `Class was deleted successfully!` });
     });
   };
+
+
+  exports.getAllClass = (req, res) => {
+    Class.getAll((err, data) => {
+      if (err)
+        res.status(200).send({
+          message:
+            err.message || "Some error occurred while retrieving classes.",
+            status: "FAILED",
+            statusCode: "500"
+        });
+      else res.send(data);
+    });
+  };
