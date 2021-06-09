@@ -82,8 +82,8 @@ User.getAllByRole = (role, result) => {
 
   User.updateByUid = (uid, user, result) => {
     sql.query(
-      "UPDATE User SET username = ?, firstname = ?, lastname = ?, role = ? WHERE uid = ?",
-      [user.username, user.firstname, user.lastname, user.role, uid],
+      "UPDATE User SET firstname = ?, lastname = ?, role = ? WHERE uid = ?",
+      [user.firstname, user.lastname, user.role, uid],
       (err, res) => {
         if (err) {
           console.log("error: ", err);
