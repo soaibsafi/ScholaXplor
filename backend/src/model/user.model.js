@@ -80,4 +80,46 @@ User.getAllByRole = (role, result) => {
     });
   };
 
+  User.updateByUid = (uid, user, result) => {
+    sql.query(
+      "UPDATE User SET username = ?, firstname = ?, lastname = ?, role = ? WHERE uid = ?",
+      [user.username, user.firstname, user.lastname, user.role, uid],
+      (err, res) => {
+        if (err) {
+          console.log("error: ", err);
+          result(null, err);
+          return;
+        }
+  
+        if (res.affectedRows == 0) {
+          // not found User with the uid
+          result({ kind: "not_found" }, null);
+          return;
+        }
+  
+        console.log("updated user: ", { uid: uid, ...user });
+        result(null, { uid: uid, ...user });
+      }
+    );
+  };
+
+  User.removeByUid = (uid, result) => {
+    sql.query("DELETE FROM User WHERE uid = ?", uid, (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+  
+      if (res.affectedRows == 0) {
+        // not found User with the uid
+        result({ kind: "not_found" }, null);
+        return;
+      }
+  
+      console.log("deleted user with uid: ", uid);
+      result(null, res);
+    });
+  };
+
 module.exports = User;
