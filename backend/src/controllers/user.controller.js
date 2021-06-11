@@ -9,7 +9,7 @@ exports.createUser = (req, res) => {
     res.status(200).send({
       message: "Content can not be empty!",
       status: "FAILED",
-      statusCode: "400"
+      statusCode: 400,
     });
   }
 
@@ -19,53 +19,67 @@ exports.createUser = (req, res) => {
     password: bcrypt.hashSync(req.body.password, 10),
     firstname: req.body.firstname,
     lastname: req.body.lastname,
-    role: req.body.role
+    role: req.body.role,
   });
 
   // Save User in the database
   User.create(newUser, (err, data) => {
     if (err)
       res.status(200).send({
-        message:
-          err.message || "Some error occurred while creating the User.",
+        message: err.message || "Some error occurred while creating the User.",
         status: "FAILED",
-        statusCode: "500"
+        statusCode: 500,
       });
-    else res.send(data);
+    else
+      res.status(200).send({
+        data: data,
+        status: "SUCCESS",
+        statusCode: 201,
+      });
   });
 };
-
 
 exports.findOne = (req, res) => {
   User.findById(req.params.userId, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
-        res.status(404).send({
+        res.status(200).send({
+          status: "FAILED",
+          statusCode: 404,
           message: `Not found Customer with id ${req.params.userId}.`,
         });
       } else {
-        res.status(500).send({
+        res.status(200).send({
+          status: "FAILED",
+          statusCode: 500,
           message: "Error retrieving Customer with id " + req.params.userId,
         });
       }
-    } else res.send(data);
+    } else
+      res.status(200).send({
+        data: data,
+        status: "SUCCESS",
+        statusCode: 200,
+      });
   });
 };
-
 
 exports.findUserByRole = (req, res) => {
   User.getAllByRole(req.params.role, (err, data) => {
     if (err)
       res.status(200).send({
-        message:
-          err.message || "Some error occurred while retrieving users.",
+        message: err.message || "Some error occurred while retrieving users.",
         status: "FAILED",
-        statusCode: "500"
+        statusCode: 500,
       });
-    else res.send(data);
+    else
+      res.status(200).send({
+        data: data,
+        status: "SUCCESS",
+        statusCode: 200,
+      });
   });
 };
-
 
 exports.findAll = (req, res) => {
   User.getAll((err, data) => {
@@ -73,8 +87,14 @@ exports.findAll = (req, res) => {
       res.status(500).send({
         message:
           err.message || "Some error occurred while retrieving customers.",
+        status: "FAILED",
+        statusCode: 500,
       });
-    else res.send(data);
+    else
+      res.status(200).send({
+        data: data,
+        status: "SUCCESS",
+        statusCode: 200,
+      });
   });
 };
-

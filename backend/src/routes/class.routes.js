@@ -3,11 +3,11 @@ const userMiddleware = require("../middleware/authjwt");
 module.exports = app => {
     const class_c = require("../controllers/class.controller");
 
-    app.post('/class/', class_c.createClass)
+    app.post('/class/', userMiddleware.isAdminLoggedIn, class_c.createClass)
 
-    app.put('/class/:classId', class_c.updateById)
+    app.put('/class/:classId', userMiddleware.isAdminLoggedIn, class_c.updateById)
 
-    app.delete('/class/:classId', class_c.deleteClassById)
+    app.delete('/class/:classId', userMiddleware.isAdminLoggedIn, class_c.deleteClassById)
 
   };
   

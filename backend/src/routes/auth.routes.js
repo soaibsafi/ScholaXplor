@@ -53,7 +53,7 @@ module.exports = (app) => {
       (err, result) => {
         // user does not exists
         if (err) {
-          throw err;
+          //throw err;
           return res.status(200).send({
             status:"FAILED",
             msg: err,
