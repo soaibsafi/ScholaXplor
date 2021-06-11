@@ -18,18 +18,18 @@ class loginView extends React.Component{
 
   loginAction(){
     var that = this;
+
     console.log(that.state);
 
     var data = {
       'username' : that.state.username,
       'password' : that.state.password
     }
-
     login(data).then(response => {
       console.log(response);
       if(response.status === 'SUCCESS' ) {
-
         that.props.history.push({pathname:redirectpath, state: {token:response.token}});
+        debugger;
       }
       else alert("Login falied!")
     }).catch(err => {console.log(err)});

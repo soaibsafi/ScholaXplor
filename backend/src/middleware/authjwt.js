@@ -30,20 +30,31 @@ module.exports = {
 
     next();
   },
+
   isLoggedIn: (req, res, next) => {
     console.log(req.headers.authorization);
     try {
-      const token = req.headers.authorization.split(" ")[1];
-      const decoded = jwt.verify(token, "SECRETKEY");
+      const token = req.headers.authorization.split(' ')[1];
+      const decoded = jwt.verify(
+          token,
+          'SECRETKEY'
+      );
       req.userData = decoded;
-      console.log("Decoded: ", req.userData.role);
-      next();
+      console.log("Decoded: ",req.userData.role)
+      return res.status(200).send({
+        status: "SUCCESS",
+        statusCode: 200,
+        role: req.userData.role
+      });
     } catch (err) {
-      return res.status(401).send({
-        msg: "Your session is not valid!",
+      return res.status(200).send({
+        status: "FAILED",
+        statusCode: 400,
+        msg: 'Your session is not valid!'
       });
     }
   },
+
   isAdminLoggedIn: (req, res, next) => {
     console.log(req.headers.authorization);
     try {
@@ -82,7 +93,7 @@ module.exports = {
       next();
     } catch (err) {
       return res.status(401).send({
-        msg: "Your session is not valid!",
+        msg: 'Your session is not valid!'
       });
     }
   },
