@@ -15,7 +15,6 @@ export async function login(data) {
 
 export async function checkUserType(token){
   url = host + "secret-route";
-  debugger;
   try{
     const response = await  axios.get(url,{
       headers: {
