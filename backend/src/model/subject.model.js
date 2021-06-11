@@ -28,6 +28,21 @@ Subject.getAll = (cid, result) => {
   });
 };
 
+Subject.getAllTestGrades = (sid, pid, result) => {
+  console.log(sid, pid)
+  var query =
+    "SELECT Test.testname, Test.testdate, T.marks FROM Test INNER JOIN (SELECT result.marks, result.tid FROM result WHERE result.aid = (SELECT AssignedSubject.aid FROM AssignedSubject WHERE uid = ? AND sid = ?)) as T ON Test.tid = T.tid"
+  sql.query(query, [pid, sid], (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    console.log("class: ", res);
+    result(null, res);
+  });
+};
+
 Subject.update = (sid, subject, result) => {
   sql.query("SET FOREIGN_KEY_CHECKS=0;", (err, res) => {
     if (err) {
@@ -135,6 +150,34 @@ Subject.getAverageGrade = (subjectId, result) => {
   var query =
     "SELECT CONCAT(User.firstname, ' ', User.lastname) as name , TT.AVG_MARK FROM User INNER JOIN (SELECT AssignedSubject.uid as userid, T.AVG_MARK FROM AssignedSubject INNER JOIN (SELECT aid, AVG(marks) as AVG_MARK FROM result INNER JOIN (SELECT tid FROM Test WHERE sid = ?) as T ON result.tid = T.tid GROUP BY result.aid) as T ON AssignedSubject.aid = T.aid) as TT ON User.uid = TT.userid";
   sql.query(query, subjectId, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    console.log("class: ", res);
+    result(null, res);
+  });
+};
+
+Subject.getAllSUbjectOfPupil = (pid, result) => {
+  var query =
+    "SELECT Subject.sid, subjectname FROM Subject INNER JOIN (SELECT sid FROM AssignedSubject WHERE uid = ?) as T ON Subject.sid = T.sid";
+  sql.query(query, pid,(err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    console.log("class: ", res);
+    result(null, res);
+  });
+};
+
+Subject.getAverageGradeBySubAndPupil = (sid, pid, result) => {
+  console.log(sid, pid)
+  var query = "SELECT AVG(marks) as AVG_MARK FROM result INNER JOIN (SELECT tid FROM Test WHERE sid = ?) as T INNER JOIN (SELECT AssignedSubject.aid FROM AssignedSubject WHERE uid = ? AND sid = ?) as TT ON result.aid = TT.aid";
+  sql.query(query, [sid, pid, sid], (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);

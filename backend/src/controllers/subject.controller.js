@@ -12,6 +12,29 @@ exports.getAllSubjectByClass = (req, res) => {
   });
 };
 
+exports.getAllGradeBySubjectPupilId = (req, res) => {
+  //console.log(req.query.sid, req.query.pid)
+  Subject.getAllTestGrades(req.query.sid, req.query.pid, (err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving Subjects.",
+      });
+    else res.send(data);
+  });
+};
+
+exports.getAllSubjectByPupilId = (req, res) => {
+  Subject.getAllSUbjectOfPupil(req.params.pupilId, (err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving Subjects.",
+      });
+    else res.send(data);
+  });
+};
+
 exports.updateSubjectById = (req, res) => {
   Subject.update(req.params.subjectId, new Subject(req.body), (err, data) => {
     if (err)
@@ -65,6 +88,17 @@ exports.createSubject = (req, res) => {
 
   exports.getAverageGradeBySubjectId = (req, res) => {
     Subject.getAverageGrade(req.params.subjectId, (err, data) => {
+      if (err)
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while retrieving Subjects.",
+        });
+      else res.send(data);
+    });
+  };
+
+  exports.getAverageGradePupilSUbject = (req, res) => {
+    Subject.getAverageGradeBySubAndPupil(req.query.sid, req.query.pid, (err, data) => {
       if (err)
         res.status(500).send({
           message:

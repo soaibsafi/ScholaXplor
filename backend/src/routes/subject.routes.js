@@ -7,5 +7,8 @@ module.exports = (app) => {
   app.put("/subject/:subjectId", subject.updateSubjectById);
   app.delete("/subject/:subjectId", subject.deleteSubjectById);
   app.post("/subject/", subject.createSubject);
-  app.get("/averageGrade/:subjectId", subject.getAverageGradeBySubjectId);
+  app.get("/subject-average/:subjectId", subject.getAverageGradeBySubjectId);
+  app.get('/pupil-subjects/:pupilId', subject.getAllSubjectByPupilId)
+  app.get('/pupil-average/', subject.getAverageGradePupilSUbject)
+  app.get('/test-grades/', subject.getAllGradeBySubjectPupilId)
 };
