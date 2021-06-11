@@ -100,6 +100,11 @@ exports.getAllClass = (req, res) => {
         status: "FAILED",
         statusCode: "500",
       });
-    else res.send(data);
+    else
+      res.status(200).send({
+        status: "SUCCESS",
+        statusCode: 200,
+        data: data,
+      });
   });
 };
