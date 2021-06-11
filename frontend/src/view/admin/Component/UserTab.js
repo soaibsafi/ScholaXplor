@@ -35,7 +35,6 @@ export default class UserTab extends React.Component {
 
   componentDidMount() {
     var token = this.props.token;
-    // console.log(that.props.token);
     this.getAllUser("tokeon " + token);
   }
 
@@ -116,12 +115,14 @@ export default class UserTab extends React.Component {
 
   getAllUser(token) {
     getAllUsers(token).then(data => {
-      this.setState({list: data})
+      this.setState({list: data.data})
     })
   }
 
   loadFillData() {
-    return this.state.list.map(data => {
+    if(this.state.list.length) {
+
+      return this.state.list.map(data => {
         return (
             <tr key={data.uid}>
               <th>{data.username}</th>
@@ -132,6 +133,8 @@ export default class UserTab extends React.Component {
               <td>{<button className="btn btn-danger" onClick={() => this.deleteInfo(data.id)}>Delete</button>}</td>
             </tr>
         )
-    })
+      })
+    }
+    else console.log("No data");
   }
 }
