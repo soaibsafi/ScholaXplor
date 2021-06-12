@@ -29,7 +29,7 @@ class loginView extends React.Component{
       console.log(response);
       if(response.status === 'SUCCESS' ) {
         that.props.history.push({pathname:redirectpath, state: {token:response.token}});
-        debugger;
+        //debugger;
       }
       else alert("Login falied!")
     }).catch(err => {console.log(err)});

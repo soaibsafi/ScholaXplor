@@ -16,3 +16,18 @@ export async function getAllUsers(token){
     console.log(error);
   }
 }
+
+export async function getAllClass(token){
+  url = host + "class";
+  try{
+    const response = await  axios.get(url,{
+      headers: {
+        'Authorization': token
+      }
+    });
+    debugger
+    return response.data;
+  }catch(error){
+    console.log(error);
+  }
+}
