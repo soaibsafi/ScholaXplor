@@ -9,7 +9,6 @@ export default class pupilPanel extends React.Component{
 
   componentDidMount() {
     var that = this;
-    debugger;
     var token = this.props.location.state ? this.props.location.state.token : '';
     checkUserType('token '+ token ).then(res => {
       if(res.status === "FAILED") that.props.history.push("/");
