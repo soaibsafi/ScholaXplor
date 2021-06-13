@@ -32,7 +32,7 @@ module.exports = {
   },
 
   isLoggedIn: (req, res, next) => {
-    console.log(req.headers.authorization);
+   // console.log(req.headers.authorization);
     try {
       const token = req.headers.authorization.split(' ')[1];
       const decoded = jwt.verify(
@@ -40,7 +40,7 @@ module.exports = {
           'SECRETKEY'
       );
       req.userData = decoded;
-      console.log("Decoded: ",req.userData.role)
+     // console.log("Decoded: ",req.userData.role)
       return res.status(200).send({
         status: "SUCCESS",
         statusCode: 200,
@@ -56,7 +56,7 @@ module.exports = {
   },
 
   isAdminLoggedIn: (req, res, next) => {
-    console.log(req.headers.authorization);
+   // console.log(req.headers.authorization);
     try {
       const token = req.headers.authorization.split(" ")[1];
       const decoded = jwt.verify(token, "SECRETKEY");
@@ -68,7 +68,7 @@ module.exports = {
         });
       }
 
-      console.log("Decoded: ", req.userData.role);
+     // console.log("Decoded: ", req.userData.role);
       next();
     } catch (err) {
       return res.status(401).send({
@@ -77,7 +77,7 @@ module.exports = {
     }
   },
   isTeacherLoggedIn: (req, res, next) => {
-    console.log(req.headers.authorization);
+   // console.log(req.headers.authorization);
     try {
       const token = req.headers.authorization.split(" ")[1];
       const decoded = jwt.verify(token, "SECRETKEY");
@@ -89,7 +89,7 @@ module.exports = {
         });
       }
 
-      console.log("Decoded: ", req.userData.role);
+     // console.log("Decoded: ", req.userData.role);
       next();
     } catch (err) {
       return res.status(401).send({
@@ -98,7 +98,7 @@ module.exports = {
     }
   },
   isPupilLoggedIn: (req, res, next) => {
-    console.log(req.headers.authorization);
+   // console.log(req.headers.authorization);
     try {
       const token = req.headers.authorization.split(" ")[1];
       const decoded = jwt.verify(token, "SECRETKEY");
@@ -110,7 +110,7 @@ module.exports = {
         });
       }
 
-      console.log("Decoded: ", req.userData.role);
+      //console.log("Decoded: ", req.userData.role);
       next();
     } catch (err) {
       return res.status(401).send({

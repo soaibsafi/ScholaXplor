@@ -13,7 +13,7 @@ Class.create = (newClass, result) => {
       return;
     }
 
-    console.log("Created Class: ", { ...newClass });
+   // console.log("Created Class: ", { ...newClass });
     result(null, { ...newClass });
   });
 };
@@ -35,7 +35,7 @@ Class.updateOne = (cid, class_c, result) => {
         return;
       }
 
-      console.log("Updated Class: ", { id: cid, ...class_c });
+      //console.log("Updated Class: ", { id: cid, ...class_c });
       result(null, { ...class_c });
     }
   );

@@ -124,7 +124,11 @@ exports.update = (req, res) => {
           statusCode: "500",
         });
       }
-    } else res.send(data);
+    } else res.send({
+      data: data,
+      status:"SUCCESS",
+      statusCode: 200
+    });
   });
 };
 

@@ -84,7 +84,7 @@ Subject.update = (sid, subject, result) => {
         }
       });
 
-      console.log("Updated Subject: ", { ...subject });
+      //console.log("Updated Subject: ", { ...subject });
       result(null, { ...subject });
     }
   );
