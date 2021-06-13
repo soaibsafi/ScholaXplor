@@ -124,7 +124,11 @@ exports.update = (req, res) => {
           statusCode: "500",
         });
       }
-    } else res.send(data);
+    } else res.send({
+      data: data,
+      status:"SUCCESS",
+      statusCode: 200
+    });
   });
 };
 
@@ -152,3 +156,28 @@ exports.delete = (req, res) => {
       });
   });
 };
+
+exports.checkDuplicateUsername = (req, res) => {
+  User.duplicateUsername(req.params.username, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(200).send({
+          status: "FAILED",
+          statusCode: 404,
+          message: `Not found Customer with id ${req.params.userId}.`,
+        });
+      } else {
+        res.status(200).send({
+          status: "FAILED",
+          statusCode: 500,
+          message: "Error retrieving Customer with id " + req.params.userId,
+        });
+      }
+    } else
+      res.status(200).send({
+        data: data,
+        status: "SUCCESS",
+        statusCode: 200,
+      });
+  });
+}

@@ -68,13 +68,13 @@ User.getAllByRole = (role, result) => {
         result(err, null);
         return;
       }
-  
+
       if (res.length) {
         console.log("found user: ", res);
         result(null, res);
         return;
       }
-  
+
       // not found Customer with the id
       result({ kind: "not_found" }, null);
     });
@@ -90,13 +90,13 @@ User.getAllByRole = (role, result) => {
           result(null, err);
           return;
         }
-  
+
         if (res.affectedRows == 0) {
           // not found User with the uid
           result({ kind: "not_found" }, null);
           return;
         }
-  
+
         console.log("updated user: ", { uid: uid, ...user });
         result(null, { uid: uid, ...user });
       }
@@ -110,16 +110,36 @@ User.getAllByRole = (role, result) => {
         result(null, err);
         return;
       }
-  
+
       if (res.affectedRows == 0) {
         // not found User with the uid
         result({ kind: "not_found" }, null);
         return;
       }
-  
+
       console.log("deleted user with uid: ", uid);
       result(null, res);
     });
   };
+
+  User.duplicateUsername = (username, result) => {
+
+    sql.query("SELECT * FROM User WHERE username= ? ", username,(err,res)=>{
+      if(err){
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+
+      if (res.affectedRows == 0) {
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      // console.log("user with ", username);
+      result(null, res);
+
+    })
+
+  }
 
 module.exports = User;

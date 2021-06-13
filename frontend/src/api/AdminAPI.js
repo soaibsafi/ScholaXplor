@@ -25,9 +25,36 @@ export async function getAllClass(token){
         'Authorization': token
       }
     });
-    debugger
     return response.data;
   }catch(error){
     console.log(error);
+  }
+}
+
+export async function createNewUser(user,token){
+  url = host + "user/";
+  try{
+    const response = await axios.post(url,user,{
+      headers: {
+        'Authorization': token
+      }
+    });
+    return response.data
+  }catch(error){
+    console.log(error)
+  }
+}
+
+export async function updateAUser(user,token){
+  url = host + "user/"+ user.uid;
+  try{
+    const response = await axios.put(url, user,{
+      headers: {
+        'Authorization': token
+      }
+    });
+    return response.data
+  }catch(error){
+    console.log(error)
   }
 }
