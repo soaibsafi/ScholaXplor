@@ -58,3 +58,17 @@ export async function updateAUser(user,token){
     console.log(error)
   }
 }
+
+export async function getSubjectsDetails(token, sid){
+  url = host + "subjects/"+sid;
+  try{
+    const response = await  axios.get(url,{
+      headers: {
+        'Authorization': token
+      }
+    });
+    return response.data;
+  }catch(error){
+    console.log(error);
+  }
+}
