@@ -20,22 +20,25 @@ class userpopup extends React.Component{
     var that = this;
     return(
         <div className='popup'>
-          <div className='App popup_inner'>
+          <div className='App popup_inner custom_pop'>
             <h2>{that.props.popupHeaderText + " " + that.props.selectedRole}</h2>
-            <div style={{alignItem:'center'}}>
-              <label> First Name:</label>
-                <input className="form-control"  type="text" name="fname" defaultValue={this.state.fname}
+            <div style={{alignItem:'center', textAlign:'left'}}>
+              <p> First Name:</p>
+                <input className="form-control-lg"  type="text" name="fname" id="firstname" defaultValue={this.state.fname}
                        // onChange={this.oninputChange.bind(this, "fname")}
                 />
               <br/>
-              <label>Last Name:</label>
-                <input className="form-control"   type="text" name="lname" defaultValue={this.state.lname}
+              <br/>
+              <p>Last Name:</p>
+                <input className="form-control-lg"   type="text" name="lname" id="lastname" defaultValue={this.state.lname}
                        // onChange={this.oninputChange.bind(this, "lname")}
                 />
               <br/>
             </div>
-            <button className='btn btn-primary'  onClick={this.sendData}>{this.props.popupBtnText}</button>
-            <button className='btn btn-danger' onClick={this.props.closePopup}>{"Close"}</button>
+            <div style={{width:'170px', margin: '0px auto'}}> 
+              <button className='btn btn-primary btn-lg float-left'  onClick={this.sendData}>{this.props.popupBtnText}</button>
+              <button className='btn btn-danger btn-lg float-right' onClick={this.props.closePopup}>{"Close"}</button>
+            </div>
           </div>
         </div>
     )

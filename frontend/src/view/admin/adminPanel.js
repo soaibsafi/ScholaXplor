@@ -3,6 +3,7 @@ import {checkUserType} from "../../api/APIUtils";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
 import UserTab from './Component/UserTab'
+import SubjectTab from './Component/SubjectTab'
 
 import 'react-tabs/style/react-tabs.css';
 
@@ -50,7 +51,7 @@ export default class adminPanel extends React.Component{
               <h2>Class Management</h2>
             </TabPanel>
             <TabPanel>
-              <h2>Subject Managment</h2>
+              <SubjectTab token={state.token}/>
             </TabPanel>
           </Tabs>
 
