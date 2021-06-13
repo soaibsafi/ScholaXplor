@@ -1,7 +1,11 @@
 import React from "react";
 import Dropdown from "react-dropdown";
-import { getAllClass, getSubjectsDetails } from "../../../api/AdminAPI";
-import Userpopup from "./Userpopup";
+import {
+  getAllClass,
+  getSubjectsDetails,
+  createNewClass,
+} from "../../../api/AdminAPI";
+import Tablepopup from "./Tablepopup";
 
 import style from "./UserTab.css";
 import "../../../App.css";
@@ -16,10 +20,23 @@ export default class ClassTable extends React.Component {
     this.state = {
       subjectsDetails: [],
       allClasses: [],
+      showPopup: false,
+      selectedRole: "",
+      popupHeaderText: "",
+      popupBtnText: "",
+      classinfo: {
+        classname: "",
+        cid: "",
+      },
     };
     this.loadFillData = this.loadFillData.bind(this);
     this.getAllClasses = this.getAllClasses.bind(this);
     this.getAllSubjectsDetails = this.getAllSubjectsDetails.bind(this);
+    this.openNewClassPopup = this.openNewClassPopup.bind(this)
+
+    //Popup functions
+    this.addClass = this.addClass.bind(this);
+    
   }
 
   componentDidMount() {
@@ -41,7 +58,7 @@ export default class ClassTable extends React.Component {
             placeholder="Select a class"
             placeholderClassName="myPlaceholderClassName"
           />
-          <button className="btn btn-success" onClick={this.addNewUser}>
+          <button className="btn btn-success" onClick={this.openNewClassPopup}>
             Add
           </button>
         </div>
@@ -53,13 +70,22 @@ export default class ClassTable extends React.Component {
                 <th scope="col">Status</th>
                 <th scope="col">Total Students</th>
                 <th scope="col">Teacher</th>
-                <th scope="col"></th>
-                <th scope="col"></th>
               </tr>
             </thead>
             <tbody>{this.loadFillData()}</tbody>
           </table>
         </div>
+        {that.state.showPopup ? (
+          <Tablepopup
+            classinfo={that.state.classinfo}
+            selectedRole={that.state.selectedRole}
+            closePopup={that.togglePopup.bind(this)}
+            popupHeaderText={that.state.popupHeaderText}
+            popupBtnText={that.state.popupBtnText}
+            updateInfo={that.updateInfo}
+            addClass={that.addClass}
+          />
+        ) : null}
       </div>
     );
   }
@@ -73,26 +99,6 @@ export default class ClassTable extends React.Component {
             <th>{data.status}</th>
             <td>{data.totalstudent}</td>
             <td>{data.fullname}</td>
-            <td>
-              {
-                <button
-                  className="btn btn-info"
-                  onClick={() => this.updateInfo(data)}
-                >
-                  Update
-                </button>
-              }
-            </td>
-            <td>
-              {
-                <button
-                  className="btn btn-danger"
-                  onClick={() => this.deleteInfo(data.id)}
-                >
-                  Delete
-                </button>
-              }
-            </td>
           </tr>
         );
       });
@@ -115,5 +121,35 @@ export default class ClassTable extends React.Component {
     getSubjectsDetails("token " + that.props.token, e.value).then((data) => {
       that.setState({ subjectsDetails: data.data });
     });
+  }
+
+  addClass(data) {
+    var that = this;
+    createNewClass(data, "token " + that.props.token).then((data) => {
+      if (data.status === "SUCCESS") {
+        that.togglePopup();
+        that.setState({ allClasses: [] }, () => {
+          that.getAllClasses("Token " + that.props.token);
+        });
+      } else {
+        alert("Error!!");
+      }
+    });
+  }
+
+  openNewClassPopup() {
+    this.setState(
+      {
+        popupHeaderText: "Add A New Class",
+        popupBtnText: "Add",
+      },
+      () => {
+        this.togglePopup();
+      }
+    );
+  }
+
+  togglePopup() {
+    this.setState({ showPopup: !this.state.showPopup });
   }
 }

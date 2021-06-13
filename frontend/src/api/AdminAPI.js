@@ -72,3 +72,17 @@ export async function getSubjectsDetails(token, sid){
     console.log(error);
   }
 }
+
+export async function createNewClass(classObj,token){
+  url = host + "class/";
+  try{
+    const response = await axios.post(url,classObj,{
+      headers: {
+        'Authorization': token
+      }
+    });
+    return response.data
+  }catch(error){
+    console.log(error)
+  }
+}
