@@ -38,7 +38,7 @@ export default class adminPanel extends React.Component {
     return (
         <div style={{width: '1024px'}}>
           <div className='row' onClick={this.logoutAction}><h1>Admin Panel</h1>
-            <button type="button" class="btn btn-danger">Logout</button>
+            <button type="button" className="btn btn-danger">Logout</button>
           </div>
           <Tabs>
             <TabList>
@@ -46,7 +46,6 @@ export default class adminPanel extends React.Component {
               <Tab>Class</Tab>
               <Tab>Subject</Tab>
             </TabList>
-
             <TabPanel>
               <UserTab token={state.token}/>
             </TabPanel>

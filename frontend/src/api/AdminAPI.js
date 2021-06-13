@@ -16,3 +16,17 @@ export async function getAllUsers(token){
     console.log(error);
   }
 }
+
+export async function createNewUser(user,token){
+  url = host + "user/";
+  try{
+    const response = await axios.post(url,user,{
+      headers: {
+        'Authorization': token
+      }
+    });
+    return response.data
+  }catch(error){
+    console.log(error)
+  }
+}
