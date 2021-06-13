@@ -1,6 +1,6 @@
 import React from 'react';
 import Dropdown from "react-dropdown";
-import {getAllUsers, createNewUser} from '../../../api/AdminAPI'
+import {getAllUsers, createNewUser, updateAUser} from '../../../api/AdminAPI'
 import Userpopup from "./Userpopup";
 
 import style from './UserTab.css'
@@ -8,7 +8,9 @@ import '../../../App.css';
 import 'react-dropdown/style.css';
 
 const options = [
-  'Pupil', 'Teacher'
+  {value: 'Admin', label: 'Admin'},
+  {value: 'Pupil', label: 'Pupil'},
+  {value: 'Teacher', label: 'Teacher'}
 ];
 
 export default class UserTab extends React.Component {
@@ -28,14 +30,14 @@ export default class UserTab extends React.Component {
         username: '',
         uid: ''
       }
-
     }
     this.loadFillData = this.loadFillData.bind(this);
     this.getAllUser = this.getAllUser.bind(this);
-    this.addNewUser = this.addNewUser.bind(this);
+    this.openNewUserPopup = this.openNewUserPopup.bind(this);
     this.onRoleSelect = this.onRoleSelect.bind(this);
     this.openUpdatePopup = this.openUpdatePopup.bind(this);
 
+    /// Popup functions
     this.addUser = this.addUser.bind(this);
     this.updateInfo = this.updateInfo.bind(this);
     this.togglePopup = this.togglePopup.bind(this);
@@ -58,9 +60,9 @@ export default class UserTab extends React.Component {
                       onChange={this.onRoleSelect}
                       placeholder="Select an option"
                       placeholderClassName='myPlaceholderClassName'/>
-            <button className="btn btn-success" onClick={this.addNewUser}>Add</button>
+            <button className="btn btn-success" onClick={this.openNewUserPopup}>Add</button>
           </div>
-          <div className="ag-theme-alpine" style={{height: 400, width: 800}}>
+          {that.state.list.length ? <div className="ag-theme-alpine" style={{height: 400, width: 800}}>
             <table className="table table-hover table-striped">
               <thead className="thead-dark">
               <tr key={"user_key1"}>
@@ -76,7 +78,7 @@ export default class UserTab extends React.Component {
               {this.loadFillData()}
               </tbody>
             </table>
-          </div>
+          </div>: <label>No data</label>}
           {that.state.showPopup ?
               <Userpopup userinfo={that.state.userinfo}
                          selectedRole={that.state.selectedRole}
@@ -90,20 +92,46 @@ export default class UserTab extends React.Component {
     )
   }
 
-  onRoleSelect(e) {
-    console.log(e);
-    this.setState({selectedRole: e.value})
+  loadFillData() {
+    if (this.state.list.length) {
+
+      return this.state.list.map(data => {
+        return (
+            <tr key={data.uid}>
+              <th>{data.username}</th>
+              <th>{data.firstname}</th>
+              <td>{data.lastname}</td>
+              <td>{data.role}</td>
+              <td>{<button className="btn btn-info" onClick={() => this.openUpdatePopup(data)}>Update</button>}</td>
+              <td>{<button className="btn btn-danger" onClick={() => this.deleteInfo(data.id)}>Delete</button>}</td>
+            </tr>
+        )
+      })
+    } else console.log("No data");
   }
 
-  addUser(data) {
-    debugger;
-    console.log(data);
-    createNewUser(data,"token " + this.props.token).then(data => {
-      if(data.status === "SUCCESS") this.togglePopup();
-      else{alert("Error!!")}
+  getAllUser(token) {
+    getAllUsers(token).then(data => {
+      this.setState({list: data.data})
     })
   }
 
+  openNewUserPopup() {
+    if (this.state.selectedRole)
+      this.setState({
+            popupHeaderText: "Add A New",
+            popupBtnText: "Add"
+          },
+          () => {
+            this.togglePopup();
+          })
+    else alert("Please select a role.");
+
+  }
+
+  onRoleSelect(e) {
+    this.setState({selectedRole: e.value})
+  }
 
   openUpdatePopup(data) {
     this.setState({
@@ -127,50 +155,35 @@ export default class UserTab extends React.Component {
     // })
   }
 
+  addUser(data) {
+    var that = this;
+    createNewUser(data, "token " + that.props.token).then(data => {
+      if (data.status === "SUCCESS") {
+        that.togglePopup();
+        that.setState({list:[]},() =>{
+          that.getAllUser("Token " + that.props.token)
+        })
+
+      }
+      else {
+        alert("Error!!")
+      }
+    })
+  }
+
   updateInfo(data) {
-    console.log(data);
-
-
+    var that = this;
+    updateAUser(data, "Token " + that.props.token).then(response => {
+      if (response.status === "SUCCESS") {
+        that.togglePopup();
+        that.setState({list:[]},() =>{
+          that.getAllUser("Token " + that.props.token)
+        })
+      }
+    })
   }
 
   togglePopup() {
     this.setState({showPopup: !this.state.showPopup});
-  }
-
-  addNewUser() {
-    if (this.state.selectedRole)
-      this.setState({
-            popupHeaderText: "Add A New",
-            popupBtnText: "Add"
-          },
-          () => {
-            this.togglePopup();
-          })
-    else alert("Please select a role.");
-
-  }
-
-  getAllUser(token) {
-    getAllUsers(token).then(data => {
-      this.setState({list: data.data})
-    })
-  }
-
-  loadFillData() {
-    if (this.state.list.length) {
-
-      return this.state.list.map(data => {
-        return (
-            <tr key={data.uid}>
-              <th>{data.username}</th>
-              <th>{data.firstname}</th>
-              <td>{data.lastname}</td>
-              <td>{data.role}</td>
-              <td>{<button className="btn btn-info" onClick={() => this.openUpdatePopup(data)}>Update</button>}</td>
-              <td>{<button className="btn btn-danger" onClick={() => this.deleteInfo(data.id)}>Delete</button>}</td>
-            </tr>
-        )
-      })
-    } else console.log("No data");
   }
 }

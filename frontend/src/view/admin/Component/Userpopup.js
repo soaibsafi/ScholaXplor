@@ -5,7 +5,9 @@ import Dropdown from "react-dropdown";
 import 'react-dropdown/style.css';
 
 const options = [
-  'Pupil', 'Teacher'
+  {value: 'Admin', label: 'Admin'},
+  {value: 'Pupil', label: 'Pupil'},
+  {value: 'Teacher', label: 'Teacher'}
 ];
 
 class userpopup extends React.Component {
@@ -22,8 +24,9 @@ class userpopup extends React.Component {
       password: ''
     }
     this.oninputChange = this.oninputChange.bind(this);
-    this.sendData = this.sendData.bind(this);
     this.onRoleSelect = this.onRoleSelect.bind(this);
+    this.setUserID = this.setUserID.bind(this);
+    this.sendData = this.sendData.bind(this);
   }
 
   render() {
@@ -95,7 +98,6 @@ class userpopup extends React.Component {
   }
 
   onRoleSelect(e) {
-    console.log(e);
     this.setState({selectedRole: e.value})
   }
 
@@ -126,12 +128,12 @@ class userpopup extends React.Component {
           data.password.length)
         this.props.addUser(data)
       else alert("No name provided");
+    } else {
+      if (data.firstname.length &&
+          data.lastname.length)
+        this.props.updateInfo(data);
+      else alert("Please Provide all information")
     }
-    // else {
-    //   if (data.fname.length && data.lname.length && data.dob)
-    //     this.props.updateUser(data);
-    //   else alert("Please Provide all information")
-    // }
   }
 }
 
