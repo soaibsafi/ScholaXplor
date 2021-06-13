@@ -1,6 +1,6 @@
 import React from "react";
 import Dropdown from "react-dropdown";
-import { getAllClass } from "../../../api/AdminAPI";
+import { getAllClass, getSubjectsDetails } from "../../../api/AdminAPI";
 import Userpopup from "./Userpopup";
 
 import style from "./UserTab.css";
@@ -14,11 +14,12 @@ export default class ClassTable extends React.Component {
     super(props);
 
     this.state = {
-      list: [],
+      subjectsDetails: [],
       allClasses: [],
     };
     this.loadFillData = this.loadFillData.bind(this);
     this.getAllClasses = this.getAllClasses.bind(this);
+    this.getAllSubjectsDetails = this.getAllSubjectsDetails.bind(this);
   }
 
   componentDidMount() {
@@ -33,54 +34,86 @@ export default class ClassTable extends React.Component {
       <div className="App">
         <h2 className={style.dropDown}>Class Managment</h2>
         <div className="row" style={{ width: 340 }}>
-          <select onChange={this.getAllClasses}>
-            <option value="Select a Class"> -- Select a Class -- </option>
-            {that.state.allClasses.map((classes, idx) => (
-              <option value={classes.cid} key={idx}>
-                {classes.classname}
-              </option>
-            ))}
-          </select>
-
+          <Dropdown
+            classname="style.dropDown"
+            options={that.state.allClasses}
+            onChange={this.getAllSubjectsDetails}
+            placeholder="Select a class"
+            placeholderClassName="myPlaceholderClassName"
+          />
           <button className="btn btn-success" onClick={this.addNewUser}>
             Add
           </button>
+        </div>
+        <div className="ag-theme-alpine" style={{ height: 400, width: 800 }}>
+          <table className="table table-hover table-striped">
+            <thead className="thead-dark">
+              <tr key={"user_key1"}>
+                <th scope="col">Subject</th>
+                <th scope="col">Status</th>
+                <th scope="col">Total Students</th>
+                <th scope="col">Teacher</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>{this.loadFillData()}</tbody>
+          </table>
         </div>
       </div>
     );
   }
 
-  getAllClasses(token) {
-    getAllClass(token).then((data) => {
-      this.setState({ allClasses: data.data });
-    });
-  }
-
   loadFillData() {
-    if (this.state.allClasses.length) {
-      return this.state.allClasses.map((data) => {
-        const { allClasses } = this.state;
+    if (this.state.subjectsDetails.length) {
+      return this.state.subjectsDetails.map((data, idx) => {
         return (
-          <select onChange={this.searchSubmit}>
-            <option value="-1">Select Class</option>
-            {allClasses.map((classes) => (
-              <option value={classes.cid} key={classes.cid}>
-                {classes.classname}
-              </option>
-            ))}
-          </select>
+          <tr key={idx}>
+            <th>{data.subjectname}</th>
+            <th>{data.status}</th>
+            <td>{data.totalstudent}</td>
+            <td>{data.fullname}</td>
+            <td>
+              {
+                <button
+                  className="btn btn-info"
+                  onClick={() => this.updateInfo(data)}
+                >
+                  Update
+                </button>
+              }
+            </td>
+            <td>
+              {
+                <button
+                  className="btn btn-danger"
+                  onClick={() => this.deleteInfo(data.id)}
+                >
+                  Delete
+                </button>
+              }
+            </td>
+          </tr>
         );
       });
     } else console.log("No data");
   }
 
-  //   getAllClasses(token) {
-  //     var tempList = [];
-  //     getAllClass(token).then((data) => {
-  //       data.data.map((info) => {
-  //         tempList.push(info.classname);
-  //       });
-  //       this.setState({ allClasses: tempList });
-  //     });
-  //   }
+  getAllClasses(token) {
+    var tempList = [];
+    getAllClass(token).then((data) => {
+      data.data.map((info) => {
+        var obj = { value: info.cid, label: info.classname };
+        tempList.push(obj);
+      });
+      this.setState({ allClasses: tempList });
+    });
+  }
+
+  getAllSubjectsDetails(e) {
+    var that = this;
+    getSubjectsDetails("token " + that.props.token, e.value).then((data) => {
+      that.setState({ subjectsDetails: data.data });
+    });
+  }
 }
