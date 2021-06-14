@@ -1,6 +1,13 @@
 import React from 'react';
 import Dropdown from "react-dropdown";
-import {getAllUsers, createNewUser, updateAUser} from '../../../api/AdminAPI'
+import {
+  getAllUsers,
+  createNewUser,
+  updateAUser,
+  checkDuplicateUsername,
+  getUsersByRole,
+  deleteAUser
+} from '../../../api/AdminAPI'
 import Userpopup from "./Userpopup";
 
 import style from './UserTab.css'
@@ -8,6 +15,7 @@ import '../../../App.css';
 import 'react-dropdown/style.css';
 
 const options = [
+  {value: 'ALL', label: 'All Users'},
   {value: 'Admin', label: 'Admin'},
   {value: 'Pupil', label: 'Pupil'},
   {value: 'Teacher', label: 'Teacher'}
@@ -29,18 +37,21 @@ export default class UserTab extends React.Component {
         lname: '',
         username: '',
         uid: ''
-      }
+      },
+      token: "token " + this.props.token
     }
     this.loadFillData = this.loadFillData.bind(this);
     this.getAllUser = this.getAllUser.bind(this);
     this.openNewUserPopup = this.openNewUserPopup.bind(this);
     this.onRoleSelect = this.onRoleSelect.bind(this);
     this.openUpdatePopup = this.openUpdatePopup.bind(this);
+    this.deleteInfo = this.deleteInfo.bind(this);
+    this.togglePopup = this.togglePopup.bind(this);
 
     /// Popup functions
     this.addUser = this.addUser.bind(this);
     this.updateInfo = this.updateInfo.bind(this);
-    this.togglePopup = this.togglePopup.bind(this);
+    this.closePopup = this.closePopup.bind(this);
   }
 
   componentDidMount() {
@@ -58,7 +69,7 @@ export default class UserTab extends React.Component {
             <Dropdown classname='style.dropDown'
                       options={options}
                       onChange={this.onRoleSelect}
-                      placeholder="Select an option"
+                      value={options[0]}
                       placeholderClassName='myPlaceholderClassName'/>
             <button className="btn btn-success" onClick={this.openNewUserPopup}>Add</button>
           </div>
@@ -78,15 +89,15 @@ export default class UserTab extends React.Component {
               {this.loadFillData()}
               </tbody>
             </table>
-          </div>: <label>No data</label>}
+          </div> : <label>No data</label>}
           {that.state.showPopup ?
               <Userpopup userinfo={that.state.userinfo}
                          selectedRole={that.state.selectedRole}
-                         closePopup={that.togglePopup.bind(this)}
                          popupHeaderText={that.state.popupHeaderText}
                          popupBtnText={that.state.popupBtnText}
                          updateInfo={that.updateInfo}
                          addUser={that.addUser}
+                         closePopup={that.closePopup}
               /> : null}
         </div>
     )
@@ -103,7 +114,7 @@ export default class UserTab extends React.Component {
               <td>{data.lastname}</td>
               <td>{data.role}</td>
               <td>{<button className="btn btn-info" onClick={() => this.openUpdatePopup(data)}>Update</button>}</td>
-              <td>{<button className="btn btn-danger" onClick={() => this.deleteInfo(data.id)}>Delete</button>}</td>
+              <td>{<button className="btn btn-danger" onClick={() => this.deleteInfo(data.uid)}>Delete</button>}</td>
             </tr>
         )
       })
@@ -120,7 +131,14 @@ export default class UserTab extends React.Component {
     if (this.state.selectedRole)
       this.setState({
             popupHeaderText: "Add A New",
-            popupBtnText: "Add"
+            popupBtnText: "Add",
+            userinfo: {
+              fname: "",
+              lname: "",
+              uid: "",
+              username: ""
+            },
+            selectedRole: ""
           },
           () => {
             this.togglePopup();
@@ -130,7 +148,19 @@ export default class UserTab extends React.Component {
   }
 
   onRoleSelect(e) {
-    this.setState({selectedRole: e.value})
+    var that = this;
+
+    this.setState({selectedRole: e.value}, () => {
+      if (e.value === 'ALL') {
+        that.getAllUser(that.state.token);
+      } else {
+        //debugger;
+        getUsersByRole(e.value, that.state.token).then(data => {
+          that.setState({list: data.data})
+        })
+      }
+    })
+
   }
 
   openUpdatePopup(data) {
@@ -149,38 +179,85 @@ export default class UserTab extends React.Component {
         () => {
           this.togglePopup();
         })
-    // updateUser(data).then(res => {
-    //   this.getAllInfo();
-    //
-    // })
   }
 
   addUser(data) {
     var that = this;
-    createNewUser(data, "token " + that.props.token).then(data => {
-      if (data.status === "SUCCESS") {
-        that.togglePopup();
-        that.setState({list:[]},() =>{
-          that.getAllUser("Token " + that.props.token)
+    checkDuplicateUsername(data.username, that.state.token).then(response => {
+      if (!response.data.length)
+        createNewUser(data, that.state.token).then(data => {
+          if (data.status === "SUCCESS") {
+            that.togglePopup();
+            that.setState({
+              list: [],
+              popupHeaderText: "",
+              popupBtnText: "",
+              userinfo: {
+                fname: "",
+                lname: "",
+                uid: "",
+                username: ""
+              },
+              selectedRole: ""}, () => {
+              that.getAllUser(that.state.token)
+            })
+          } else {
+            alert("Error!!")
+          }
         })
-
-      }
-      else {
-        alert("Error!!")
-      }
+      else alert("This username is already existed");
     })
+
   }
 
   updateInfo(data) {
     var that = this;
-    updateAUser(data, "Token " + that.props.token).then(response => {
+    updateAUser(data, that.state.token).then(response => {
       if (response.status === "SUCCESS") {
         that.togglePopup();
-        that.setState({list:[]},() =>{
-          that.getAllUser("Token " + that.props.token)
+        that.setState({
+          list: [],
+          popupHeaderText: "",
+          popupBtnText: "",
+          userinfo: {
+            fname: "",
+            lname: "",
+            uid: "",
+            username: ""
+          },
+          selectedRole: ""}, () => {
+          that.getAllUser(that.state.token)
         })
       }
     })
+  }
+
+  deleteInfo(uid) {
+    var that = this;
+
+    if (!window.confirm("Do you really want to delete it?")) return;
+    deleteAUser(uid, that.state.token).then(data => {
+      alert(data.message);
+      that.getAllUser(that.state.token);
+    })
+  }
+
+  closePopup(){
+    this.setState({
+          popupHeaderText: "",
+          popupBtnText: "",
+          userinfo: {
+            fname: "",
+            lname: "",
+            uid: "",
+            username: ""
+          },
+          selectedRole: ""
+
+        },
+        () => {
+          this.togglePopup();
+        })
   }
 
   togglePopup() {
