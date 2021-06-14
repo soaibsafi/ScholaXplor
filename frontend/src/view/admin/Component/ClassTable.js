@@ -39,7 +39,7 @@ export default class ClassTable extends React.Component {
     this.addClass = this.addClass.bind(this);
     this.updateInfo = this.updateInfo.bind(this);
     this.closePopup = this.closePopup.bind(this);
-    
+
   }
 
   componentDidMount() {
@@ -67,7 +67,7 @@ export default class ClassTable extends React.Component {
           <button className="btn btn-info" onClick={() => this.openUpdatePopup(that.state.classinfo)}>
             Update
           </button>
-          
+
           <button className="btn  btn-danger" onClick={() => this.deleteInfo()}>
             Delete
           </button>
@@ -94,7 +94,7 @@ export default class ClassTable extends React.Component {
             popupBtnText={that.state.popupBtnText}
             updateInfo={that.updateInfo}
             addClass={that.addClass}
-            closePopup={that.closePopup}
+            // closePopup={that.closePopup}
           />
         ) : null}
       </div>
@@ -129,19 +129,14 @@ export default class ClassTable extends React.Component {
 
   getAllSubjectsDetails(e) {
     var that = this;
-    
-    console.log(that.state.classinfo)
+
     getSubjectsDetails("token " + that.props.token, e).then((data) => {
       var obj = {
         cid: e.value,
         classname: e.label
       }
-      
-      that.setState({classinfo: obj, subjectsDetails: data.data }, ()=>{
-        console.log(that.state.classinfo)
-        debugger
-      })
-      
+      that.setState({classinfo: obj, subjectsDetails: data.data })
+
       //console.log(this.state.selectedClass)
     });
   }
@@ -168,9 +163,12 @@ export default class ClassTable extends React.Component {
         that.togglePopup();
         that.setState({
           //allClasses: [],
-          popupHeaderText: "Update",
-          popupBtnText: "Update",
-          
+          popupHeaderText: "",
+          popupBtnText: "",
+          classinfo:{
+            cid:"",
+            classname:""
+          },
           selectedClass: ""}, () => {
           that.getAllClass(that.state.token)
         })
@@ -196,8 +194,8 @@ export default class ClassTable extends React.Component {
           popupBtnText: "Update",
           classinfo: {
             cid: data.cid,
-            classname: data.classanme
-          },
+            classname: data.classname
+          }
         },
         () => {
           this.togglePopup();

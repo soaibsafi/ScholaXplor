@@ -14,7 +14,6 @@ class classpopup extends React.Component {
 
   constructor(props) {
     super(props);
-
     this.state = {
       classname: this.props.classinfo.classname,
       cid: this.props.classinfo.cid,
@@ -28,7 +27,6 @@ class classpopup extends React.Component {
 
   render() {
     var that = this;
-    console.log(that.state)
     return (
         <div className='popup'>
           <div className='App popup_inner'>
