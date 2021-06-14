@@ -39,6 +39,7 @@ User.getAll = (result) => {
 };
 
 
+
 User.findById = (userId, result) => {
   //var query = "Select * from User where uid ='" +userId+ "'";
   sql.query("SELECT * FROM User WHERE uid ='" + userId + "'", (err, res) => {
@@ -50,6 +51,25 @@ User.findById = (userId, result) => {
 
     if (res.length) {
       console.log("found customer: ", res[0]);
+      result(null, res[0]);
+      return;
+    }
+
+    // not found Customer with the id
+    result({ kind: "not_found" }, null);
+  });
+};
+
+User.searchPupil = (sp, result) => {
+  sql.query("SELECT * from User where role='pupil' AND uid NOT IN (SELECT DISTINCT uid FROM ClassStudent) AND (firstname LIKE '%"+sp+"%' OR lastname LIKE '%"+sp+"%')", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+
+    if (res.length) {
+      console.log("found pupil: ", res[0]);
       result(null, res[0]);
       return;
     }

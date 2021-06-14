@@ -5,9 +5,7 @@ import Dropdown from "react-dropdown";
 import 'react-dropdown/style.css';
 
 const options = [
-  {value: 'Admin', label: 'Admin'},
-  {value: 'Pupil', label: 'Pupil'},
-  {value: 'Teacher', label: 'Teacher'}
+  'Admin', 'Pupil', 'Teacher'
 ];
 
 class userpopup extends React.Component {
@@ -27,6 +25,8 @@ class userpopup extends React.Component {
     this.onRoleSelect = this.onRoleSelect.bind(this);
     this.setUserID = this.setUserID.bind(this);
     this.sendData = this.sendData.bind(this);
+    this.resetState = this.resetState.bind(this);
+    this.close = this.close.bind(this);
   }
 
   render() {
@@ -36,7 +36,7 @@ class userpopup extends React.Component {
           <div className='App popup_inner'>
             <h2>{that.props.popupHeaderText + " " + (that.props.popupHeaderText !== "Update" ? that.props.selectedRole : '')}</h2>
             <div style={{alignItem: 'left'}}>
-
+              {console.log(options.indexOf(that.state.selectedRole))}
               {that.props.popupHeaderText === "Update" ?
                   <Dropdown classname='style.dropDown'
                             value={options[options.indexOf(that.state.selectedRole)]}
@@ -72,10 +72,26 @@ class userpopup extends React.Component {
                   </div> : null}
             </div>
             <button className='btn btn-primary' onClick={that.sendData}>{this.props.popupBtnText}</button>
-            <button className='btn btn-danger' onClick={that.props.closePopup}>{"Close"}</button>
+            <button className='btn btn-danger' onClick={this.close}>{"Close"}</button>
           </div>
         </div>
     )
+  }
+
+  close(){
+    this.resetState();
+    this.props.closePopup();
+  }
+
+  resetState(){
+    this.setState({
+      fname: "",
+      lname: "",
+      username: "",
+      uid: "",
+      selectedRole: "",
+      password: ''
+    })
   }
 
   oninputChange(key, e) {
@@ -121,6 +137,7 @@ class userpopup extends React.Component {
       "uid": this.state.uid
     }
 
+    this.resetState();
     if (this.props.popupBtnText === "Add") {
       if (data.firstname.length &&
           data.lastname.length &&

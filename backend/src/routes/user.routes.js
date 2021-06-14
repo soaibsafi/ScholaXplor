@@ -8,6 +8,7 @@ module.exports = app => {
     app.get("/user/getUserByRole/:role", userMiddleware.isAdminLoggedIn, user.findUserByRole);
     app.get('/usercheck/:username', userMiddleware.isAdminLoggedIn, user.checkDuplicateUsername);
     app.get("/users", userMiddleware.isAdminLoggedIn, user.findAll);
+    app.get('/search-pupil/:sParam', user.searchAllPupil)
 
     app.post("/user/", userMiddleware.isAdminLoggedIn, user.createUser);
     app.put("/user/:uid", userMiddleware.isAdminLoggedIn, user.update);

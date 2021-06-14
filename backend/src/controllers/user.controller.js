@@ -187,3 +187,22 @@ exports.checkDuplicateUsername = (req, res) => {
       });
   });
 }
+
+
+exports.searchAllPupil = (req, res) => {
+  User.searchPupil(req.params.sParam, (err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving customers.",
+        status: "FAILED",
+        statusCode: 500,
+      });
+    else
+      res.status(200).send({
+        data: data,
+        status: "SUCCESS",
+        statusCode: 200,
+      });
+  });
+};
