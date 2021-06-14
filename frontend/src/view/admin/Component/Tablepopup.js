@@ -18,6 +18,7 @@ class classpopup extends React.Component {
     this.state = {
       classname: this.props.classinfo.classname,
       cid: this.props.classinfo.cid,
+      selectedClass: this.props.selectedClass,
     }
     this.oninputChange = this.oninputChange.bind(this);
     this.setClassID = this.setClassID.bind(this);
@@ -27,17 +28,18 @@ class classpopup extends React.Component {
 
   render() {
     var that = this;
+    console.log(that.state)
     return (
         <div className='popup'>
           <div className='App popup_inner'>
             <h2>{that.props.popupHeaderText + " " + (that.props.popupHeaderText !== "Update" ? that.props.selectedRole : '')}</h2>
             <div style={{alignItem: 'left'}}>
-
+            {console.log(that.props.popupHeaderText)}
               <label>Class Name</label><br/>
-              {that.props.popupHeaderText === "Update" ?
-                  <label>{this.state.username}</label> :
-                  <input className="form-control" type="text" name="classname"
-                         onChange={that.oninputChange.bind(this, "classname")}
+              {that.props.popupHeaderText !== "Update" ?
+                  <label>{this.state.classname}</label> :
+                  <input className="form-control" type="text" name="classname" defaultValue={that.state.classname}
+                     onChange={that.oninputChange.bind(this, "classname")}
                   />}
             </div>
             <button className='btn btn-primary' onClick={that.sendData}>{this.props.popupBtnText}</button>
@@ -57,8 +59,8 @@ class classpopup extends React.Component {
     }
   }
 
-  onRoleSelect(e) {
-    this.setState({selectedRole: e.value})
+  onClassSelect(e) {
+    this.setState({selectedClass: e.value})
   }
 
   setClassID(){
@@ -68,13 +70,15 @@ class classpopup extends React.Component {
   sendData() {
     var data = this.props.popupBtnText === "Add" ? {
       "classname": this.state.classname,
-      "cid": this.setClassID()
+      "cid": this.setClassID(),
+      "selectedClass" : this.state.selectedClass
 
     } : {
       "classname": this.state.classname,
-      "cid": this.state.cid
+      "cid": this.state.cid,
+      "selectedClass" : this.state.selectedClass
     }
-
+    this.resetState();
     if (this.props.popupBtnText === "Add") {
       if (data.classname.length)
         this.props.addClass(data)
@@ -85,6 +89,40 @@ class classpopup extends React.Component {
       else alert("Please Provide all information")
     }
   }
+
+  close(){
+    this.resetState();
+    this.props.closePopup();
+  }
+
+  resetState(){
+    this.setState({
+      classname: "",
+      cid: "",
+      selectedClass: "",
+    })
+  }
+
+  oninputChange(key, e) {
+    switch (key) {
+      case "username":
+        this.setState({username: e.target.value});
+        break;
+      case "fname":
+        this.setState({fname: e.target.value});
+        break;
+      case "lname":
+        this.setState({lname: e.target.value});
+        break;
+      case "password":
+        this.setState({password: e.target.value});
+        break;
+      default:
+        break;
+    }
+  }
+
+
 }
 
 export default classpopup;

@@ -47,13 +47,13 @@ exports.updateById = (req, res) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(200).send({
-          message: `Not found Customer with id ${req.params.userId}.`,
+          message: `Not found Customer with id ${req.params.classId}.`,
           status: "FAILED",
           statusCode: 404,
         });
       } else {
         res.status(200).send({
-          message: "Error retrieving Customer with id " + req.params.userId,
+          message: "Error retrieving Customer with id " + req.params.classId,
           status: "FAILED",
           statusCode: 500,
         });

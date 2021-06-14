@@ -4,6 +4,7 @@ import {
   getAllClass,
   getSubjectsDetails,
   createNewClass,
+  updateAClass,
 } from "../../../api/AdminAPI";
 import Tablepopup from "./Tablepopup";
 
@@ -21,7 +22,7 @@ export default class ClassTable extends React.Component {
       subjectsDetails: [],
       allClasses: [],
       showPopup: false,
-      selectedRole: "",
+      selectedClass: "",
       popupHeaderText: "",
       popupBtnText: "",
       classinfo: {
@@ -36,6 +37,8 @@ export default class ClassTable extends React.Component {
 
     //Popup functions
     this.addClass = this.addClass.bind(this);
+    this.updateInfo = this.updateInfo.bind(this);
+    this.closePopup = this.closePopup.bind(this);
     
   }
 
@@ -46,7 +49,7 @@ export default class ClassTable extends React.Component {
 
   render() {
     var that = this;
-    console.log(that.state.allClasses);
+    //console.log(that.state.allClasses);
     return (
       <div className="App">
         <h2 className={style.dropDown}>Class Managment</h2>
@@ -60,6 +63,13 @@ export default class ClassTable extends React.Component {
           />
           <button className="btn btn-success" onClick={this.openNewClassPopup}>
             Add
+          </button>
+          <button className="btn btn-info" onClick={() => this.openUpdatePopup(that.state.classinfo)}>
+            Update
+          </button>
+          
+          <button className="btn  btn-danger" onClick={() => this.deleteInfo()}>
+            Delete
           </button>
         </div>
         <div className="ag-theme-alpine" style={{ height: 400, width: 800 }}>
@@ -78,12 +88,13 @@ export default class ClassTable extends React.Component {
         {that.state.showPopup ? (
           <Tablepopup
             classinfo={that.state.classinfo}
-            selectedRole={that.state.selectedRole}
+            selectedClass={that.state.selectedClass}
             closePopup={that.togglePopup.bind(this)}
             popupHeaderText={that.state.popupHeaderText}
             popupBtnText={that.state.popupBtnText}
             updateInfo={that.updateInfo}
             addClass={that.addClass}
+            closePopup={that.closePopup}
           />
         ) : null}
       </div>
@@ -102,7 +113,7 @@ export default class ClassTable extends React.Component {
           </tr>
         );
       });
-    } else console.log("No data");
+    } //else console.log("No data");
   }
 
   getAllClasses(token) {
@@ -118,8 +129,20 @@ export default class ClassTable extends React.Component {
 
   getAllSubjectsDetails(e) {
     var that = this;
-    getSubjectsDetails("token " + that.props.token, e.value).then((data) => {
-      that.setState({ subjectsDetails: data.data });
+    
+    console.log(that.state.classinfo)
+    getSubjectsDetails("token " + that.props.token, e).then((data) => {
+      var obj = {
+        cid: e.value,
+        classname: e.label
+      }
+      
+      that.setState({classinfo: obj, subjectsDetails: data.data }, ()=>{
+        console.log(that.state.classinfo)
+        debugger
+      })
+      
+      //console.log(this.state.selectedClass)
     });
   }
 
@@ -137,6 +160,24 @@ export default class ClassTable extends React.Component {
     });
   }
 
+  updateInfo(data) {
+    var that = this;
+    console.log(data)
+    updateAClass(data, that.state.token).then(response => {
+      if (response.status === "SUCCESS") {
+        that.togglePopup();
+        that.setState({
+          //allClasses: [],
+          popupHeaderText: "Update",
+          popupBtnText: "Update",
+          
+          selectedClass: ""}, () => {
+          that.getAllClass(that.state.token)
+        })
+      }
+    })
+  }
+
   openNewClassPopup() {
     this.setState(
       {
@@ -148,6 +189,37 @@ export default class ClassTable extends React.Component {
       }
     );
   }
+
+  openUpdatePopup(data) {
+    this.setState({
+          popupHeaderText: "Update",
+          popupBtnText: "Update",
+          classinfo: {
+            cid: data.cid,
+            classname: data.classanme
+          },
+        },
+        () => {
+          this.togglePopup();
+        })
+  }
+
+  closePopup(){
+    this.setState({
+          popupHeaderText: "",
+          popupBtnText: "",
+          classinfo: {
+            classname: "",
+            cid: ""
+          },
+          selectedClass: ""
+
+        },
+        () => {
+          this.togglePopup();
+        })
+  }
+
 
   togglePopup() {
     this.setState({ showPopup: !this.state.showPopup });

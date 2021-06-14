@@ -135,3 +135,17 @@ export async function createNewClass(classObj,token){
     console.log(error)
   }
 }
+
+export async function updateAClass(classObj, token){
+  url = host + "class/"+ classObj.cid;
+  try{
+    const response = await axios.put(url, classObj,{
+      headers: {
+        'Authorization': token
+      }
+    });
+    return response.data
+  }catch(error){
+    console.log(error)
+  }
+}

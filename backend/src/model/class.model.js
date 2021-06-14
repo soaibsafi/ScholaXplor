@@ -21,7 +21,7 @@ Class.create = (newClass, result) => {
 Class.updateOne = (cid, class_c, result) => {
   sql.query(
     "UPDATE Class SET classname = ? WHERE cid = ?",
-    [class_c.classname, class_c.cid],
+    [class_c.classname, cid],
     (err, res) => {
       if (err) {
         console.log("error: ", err);
