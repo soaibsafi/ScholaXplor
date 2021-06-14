@@ -33,6 +33,7 @@
   bottom: 25%;
   margin: auto;
   background: white;
+  border-radius: 20px;
 }
 
 .App-header {
@@ -57,4 +58,15 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+
+.custom_pop{
+
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: space-around;
+  padding: 50px 150px;
 }

@@ -1,0 +1,16 @@
+.dropDown {
+    width: 250px
+}
+
+.add-subject-area{
+   
+  width:fit-content;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: space-around;
+  padding: 20px 70px;
+  border: 1px solid gray;
+  border-radius: 10px;
+}

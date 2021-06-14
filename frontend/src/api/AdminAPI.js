@@ -18,7 +18,7 @@ export async function getAllUsers(token){
 }
 
 export async function getAllClass(token){
-  url = host + "class";
+  url = host + "class/";
   try{
     const response = await  axios.get(url,{
       headers: {
