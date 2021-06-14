@@ -11,7 +11,7 @@ module.exports = app => {
 
     app.post("/user/", userMiddleware.isAdminLoggedIn, user.createUser);
     app.put("/user/:uid", userMiddleware.isAdminLoggedIn, user.update);
-    app.delete("/user/:uid", userMiddleware.isAdminLoggedIn, user.delete);
+    app.delete("/user/:uid", user.delete);
 
     // app.get('/user/:userId', user.findOne);
   };

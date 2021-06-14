@@ -41,7 +41,7 @@ User.getAll = (result) => {
 
 User.findById = (userId, result) => {
   //var query = "Select * from User where uid ='" +userId+ "'";
-  sql.query("SELECT * FROM User WHERE uid ='" +userId+ "'", (err, res) => {
+  sql.query("SELECT * FROM User WHERE uid ='" + userId + "'", (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -61,50 +61,30 @@ User.findById = (userId, result) => {
 
 
 User.getAllByRole = (role, result) => {
-    var query = "SELECT * FROM User WHERE role ='" +role+ "'";
-    sql.query(query, (err, res) => {
-      if (err) {
-        console.log("error: ", err);
-        result(err, null);
-        return;
-      }
+  var query = "SELECT * FROM User WHERE role ='" + role + "'";
+  sql.query(query, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
 
-      if (res.length) {
-        console.log("found user: ", res);
-        result(null, res);
-        return;
-      }
+    if (res.length) {
+      console.log("found user: ", res);
+      result(null, res);
+      return;
+    }
 
-      // not found Customer with the id
-      result({ kind: "not_found" }, null);
-    });
-  };
+    // not found Customer with the id
+    result({ kind: "not_found" }, null);
+  });
+};
 
-  User.updateByUid = (uid, user, result) => {
-    sql.query(
-      "UPDATE User SET firstname = ?, lastname = ?, role = ? WHERE uid = ?",
-      [user.firstname, user.lastname, user.role, uid],
-      (err, res) => {
-        if (err) {
-          console.log("error: ", err);
-          result(null, err);
-          return;
-        }
-
-        if (res.affectedRows == 0) {
-          // not found User with the uid
-          result({ kind: "not_found" }, null);
-          return;
-        }
-
-        console.log("updated user: ", { uid: uid, ...user });
-        result(null, { uid: uid, ...user });
-      }
-    );
-  };
-
-  User.removeByUid = (uid, result) => {
-    sql.query("DELETE FROM User WHERE uid = ?", uid, (err, res) => {
+User.updateByUid = (uid, user, result) => {
+  sql.query(
+    "UPDATE User SET firstname = ?, lastname = ?, role = ? WHERE uid = ?",
+    [user.firstname, user.lastname, user.role, uid],
+    (err, res) => {
       if (err) {
         console.log("error: ", err);
         result(null, err);
@@ -117,29 +97,163 @@ User.getAllByRole = (role, result) => {
         return;
       }
 
-      console.log("deleted user with uid: ", uid);
-      result(null, res);
-    });
-  };
+      console.log("updated user: ", { uid: uid, ...user });
+      result(null, { uid: uid, ...user });
+    }
+  );
+};
 
-  User.duplicateUsername = (username, result) => {
 
-    sql.query("SELECT * FROM User WHERE username= ? ", username,(err,res)=>{
-      if(err){
-        console.log("error: ", err);
-        result(null, err);
-        return;
-      }
+User.removeByUid = (uid, result) => {
 
-      if (res.affectedRows == 0) {
-        result({ kind: "not_found" }, null);
-        return;
-      }
-      // console.log("user with ", username);
-      result(null, res);
+  var userRole = "";
+  //Fetch role from uid
+  sql.query("SELECT role FROM User WHERE uid ='" + uid + "'", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
 
-    })
+    if (res.length) {
+      console.log("found user: ", res[0]);
+      userRole = JSON.stringify(res[0].role).replace("\"", "").replace("\"", "");
+    }
+    //User as a teacher
+    if (userRole === "Teacher") {
 
-  }
+      var isFound = 0;
+      //Check if teacher has assigned into one subject and not archieved
+      sql.query("SELECT * FROM Subject WHERE uid ='" + uid + "' AND status='Not Archived'", (err, res) => {
+        if (err) {
+          console.log("error: ", err);
+          result(null, err);
+          isFound = 1;
+          return;
+        }
+
+        if (res.length) {
+          console.log("found assigned subject and not archived (user cannot be deleted): ", res);
+          result({ kind: "found_assign" }, null);
+          isFound = 1;
+          return;
+        }
+        //If archived or no data at Subject table then delete the user 
+        if (isFound === 0) {
+          sql.query("SET FOREIGN_KEY_CHECKS=0;", (err, res) => {
+            if (err) {
+              console.log("error: ", err);
+              result(null, err);
+              return;
+            }
+          });
+
+          sql.query("DELETE FROM User WHERE uid = ?", uid, (err, res) => {
+            if (err) {
+              console.log("error: ", err);
+              result(null, err);
+              return;
+            }
+          });
+
+          sql.query("DELETE FROM AssignedSubject WHERE uid = ?", uid, (err, res) => {
+            if (err) {
+              console.log("error: ", err);
+              result(null, err);
+              return;
+            }
+          });
+
+          sql.query("SET FOREIGN_KEY_CHECKS=1;", (err, res) => {
+            if (err) {
+              console.log("error: ", err);
+              result(null, err);
+              return;
+            }
+
+            console.log("deleted user with uid: ", uid);
+            result(null, res);
+          });
+        }
+      });
+      //User as a Pupil
+    } else if (userRole === "Pupil") {
+
+      sql.query("SET FOREIGN_KEY_CHECKS=0;", (err, res) => {
+        if (err) {
+          console.log("error: ", err);
+          result(null, err);
+          return;
+        }
+      });
+      //Delete Pupil from User table
+      sql.query("DELETE FROM User WHERE uid = ?", uid, (err, res) => {
+        if (err) {
+          console.log("error: ", err);
+          result(null, err);
+          return;
+        }
+        //Delete Pupil from ClassStudent
+        sql.query("DELETE FROM ClassStudent WHERE uid = ?", uid, (err, res) => {
+          if (err) {
+            console.log("error: ", err);
+            result(null, err);
+            return;
+          }
+        });
+
+        sql.query("SET FOREIGN_KEY_CHECKS=1;", (err, res) => {
+          if (err) {
+            console.log("error: ", err);
+            result(null, err);
+            return;
+          }
+        });
+
+        console.log("deleted user with uid: ", uid);
+        result(null, res);
+      });
+      //User as an Admin
+    } else {
+      sql.query("DELETE FROM User WHERE uid = ?", uid, (err, res) => {
+        if (err) {
+          console.log("error: ", err);
+          result(null, err);
+          return;
+        }
+
+        if (res.affectedRows == 0) {
+          // not found User with the uid
+          result({ kind: "not_found" }, null);
+          return;
+        }
+
+        console.log("deleted user with uid: ", uid);
+        result(null, res);
+      });
+    }
+  });
+};
+
+
+User.duplicateUsername = (username, result) => {
+
+  sql.query("SELECT * FROM User WHERE username= ? ", username, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+
+    if (res.affectedRows == 0) {
+      result({ kind: "not_found" }, null);
+      return;
+    }
+    // console.log("user with ", username);
+    result(null, res);
+
+  })
+
+}
 
 module.exports = User;
