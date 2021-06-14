@@ -43,7 +43,7 @@ exports.updateById = (req, res) => {
     });
   }
 
-  Class.updateOne(req.params.classId, new Class(req.body), (err, data) => {
+  Class.updateOne( new Class(req.body), (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(200).send({

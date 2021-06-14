@@ -101,26 +101,6 @@ class classpopup extends React.Component {
     })
   }
 
-  oninputChange(key, e) {
-    switch (key) {
-      case "username":
-        this.setState({username: e.target.value});
-        break;
-      case "fname":
-        this.setState({fname: e.target.value});
-        break;
-      case "lname":
-        this.setState({lname: e.target.value});
-        break;
-      case "password":
-        this.setState({password: e.target.value});
-        break;
-      default:
-        break;
-    }
-  }
-
-
 }
 
 export default classpopup;

@@ -138,6 +138,7 @@ export async function createNewClass(classObj,token){
 
 export async function updateAClass(classObj, token){
   url = host + "class/"+ classObj.cid;
+  
   try{
     const response = await axios.put(url, classObj,{
       headers: {
@@ -146,6 +147,6 @@ export async function updateAClass(classObj, token){
     });
     return response.data
   }catch(error){
-    console.log(error)
+    console.log("Error Res: "+error)
   }
 }

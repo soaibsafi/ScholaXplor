@@ -29,6 +29,7 @@ export default class ClassTable extends React.Component {
         classname: "",
         cid: "",
       },
+      token: "token " + this.props.token
     };
     this.loadFillData = this.loadFillData.bind(this);
     this.getAllClasses = this.getAllClasses.bind(this);
@@ -169,8 +170,8 @@ export default class ClassTable extends React.Component {
             cid:"",
             classname:""
           },
-          selectedClass: ""}, () => {
-          that.getAllClass(that.state.token)
+          allClasses: [] }, () => {
+            that.getAllClasses("Token " + that.props.token)
         })
       }
     })
