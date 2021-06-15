@@ -1,13 +1,13 @@
 const sql = require("../model/db");
 
 const ClassPupil = function (classPupil) {
-  this.csid = classPupil.cid;
+  this.csid = classPupil.csid;
   this.uid = classPupil.uid;
   this.cid = classPupil.cid;
 };
 
-ClassPupil.assignNewPupil = (newClass, result) => {
-  sql.query("INSERT INTO Class SET ?", newClass, (err, res) => {
+ClassPupil.assignNewPupil = (newClassPupil, result) => {
+  sql.query("INSERT INTO ClassStudent SET ?", newClassPupil, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -15,14 +15,14 @@ ClassPupil.assignNewPupil = (newClass, result) => {
     }
 
     // console.log("Created Class: ", { ...newClass });
-    result(null, { ...newClass });
+    result(null, { ...newClassPupil });
   });
 };
 
-ClassPupil.updatePupilAssign = (class_c, result) => {
+ClassPupil.updatePupilAssign = (uid, classPupil, result) => {
   sql.query(
-    "UPDATE Class SET classname = ? WHERE cid = ?",
-    [class_c.classname, class_c.cid],
+    "UPDATE ClassStudent SET cid = ? WHERE uid = ?",
+    [classPupil.cid, uid],
     (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -37,7 +37,7 @@ ClassPupil.updatePupilAssign = (class_c, result) => {
       }
 
       //console.log("Updated Class: ", { id: cid, ...class_c });
-      result(null, { ...class_c });
+      result(null, { ...classPupil });
     }
   );
 };
