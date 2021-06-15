@@ -103,6 +103,19 @@ export async function searchPupil(str, token){
   }catch(error){
     console.log(error);
   }
+}export async function getPupilByClass(cid, token){
+  url = host + "users/class/" + cid;
+  try{
+    const response = await  axios.get(url,{
+      headers: {
+        'Authorization': token
+      }
+    });
+    // debugger;
+    return response.data;
+  }catch(error){
+    console.log(error);
+  }
 }
 
 
@@ -153,7 +166,7 @@ export async function createNewClass(classObj,token){
 
 export async function updateAClass(classObj, token){
   url = host + "class/"+ classObj.cid;
-  
+
   try{
     const response = await axios.put(url, classObj,{
       headers: {
@@ -191,7 +204,7 @@ export async function getSubjectClassTeacherTogether(cid, token){
       //   'Authorization': token
       // }
     });
-    
+
     return response.data;
   }catch(error){
     console.log(error);

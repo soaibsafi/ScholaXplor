@@ -13,7 +13,7 @@ import style from "./UserTab.css";
 import "../../../App.css";
 import "react-dropdown/style.css";
 
-const options = ["Pupil", "Teacher"];
+// const options = ["Pupil", "Teacher"];
 
 export default class ClassTable extends React.Component {
   constructor(props) {
@@ -121,7 +121,7 @@ export default class ClassTable extends React.Component {
   getAllClasses(token) {
     var tempList = [];
     getAllClass(token).then((data) => {
-      data.data.map((info) => {
+      data.data.forEach((info) => {
         var obj = { value: info.cid, label: info.classname };
         tempList.push(obj);
       });

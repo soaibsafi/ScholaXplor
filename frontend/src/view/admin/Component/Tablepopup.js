@@ -1,14 +1,14 @@
 import React from "react";
 import "../../../App.css";
-import Dropdown from "react-dropdown";
+// import Dropdown from "react-dropdown";
 
-import "react-dropdown/style.css";
+// import "react-dropdown/style.css";
 
-const options = [
-  { value: "Admin", label: "Admin" },
-  { value: "Pupil", label: "Pupil" },
-  { value: "Teacher", label: "Teacher" },
-];
+// const options = [
+//   { value: "Admin", label: "Admin" },
+//   { value: "Pupil", label: "Pupil" },
+//   { value: "Teacher", label: "Teacher" },
+// ];
 
 class classpopup extends React.Component {
   constructor(props) {
