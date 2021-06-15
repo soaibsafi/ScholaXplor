@@ -276,4 +276,17 @@ User.duplicateUsername = (username, result) => {
 
 }
 
+User.getPupilByClassId = (cid, result) => {
+  var query = "SELECT u.username, u.firstname as fname, u.lastname as lname, (SELECT classname from Class where cid = ?) as classname from ClassStudent cs INNER JOIN User u ON cs.uid = u.uid WHERE cs.cid = ? and u.role ='Pupil'"
+  sql.query(query, [cid, cid], (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    console.log("class: ", res);
+    result(null, res);
+  });
+};
+
 module.exports = User;

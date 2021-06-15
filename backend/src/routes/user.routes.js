@@ -9,6 +9,7 @@ module.exports = app => {
     app.get('/usercheck/:username', userMiddleware.isAdminLoggedIn, user.checkDuplicateUsername);
     app.get("/users", userMiddleware.isAdminLoggedIn, user.findAll);
     app.get('/search-pupil/:sParam', userMiddleware.isAdminLoggedIn, user.searchAllPupil)
+    app.get('/users/class/:cid', userMiddleware.isAdminLoggedIn, user.getAllPupilByClassId)
 
     app.post("/user/", userMiddleware.isAdminLoggedIn, user.createUser);
     app.put("/user/:uid", userMiddleware.isAdminLoggedIn, user.update);

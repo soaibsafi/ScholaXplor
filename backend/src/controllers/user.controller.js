@@ -207,3 +207,21 @@ exports.searchAllPupil = (req, res) => {
       });
   });
 };
+
+
+exports.getAllPupilByClassId = (req, res) => {
+  User.getPupilByClassId(req.params.cid, (err, data) => {
+    if (err)
+      res.status(200).send({
+        message: err.message || "Some error occurred while retrieving users.",
+        status: "FAILED",
+        statusCode: 500,
+      });
+    else
+      res.status(200).send({
+        data: data,
+        status: "SUCCESS",
+        statusCode: 200,
+      });
+  });
+};
