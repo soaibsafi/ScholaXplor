@@ -3,6 +3,7 @@ import {login} from "../api/APIUtils";
 
 const redirectadminpath = '/adminpanel';
 const redirectteacherpath = '/teacherpanel';
+const redirectpupilpath = '/pupilpanel';
 
 class loginView extends React.Component{
 
@@ -31,6 +32,8 @@ class loginView extends React.Component{
       if(response.status === 'SUCCESS' ) {
         if(response.role === "Admin" )that.props.history.push({pathname:redirectadminpath, state: {token:response.token}});
         else if(response.role === "Teacher") that.props.history.push({pathname:redirectteacherpath, state: {token:response.token}});
+        else that.props.history.push({pathname:redirectpupilpath, state: {token:response.token}});
+
       }
       else alert("Login falied!")
     }).catch(err => {console.log(err)});
