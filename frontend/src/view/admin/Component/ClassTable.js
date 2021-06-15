@@ -159,7 +159,7 @@ export default class ClassTable extends React.Component {
 
   updateInfo(data) {
     var that = this;
-    console.log(data)
+    //console.log(data)
     updateAClass(data, that.state.token).then(response => {
       if (response.status === "SUCCESS") {
         that.togglePopup();
