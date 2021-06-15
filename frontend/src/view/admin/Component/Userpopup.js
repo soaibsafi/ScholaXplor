@@ -37,13 +37,13 @@ class userpopup extends React.Component {
             <h2>{that.props.popupHeaderText + " " + (that.props.popupHeaderText !== "Update" ? that.props.selectedRole : '')}</h2>
             <div style={{alignItem: 'left'}}>
               {console.log(options.indexOf(that.state.selectedRole))}
-              {that.props.popupHeaderText === "Update" ?
-                  <Dropdown classname='style.dropDown'
-                            value={options[options.indexOf(that.state.selectedRole)]}
-                            options={options}
-                            onChange={that.onRoleSelect}
-                            placeholder="Select an option"
-                            placeholderClassName='myPlaceholderClassName'/> : null}
+              {/*{that.props.popupHeaderText === "Update" ?*/}
+              {/*    <Dropdown classname='style.dropDown'*/}
+              {/*              value={options[options.indexOf(that.state.selectedRole)]}*/}
+              {/*              options={options}*/}
+              {/*              onChange={that.onRoleSelect}*/}
+              {/*              placeholder="Select an option"*/}
+              {/*              placeholderClassName='myPlaceholderClassName'/> : null}*/}
 
               <label> User name</label><br/>
               {that.props.popupHeaderText === "Update" ?

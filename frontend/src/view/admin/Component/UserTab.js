@@ -63,7 +63,6 @@ export default class UserTab extends React.Component {
     var that = this;
     return (
         <div className="App">
-
           <h2 className={style.dropDown}>User Managment</h2>
           <div className='row' style={{width: 340}}>
             <Dropdown classname='style.dropDown'
@@ -128,7 +127,7 @@ export default class UserTab extends React.Component {
   }
 
   openNewUserPopup() {
-    if (this.state.selectedRole)
+    if (this.state.selectedRole) {
       this.setState({
             popupHeaderText: "Add A New",
             popupBtnText: "Add",
@@ -137,20 +136,19 @@ export default class UserTab extends React.Component {
               lname: "",
               uid: "",
               username: ""
-            },
-            selectedRole: ""
+            }
           },
           () => {
             this.togglePopup();
           })
+    }
     else alert("Please select a role.");
 
   }
 
   onRoleSelect(e) {
     var that = this;
-
-    this.setState({selectedRole: e.value}, () => {
+    this.setState({selectedRole: e.value !== "ALL" ? e.value : ""}, () => {
       if (e.value === 'ALL') {
         that.getAllUser(that.state.token);
       } else {
@@ -174,7 +172,6 @@ export default class UserTab extends React.Component {
             username: data.username
           },
           selectedRole: data.role
-
         },
         () => {
           this.togglePopup();
