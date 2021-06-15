@@ -15,7 +15,8 @@ class PupilTab extends React.Component {
       classList: [],
       pupilList: [],
       token: "token " + this.props.token,
-      checkedPupil: []
+      checkedPupil: [],
+      isPupilExists: true
     }
     this.oninputChange = this.oninputChange.bind(this);
     this.loadAllClass = this.loadAllClass.bind(this);
@@ -24,7 +25,6 @@ class PupilTab extends React.Component {
     this.handleCheckBox = this.handleCheckBox.bind(this);
     this.goClassTab = this.goClassTab.bind(this);
     this.viewStudentList = this.viewStudentList.bind(this);
-    this.loadClassStudentData = this.loadClassStudentData.bind(this);
     this.onClassSelect = this.onClassSelect.bind(this);
   }
 
@@ -43,18 +43,10 @@ class PupilTab extends React.Component {
                       onChange={this.onClassSelect}
                       placeholder="Choose a class"
                       placeholderClassName='myPlaceholderClassName'/>
-            {/*<input className="form-control-lg" type="text" name="subject"*/}
-            {/*       placeholder="Search student"*/}
-            {/*       onChange={this.oninputChange.bind(this, "fname")}*/}
-            {/*/>*/}
-
-
             <SearchField placeholder='Search Pupil' onSearchClick={that.oninputChange}/>
             <br/>
             <button className="btn btn-success " onClick={that.assignStudent}>Assign</button>
             <button className="btn btn-success " onClick={that.viewStudentList}>View Student List</button>
-            {/*<button className="btn btn-success " onClick={that.goClassTab}>Go</button>*/}
-
           </div>
           {that.state.pupilList.length ?
               <div className="ag-theme-alpine" style={{height: 400, width: 800}}>
@@ -72,10 +64,12 @@ class PupilTab extends React.Component {
                   </tbody>
                 </table>
               </div> : null}
+          {that.state.isPupilExists ? null : <div><label>There is no pupil information for this class</label></div>}
 
         </div>
     )
   }
+
   goClassTab(){
     this.props.tabSelection(1);
   }
@@ -87,16 +81,23 @@ class PupilTab extends React.Component {
   viewStudentList(){
     var that = this;
     // debugger;
-    getPupilByClass(that.state.selectedClass,that.state.token).then(response => {
-      console.log(response);
-       that.setState({pupilList:response.data, classByList: true});
-    })
+    if(that.state.selectedClass) {
+      getPupilByClass(that.state.selectedClass, that.state.token).then(response => {
+        console.log(response);
+        that.setState({pupilList: response.data, classByList: true, isPupilExists: response.data.length ? true : false}, () =>{
+          // if(!response.data.length){
+          //   alert("There is no pupil assigned for the selected class");
+          // }
+        });
+
+      })
+    } else{alert("Please select a class first") }
   }
 
   oninputChange(e) {
     var that = this;
     searchPupil(e, that.state.token).then((response) => {
-      that.setState({pupilList: response.data, classByList: false}, () => {
+      that.setState({pupilList: response.data, classByList: false, isPupilExists: response.data.length ? true : false}, () => {
         that.loadFillData();
       })
     })
@@ -120,9 +121,6 @@ class PupilTab extends React.Component {
 
   }
 
-  loadClassStudentData(){
-
-  }
 
   loadFillData() {
     var that = this;
@@ -136,11 +134,10 @@ class PupilTab extends React.Component {
               <th>{data.username}</th>
               <th>{data.firstname}</th>
               <td>{data.lastname}</td>
-
             </tr>
         )
       })
-    } else console.log("No data");
+    }
   }
 
   handleCheckBox(e, id) {
