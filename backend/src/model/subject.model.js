@@ -10,14 +10,8 @@ const Subject = function (subject) {
 
 Subject.getAll = (cid, result) => {
   var query =
-    "SELECT subjectname, status,(SELECT COUNT(ClassStudent.uid)FROM ClassStudent WHERE cid='" +
-    cid +
-    "') as totalstudent, (SELECT CONCAT(firstname, ' ',lastname) FROM User Where uid=(SELECT uid FROM Subject WHERE cid='" +
-    cid +
-    "')) as fullname FROM Subject WHERE cid='" +
-    cid +
-    "'";
-  sql.query(query, (err, res) => {
+    "SELECT TTT.subjectname, TTT.status, IFNULL(COUNT(AssignedSubject.uid), 0) as totalstudent, TTT.fullname FROM AssignedSubject RIGHT JOIN(SELECT CONCAT(firstname, ' ',lastname) as fullname, T.subjectname, T.status, T.uid, T.sid FROM User INNER JOIN (SELECT subjectname, status, uid, Subject.sid FROM Subject INNER JOIN (SELECT Subject.sid FROM Subject WHERE Subject.cid = ?)  as TT ON Subject.sid = TT.sid) as T ON User.uid = T.uid) as TTT ON AssignedSubject.sid = TTT.sid GROUP BY AssignedSubject.sid";
+  sql.query(query, cid, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);

@@ -108,8 +108,9 @@ export async function getAllClass(token){
   }
 }
 
-export async function getSubjectsDetails(token, sid){
-  url = host + "subjects/"+sid;
+export async function getSubjectsDetails(token, cid){
+  url = host + "subjects/"+cid;
+  debugger
   try{
     const response = await  axios.get(url,{
       headers: {
@@ -148,5 +149,20 @@ export async function updateAClass(classObj, token){
     return response.data
   }catch(error){
     console.log("Error Res: "+error)
+  }
+}
+
+export async function deleteAClass(cid, token){
+  url = host + "class/" + cid;
+  try{
+    const response = await axios.delete(url, {
+      headers: {
+        'Authorization': token
+      }
+    })
+    console.log(response);
+    return response.data;
+  }catch(error){
+    console.log(error);
   }
 }

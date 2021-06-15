@@ -5,6 +5,7 @@ import {
   getSubjectsDetails,
   createNewClass,
   updateAClass,
+  deleteAClass
 } from "../../../api/AdminAPI";
 import Tablepopup from "./Tablepopup";
 
@@ -69,7 +70,7 @@ export default class ClassTable extends React.Component {
             Update
           </button>
 
-          <button className="btn  btn-danger" onClick={() => this.deleteInfo()}>
+          <button className="btn  btn-danger" onClick={() => this.deleteInfo(that.state.classinfo.cid)}>
             Delete
           </button>
         </div>
@@ -130,8 +131,8 @@ export default class ClassTable extends React.Component {
 
   getAllSubjectsDetails(e) {
     var that = this;
-
-    getSubjectsDetails("token " + that.props.token, e).then((data) => {
+    debugger
+    getSubjectsDetails("token " + that.props.token, e.value).then((data) => {
       var obj = {
         cid: e.value,
         classname: e.label
@@ -217,6 +218,16 @@ export default class ClassTable extends React.Component {
         () => {
           this.togglePopup();
         })
+  }
+
+  deleteInfo(cid) {
+    var that = this;
+
+    if (!window.confirm("Do you really want to delete the class?")) return;
+    deleteAClass(cid, that.state.token).then(data => {
+      alert(data.message);
+      that.getAllClasses(that.state.token);
+    })
   }
 
 
