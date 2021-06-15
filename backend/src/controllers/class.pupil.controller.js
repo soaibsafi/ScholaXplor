@@ -10,11 +10,11 @@ exports.assignUpdatePupil = (req, res) => {
     });
   }
 
-  ClassPupil.updatePupilAssign(new Class(req.body), (err, data) => {
+  ClassPupil.updatePupilAssign(req.params.uid, new ClassPupil(req.body), (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(200).send({
-          message: `Not found Customer with id ${req.params.classId}.`,
+          message: "Not found ClassStudent with id ${req.params.classId}.",
           status: "FAILED",
           statusCode: 404,
         });
@@ -44,17 +44,16 @@ exports.assignNewPupil = (req, res) => {
     });
   }
 
-  // Create a Customer
-  const class_c = new Class({
-    cid: req.body.cid,
-    classname: req.body.classname,
+  const class_pupil = new ClassPupil({
+    csid: req.body.csid,
+    uid: req.body.uid,
+    cid: req.body.cid
   });
 
-  // Save Customer in the database
-  ClassPupil.assignNewPupil(class_c, (err, data) => {
+  ClassPupil.assignNewPupil(class_pupil, (err, data) => {
     if (err)
       res.status(200).send({
-        message: err.message || "Some error occurred while creating the Class.",
+        message: err.message || "Some error occurred while creating the ClassPupil.",
         status: "FAILED",
         statusCode: 500,
       });
