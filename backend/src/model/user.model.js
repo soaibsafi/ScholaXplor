@@ -69,8 +69,8 @@ User.searchPupil = (sp, result) => {
     }
 
     if (res.length) {
-      console.log("found pupil: ", res[0]);
-      result(null, res[0]);
+      // console.log("found pupil: ",res);
+      result(null, res);
       return;
     }
 

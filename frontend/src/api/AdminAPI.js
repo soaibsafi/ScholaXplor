@@ -91,6 +91,20 @@ export async function deleteAUser(userid, token){
   }
 }
 
+export async function searchPupil(str, token){
+  url = host + "search-pupil/" + str;
+  try{
+    const response = await  axios.get(url,{
+      headers: {
+        'Authorization': token
+      }
+    });
+    return response.data;
+  }catch(error){
+    console.log(error);
+  }
+}
+
 
 
 // APIs for Class management Tab

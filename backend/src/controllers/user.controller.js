@@ -186,9 +186,10 @@ exports.checkDuplicateUsername = (req, res) => {
 exports.searchAllPupil = (req, res) => {
   User.searchPupil(req.params.sParam, (err, data) => {
     if (err)
-      res.status(500).send({
+      res.status(200).send({
         message:
           err.message || "Some error occurred while retrieving customers.",
+        data: [],
         status: "FAILED",
         statusCode: 500,
       });

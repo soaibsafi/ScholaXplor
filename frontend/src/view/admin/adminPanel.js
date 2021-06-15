@@ -4,6 +4,7 @@ import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 
 import UserTab from './Component/UserTab'
 import SubjectTab from './Component/SubjectTab'
+import PupilTab from './Component/PupilTab'
 
 import 'react-tabs/style/react-tabs.css';
 import ClassTable from './Component/ClassTable';
@@ -16,10 +17,12 @@ export default class adminPanel extends React.Component {
     super(props);
 
     this.state = {
-      token: this.props.location.state ? this.props.location.state.token : ''
+      token: this.props.location.state ? this.props.location.state.token : '',
+      selectedTab: 0
     };
 
     this.logoutAction = this.logoutAction.bind(this);
+    this.tabSelectionAction = this.tabSelectionAction.bind(this);
   }
 
   componentDidMount() {
@@ -37,17 +40,19 @@ export default class adminPanel extends React.Component {
   }
 
   render() {
+    var that = this;
     var state = this.state;
     return (
         <div style={{width: '1024px'}}>
           <div className='row' onClick={this.logoutAction}><h1>Admin Panel</h1>
             <button type="button" className="btn btn-danger">Logout</button>
           </div>
-          <Tabs>
+          <Tabs selectedIndex={state.selectedTab} onSelect={index => that.tabSelectionAction(index)}>
             <TabList>
               <Tab>User</Tab>
               <Tab>Class</Tab>
               <Tab>Subject</Tab>
+              <Tab>Pupil</Tab>
             </TabList>
             <TabPanel>
               <UserTab token={state.token}/>
@@ -57,6 +62,9 @@ export default class adminPanel extends React.Component {
             </TabPanel>
             <TabPanel>
               <SubjectTab token={state.token}/>
+            </TabPanel>
+            <TabPanel>
+              <PupilTab token={state.token} tabSelection={that.tabSelectionAction}/>
             </TabPanel>
           </Tabs>
 
@@ -71,5 +79,9 @@ export default class adminPanel extends React.Component {
         () => {
           that.props.history.push({pathname:redirectpath});
         })
+  }
+
+  tabSelectionAction(idx){
+    this.setState({selectedTab:idx})
   }
 }
