@@ -80,7 +80,6 @@ export default class ClassTable extends React.Component {
               <tr key={"user_key1"}>
                 <th scope="col">Subject</th>
                 <th scope="col">Status</th>
-                <th scope="col">Total Students</th>
                 <th scope="col">Teacher</th>
               </tr>
             </thead>
@@ -110,7 +109,6 @@ export default class ClassTable extends React.Component {
           <tr key={idx}>
             <th>{data.subjectname}</th>
             <th>{data.status}</th>
-            <td>{data.totalstudent}</td>
             <td>{data.fullname}</td>
           </tr>
         );
