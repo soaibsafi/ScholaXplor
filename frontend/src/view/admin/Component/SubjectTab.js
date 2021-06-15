@@ -1,15 +1,12 @@
 import React from 'react';
 import Dropdown from "react-dropdown";
 import {getAllUsers, getAllClass, getSubjectClassTeacherTogether} from '../../../api/AdminAPI'
-import Userpopup from "./Userpopup";
+import SubjectPopUp from "./SubjectPopUp";
 
 import style from './SubjectTab.css'
 import '../../../App.css';
 import 'react-dropdown/style.css';
 
-var options = [
-  'Pupil', 'Teacher'
-];
 
 export default class SubjectTab extends React.Component {
 
@@ -22,7 +19,15 @@ export default class SubjectTab extends React.Component {
       showPopup: false,
       selectedClass:'',
       popupHeaderText:'',
-      popupBtnText:''
+      popupBtnText:'',
+      subjectInfo: {
+        classname: '',
+        subjectname: '',
+        tname: '',
+        uid: '',
+        status:''
+      },
+      token: "token " + this.props.token
     }
     this.loadFillData = this.loadFillData.bind(this);
     this.getAllUser = this.getAllUser.bind(this);
@@ -74,6 +79,7 @@ export default class SubjectTab extends React.Component {
                 <th scope="col">Class</th>
                 <th scope="col">Subject</th>
                 <th scope="col">Teacher</th>
+                <th scope="col">Status</th>
                 <th scope="col">Update</th>
                 <th scope="col">Remove Subject</th>
               </tr>
@@ -84,11 +90,13 @@ export default class SubjectTab extends React.Component {
             </table>
           </div>
           {that.state.showPopup ?
-              <Userpopup selectedClass={that.state.selectedClass}
-                         closePopup={that.togglePopup.bind(this)}
-                         popupHeaderText={that.state.popupHeaderText}
-                         popupBtnText={that.state.popupBtnText}
-
+              <SubjectPopUp subjectInfo={that.state.subjectInfo}
+                            selectedClass={that.state.selectedClass}
+                            popupHeaderText={that.state.popupHeaderText}
+                            popupBtnText={that.state.popupBtnText}
+                            updateInfo={that.updateInfo}
+                            addUser={that.addUser}
+                            closePopup={that.closePopup}
               /> : null}
         </div>
     )
@@ -144,7 +152,7 @@ export default class SubjectTab extends React.Component {
   getAllClass(token) {
     var tList = [];
     getAllClass(token).then(data => {     
-      data.data.map(info => {
+      data.data.forEach(info => {
           var obj = {value: info.cid, label: info.classname}
           tList.push(obj);            
       });
@@ -161,13 +169,52 @@ export default class SubjectTab extends React.Component {
               <th>{data.classname}</th>
               <th>{data.subjectname}</th>
               <th>{data.tname}</th>
-              <td>{<button className="btn btn-info" onClick={() => this.updateInfo(data)}>Update</button>}</td>
+              <th>{data.status}</th>
+              
+              {<td>{<button className="btn btn-info" onClick={() => this.openUpdatePopup(data)} disabled>Update</button>}</td>}
+              {<td>{<button className="btn btn-info" onClick={() => this.openUpdatePopup(data)} >Update</button>}</td>}
+              
               <td>{<button className="btn btn-danger" onClick={() => this.deleteInfo(data.id)}>Delete</button>}</td>
             </tr>
         )
       })
     }
     else console.log("No data");
+  }
+
+
+  openUpdatePopup(data) {
+    this.setState({
+          popupHeaderText: "Update",
+          popupBtnText: "Update",
+          subjectInfo: {
+            classname: data.classname,
+            subjectname: data.subjectname,
+            uid: data.uid,
+            tname: data.tname
+          },
+          selectedClass: data.cid
+          
+        },
+        () => {
+          this.togglePopup();
+        })
+  }
+
+  close(){
+    this.resetState();
+    this.props.closePopup();
+  }
+
+  resetState(){
+    this.setState({
+      fname: "",
+      lname: "",
+      username: "",
+      uid: "",
+      selectedRole: "",
+      password: ''
+    })
   }
 
 }
