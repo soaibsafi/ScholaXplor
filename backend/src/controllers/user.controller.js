@@ -141,6 +141,12 @@ exports.delete = (req, res) => {
           status: "FAILED",
           statusCode: "404",
         });
+      } else if(err.kind === "found_assign") {
+        res.status(200).send({
+          message: "found assigned subject and not archived (user cannot be deleted) uid: " + req.params.uid,
+          status: "FAILED",
+          statusCode: "500",
+        });
       } else {
         res.status(200).send({
           message: "Could not delete user with id " + req.params.uid,

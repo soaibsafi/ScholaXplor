@@ -1,6 +1,6 @@
 import React from 'react';
 import Dropdown from "react-dropdown";
-import {getAllUsers, getAllClass} from '../../../api/AdminAPI'
+import {getAllUsers, getAllClass, getSubjectClassTeacherTogether} from '../../../api/AdminAPI'
 import Userpopup from "./Userpopup";
 
 import style from './SubjectTab.css'
@@ -17,10 +17,10 @@ export default class SubjectTab extends React.Component {
     super(props);
 
     this.state = {
-      class: [],
+      allClass: [],
       list: [],
       showPopup: false,
-      selectedRole:'',
+      selectedClass:'',
       popupHeaderText:'',
       popupBtnText:''
     }
@@ -28,7 +28,7 @@ export default class SubjectTab extends React.Component {
     this.getAllUser = this.getAllUser.bind(this);
     this.getAllClass = this.getAllClass.bind(this);
     this.addNewUser = this.addNewUser.bind(this);
-    this.onRoleSelect = this.onRoleSelect.bind(this);
+    this.onClassSelect = this.onClassSelect.bind(this);
 
     // this.addUser = this.addUser.bind(this);
     // this.updateUser = this.updateUser.bind(this);
@@ -46,15 +46,16 @@ export default class SubjectTab extends React.Component {
     var that = this;
     return (
         <div className="App">
-         {this.loadClass()}
           <h2 className={style.dropDown}>Subject Managment</h2>
 
-          <div className='row add-subject-area'>
-            <Dropdown classname='style.dropDown'
-                      options={options}
-                      onChange={this.onRoleSelect}
+          <div className="select-class-area">
+          <Dropdown classname='style.dropDown'
+                      options={this.state.allClass}
+                      onChange={this.onClassSelect}
                       placeholder="Choose a class"
                       placeholderClassName='myPlaceholderClassName'/>
+          </div>
+          <div className='row add-subject-area'>     
             <input className="form-control-lg"  type="text" name="subject"  placeholder="Enter Subject Name"
                        // onChange={this.oninputChange.bind(this, "fname")}
                 />
@@ -83,7 +84,7 @@ export default class SubjectTab extends React.Component {
             </table>
           </div>
           {that.state.showPopup ?
-              <Userpopup selectedRole={that.state.selectedRole}
+              <Userpopup selectedClass={that.state.selectedClass}
                          closePopup={that.togglePopup.bind(this)}
                          popupHeaderText={that.state.popupHeaderText}
                          popupBtnText={that.state.popupBtnText}
@@ -93,9 +94,17 @@ export default class SubjectTab extends React.Component {
     )
   }
 
-  onRoleSelect(e){
-    console.log(e);
-    this.setState({selectedRole : e.value})
+  onClassSelect(e){
+    var that = this;
+
+    this.setState({selectedClass: e.value}, () => {
+       
+        getSubjectClassTeacherTogether(e.value, that.state.token).then(data => {
+          //debugger;
+          that.setState({list: data.data})
+        })
+      
+    })
   }
 
   // addUser(data) {
@@ -117,7 +126,7 @@ export default class SubjectTab extends React.Component {
   }
 
   addNewUser() {
-    if(this.state.selectedRole)
+    if(this.state.selectedClass)
     this.setState({
           popupHeaderText: "Add A New",
           popupBtnText:"Add"},
@@ -133,9 +142,13 @@ export default class SubjectTab extends React.Component {
   }
 
   getAllClass(token) {
-    getAllClass(token).then(data => {
-      console.log(data.data);
-      this.setState({class: data.data})
+    var tList = [];
+    getAllClass(token).then(data => {     
+      data.data.map(info => {
+          var obj = {value: info.cid, label: info.classname}
+          tList.push(obj);            
+      });
+      this.setState({allClass: tList});
     })
   }
 
@@ -144,10 +157,10 @@ export default class SubjectTab extends React.Component {
 
       return this.state.list.map(data => {
         return (
-            <tr key={data.uid}>
-              <th>{data.username}</th>
-              <th>{data.firstname}</th>
-              <td>{data.lastname}</td>
+            <tr key={data.cid}>
+              <th>{data.classname}</th>
+              <th>{data.subjectname}</th>
+              <th>{data.tname}</th>
               <td>{<button className="btn btn-info" onClick={() => this.updateInfo(data)}>Update</button>}</td>
               <td>{<button className="btn btn-danger" onClick={() => this.deleteInfo(data.id)}>Delete</button>}</td>
             </tr>
@@ -157,16 +170,4 @@ export default class SubjectTab extends React.Component {
     else console.log("No data");
   }
 
-
-  loadClass() {
-    if(this.state.class.length) {
-
-      return this.state.class.map(data => {
-        return (
-           [ data.classname ]            
-        )
-      })
-    }
-    else console.log("No data");
-  }
 }

@@ -3,9 +3,8 @@
 }
 
 .add-subject-area{
-   
   width:fit-content;
-  height: 400px;
+  height: 300px;
   display: flex;
   flex-direction: column;
   align-content: center;
@@ -13,4 +12,14 @@
   padding: 20px 70px;
   border: 1px solid gray;
   border-radius: 10px;
+}
+
+.select-class-area{
+  width:fit-content;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: space-around;
+  margin-bottom: 10px;
 }
