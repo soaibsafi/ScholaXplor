@@ -61,7 +61,7 @@ User.findById = (userId, result) => {
 };
 
 User.searchPupil = (sp, result) => {
-  sql.query("SELECT * from User where role='pupil' AND uid NOT IN (SELECT DISTINCT uid FROM ClassStudent) AND (firstname LIKE '%"+sp+"%' OR lastname LIKE '%"+sp+"%')", (err, res) => {
+  sql.query("SELECT * from User where role='pupil' AND (firstname LIKE '%"+sp+"%' OR lastname LIKE '%"+sp+"%')", (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
