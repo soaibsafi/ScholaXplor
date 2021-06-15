@@ -188,4 +188,20 @@ Subject.getAverageGradeBySubAndPupil = (sid, pid, result) => {
   });
 };
 
+Subject.getSubjectClassTeacherByCid = (cid, result) => {
+  
+  var query =
+    "SELECT Subject.uid, Subject.subjectname, Class.cid, Class.classname, CONCAT(User.firstname, ' ',User.lastname) AS tname FROM Subject "+
+    "INNER JOIN Class ON Subject.cid = Class.cid INNER JOIN User ON Subject.uid = User.uid WHERE Subject.cid = '"+cid+"' ORDER BY Class.cid DESC";
+  sql.query(query, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    console.log("class: ", res);
+    result(null, res);
+  });
+};
+
 module.exports = Subject;
