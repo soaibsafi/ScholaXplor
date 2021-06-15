@@ -3,9 +3,9 @@ import {checkUserType} from "../../api/APIUtils";
 
 export default class pupilPanel extends React.Component{
 
-  constructor(props) {
-    super(props);
-  }
+  // constructor(props) {
+  //   super(props);
+  // }
 
   componentDidMount() {
     var that = this;
