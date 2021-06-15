@@ -135,3 +135,21 @@ export async function createNewClass(classObj,token){
     console.log(error)
   }
 }
+
+
+//API for Subject Management Tab
+
+export async function getSubjectClassTeacherTogether(cid, token){
+  url = host + "subjects/class-teacher/"+cid;
+  try{
+    const response = await  axios.get(url,{
+      // headers: {
+      //   'Authorization': token
+      // }
+    });
+    
+    return response.data;
+  }catch(error){
+    console.log(error);
+  }
+}

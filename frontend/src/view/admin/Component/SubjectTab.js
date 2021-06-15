@@ -1,6 +1,6 @@
 import React from 'react';
 import Dropdown from "react-dropdown";
-import {getAllUsers, getAllClass} from '../../../api/AdminAPI'
+import {getAllUsers, getAllClass, getSubjectClassTeacherTogether} from '../../../api/AdminAPI'
 import Userpopup from "./Userpopup";
 
 import style from './SubjectTab.css'
@@ -95,8 +95,16 @@ export default class SubjectTab extends React.Component {
   }
 
   onClassSelect(e){
-    console.log(e);
-    this.setState({selectedClass : e.value})
+    var that = this;
+
+    this.setState({selectedClass: e.value}, () => {
+       
+        getSubjectClassTeacherTogether(e.value, that.state.token).then(data => {
+          //debugger;
+          that.setState({list: data.data})
+        })
+      
+    })
   }
 
   // addUser(data) {
@@ -149,10 +157,10 @@ export default class SubjectTab extends React.Component {
 
       return this.state.list.map(data => {
         return (
-            <tr key={data.uid}>
-              <th>{data.username}</th>
-              <th>{data.firstname}</th>
-              <td>{data.lastname}</td>
+            <tr key={data.cid}>
+              <th>{data.classname}</th>
+              <th>{data.subjectname}</th>
+              <th>{data.tname}</th>
               <td>{<button className="btn btn-info" onClick={() => this.updateInfo(data)}>Update</button>}</td>
               <td>{<button className="btn btn-danger" onClick={() => this.deleteInfo(data.id)}>Delete</button>}</td>
             </tr>
