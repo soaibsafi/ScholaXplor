@@ -1,15 +1,12 @@
 import React from 'react';
 import Dropdown from "react-dropdown";
-import {getAllUsers, getAllClass, getSubjectClassTeacherTogether} from '../../../api/AdminAPI'
-import Userpopup from "./Userpopup";
+import {getUsersByRole, getAllClass, getSubjectClassTeacherTogether} from '../../../api/AdminAPI'
+import SubjectPopUp from "./SubjectPopUp";
 
 import style from './SubjectTab.css'
 import '../../../App.css';
 import 'react-dropdown/style.css';
 
-var options = [
-  'Pupil', 'Teacher'
-];
 
 export default class SubjectTab extends React.Component {
 
@@ -18,28 +15,39 @@ export default class SubjectTab extends React.Component {
 
     this.state = {
       allClass: [],
+      allTeacher: [],
       list: [],
       showPopup: false,
       selectedClass:'',
       popupHeaderText:'',
-      popupBtnText:''
+      popupBtnText:'',
+      subjectInfo: {
+        classname: '',
+        subjectname: '',
+        tname: '',
+        uid: '',
+        status:''
+      },
+      token: "token " + this.props.token
     }
     this.loadFillData = this.loadFillData.bind(this);
-    this.getAllUser = this.getAllUser.bind(this);
     this.getAllClass = this.getAllClass.bind(this);
-    this.addNewUser = this.addNewUser.bind(this);
+    this.addNewSubject = this.addNewSubject.bind(this);
     this.onClassSelect = this.onClassSelect.bind(this);
-
-    // this.addUser = this.addUser.bind(this);
-    // this.updateUser = this.updateUser.bind(this);
+    this.onTeacherSelect = this.onTeacherSelect.bind(this);
      this.togglePopup = this.togglePopup.bind(this);
+
+     /// Popup functions
+    this.addSubject = this.addSubject.bind(this);
+    this.updateInfo = this.updateInfo.bind(this);
+    this.closePopup = this.closePopup.bind(this);
      
   }
 
   componentDidMount() {
     var token = this.props.token;
-    this.getAllUser("tokeon " + token);
     this.getAllClass("tokeon " + token);
+    this.getAllTeacher("tokeon " + token);
   }
 
   render() {
@@ -59,11 +67,13 @@ export default class SubjectTab extends React.Component {
             <input className="form-control-lg"  type="text" name="subject"  placeholder="Enter Subject Name"
                        // onChange={this.oninputChange.bind(this, "fname")}
                 />
-            <input className="form-control-lg"  type="text" name="teacher"  placeholder="Search Teacher"
-                       // onChange={this.oninputChange.bind(this, "fname")}
-                />
+            <Dropdown classname='style.dropDown'
+                      options={this.state.allTeacher}
+                      onChange={this.onTeacherSelect}
+                      placeholder="Choose a Teacher"
+                      placeholderClassName='myPlaceholderClassName'/>
                 <br/>
-            <button className="btn btn-success " onClick={this.addNewUser}>Add</button>
+            <button className="btn btn-success " onClick={this.addNewSubject}>Add</button>
           </div>
           <br/>
           <br/>
@@ -74,6 +84,7 @@ export default class SubjectTab extends React.Component {
                 <th scope="col">Class</th>
                 <th scope="col">Subject</th>
                 <th scope="col">Teacher</th>
+                <th scope="col">Status</th>
                 <th scope="col">Update</th>
                 <th scope="col">Remove Subject</th>
               </tr>
@@ -84,48 +95,48 @@ export default class SubjectTab extends React.Component {
             </table>
           </div>
           {that.state.showPopup ?
-              <Userpopup selectedClass={that.state.selectedClass}
-                         closePopup={that.togglePopup.bind(this)}
-                         popupHeaderText={that.state.popupHeaderText}
-                         popupBtnText={that.state.popupBtnText}
-
+              <SubjectPopUp subjectInfo={that.state.subjectInfo}
+                            selectedClass={that.state.selectedClass}
+                            allTeacher={that.state.allTeacher}
+                            popupHeaderText={that.state.popupHeaderText}
+                            popupBtnText={that.state.popupBtnText}
+                            updateInfo={that.updateInfo}
+                            addSubject={that.addSubject}
+                            closePopup={that.closePopup}
               /> : null}
         </div>
     )
   }
 
+
+  //******************* Changes On Select ********************/
+
   onClassSelect(e){
     var that = this;
+    this.setState({selectedClass: e.value}, () => {    
+        getSubjectClassTeacherTogether(e.value, that.state.token).then(data => {
+          //debugger;
+          that.setState({list: data.data})
+        })   
+    })
+  }
 
+
+  onTeacherSelect(e){
+    var that = this;
     this.setState({selectedClass: e.value}, () => {
-       
         getSubjectClassTeacherTogether(e.value, that.state.token).then(data => {
           //debugger;
           that.setState({list: data.data})
         })
-      
     })
   }
 
-  // addUser(data) {
-  //   addAUser(data).then(data => {
-  //     this.getAllInfo();
-  //     this.togglePopup();
-  //   })
-  // }
-  //
-  // updateUser(data) {
-  //   updateUser(data).then(res => {
-  //     this.getAllInfo();
-  //     this.togglePopup();
-  //   })
-  // }
 
-  togglePopup(){
-    this.setState({showPopup : !this.state.showPopup});
-  }
 
-  addNewUser() {
+  
+
+  addNewSubject() {
     if(this.state.selectedClass)
     this.setState({
           popupHeaderText: "Add A New",
@@ -135,16 +146,22 @@ export default class SubjectTab extends React.Component {
 
   }
 
-  getAllUser(token) {
-    getAllUsers(token).then(data => {
-      this.setState({list: data.data})
+  getAllTeacher(token) {
+    var tList = [];
+    getUsersByRole("Teacher",token).then(data => {     
+      data.data.forEach(info => {
+          var tname = info.firstname +" "+info.lastname
+          var obj = {value: info.uid, label: tname}
+          tList.push(obj);            
+      });
+      this.setState({allTeacher: tList});
     })
   }
 
   getAllClass(token) {
     var tList = [];
     getAllClass(token).then(data => {     
-      data.data.map(info => {
+      data.data.forEach(info => {
           var obj = {value: info.cid, label: info.classname}
           tList.push(obj);            
       });
@@ -161,13 +178,122 @@ export default class SubjectTab extends React.Component {
               <th>{data.classname}</th>
               <th>{data.subjectname}</th>
               <th>{data.tname}</th>
-              <td>{<button className="btn btn-info" onClick={() => this.updateInfo(data)}>Update</button>}</td>
-              <td>{<button className="btn btn-danger" onClick={() => this.deleteInfo(data.id)}>Delete</button>}</td>
+              <th>{data.status}</th>
+              <td>{<button className="btn btn-info" onClick={() => this.openUpdatePopup(data)} disabled={data.status === "Archived" ? true : false}>Update</button>}</td>         
+              <td>{<button className="btn btn-danger" onClick={() => this.deleteInfo(data.id)} disabled={data.status === "Archived" ? true : false}>Delete</button>}</td>
             </tr>
         )
       })
     }
     else console.log("No data");
+  }
+
+
+  openUpdatePopup(data) {
+    this.setState({
+          popupHeaderText: "Update",
+          popupBtnText: "Update",
+          subjectInfo: {
+            classname: data.classname,
+            subjectname: data.subjectname,
+            uid: data.uid,
+            tname: data.tname
+          },
+          selectedClass: data.cid
+          
+        },
+        () => {
+          this.togglePopup();
+        })
+  }
+
+
+
+
+
+
+
+  addSubject(data) {
+    var that = this;
+    /* checkDuplicateUsername(data.username, that.state.token).then(response => {
+      if (!response.data.length)
+        createNewUser(data, that.state.token).then(data => {
+          if (data.status === "SUCCESS") {
+            that.togglePopup();
+            that.setState({
+              list: [],
+              popupHeaderText: "",
+              popupBtnText: "",
+              userinfo: {
+                fname: "",
+                lname: "",
+                uid: "",
+                username: ""
+              },
+              selectedRole: ""}, () => {
+              that.getAllUser(that.state.token)
+            })
+          } else {
+            alert("Error!!")
+          }
+        })
+      else alert("This username is already existed");
+    }) */
+
+  }
+
+  updateInfo(data) {
+    var that = this;
+    /* updateAUser(data, that.state.token).then(response => {
+      if (response.status === "SUCCESS") {
+        that.togglePopup();
+        that.setState({
+          list: [],
+          popupHeaderText: "",
+          popupBtnText: "",
+          userinfo: {
+            fname: "",
+            lname: "",
+            uid: "",
+            username: ""
+          },
+          selectedRole: ""}, () => {
+          that.getAllUser(that.state.token)
+        })
+      }
+    }) */
+  }
+
+  deleteInfo(uid) {
+    var that = this;
+
+    if (!window.confirm("Do you really want to delete it?")) return;
+    /* deleteAUser(uid, that.state.token).then(data => {
+      alert(data.message);
+      that.getAllUser(that.state.token);
+    }) */
+  }
+
+  closePopup(){
+    this.setState({
+          popupHeaderText: "",
+          popupBtnText: "",
+          userinfo: {
+            fname: "",
+            lname: "",
+            uid: "",
+            username: ""
+          },
+          selectedRole: ""
+
+        },
+        () => {
+          this.togglePopup();
+        })
+  }
+
+  togglePopup(){
+    this.setState({showPopup : !this.state.showPopup});
   }
 
 }
