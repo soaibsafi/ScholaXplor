@@ -19,6 +19,7 @@ class SubjectPopUp extends React.Component {
       subjectname: this.props.subjectInfo.subjectname,
       tname: this.props.subjectInfo.tname,
       uid: this.props.subjectInfo.uid,
+      sid: this.props.subjectInfo.sid,
       selectedClass: this.props.selectedClass,
       allTeacher: this.props.allTeacher,
       selectedTeacher: '',
@@ -26,6 +27,7 @@ class SubjectPopUp extends React.Component {
     }
     this.oninputChange = this.oninputChange.bind(this);
     this.onTeacherSelect = this.onTeacherSelect.bind(this);
+    this.onStatusSelect = this.onStatusSelect.bind(this);
     this.setSubjectID = this.setSubjectID.bind(this);
     this.sendData = this.sendData.bind(this);
     this.resetState = this.resetState.bind(this);
@@ -65,7 +67,8 @@ class SubjectPopUp extends React.Component {
                     <label><b> Status </b></label>
                     <Dropdown classname='style.dropDown'
                       options={StatusOptions}
-                      onChange={that.onStatusSelect}
+                      value={"Not Archived"}
+                      onChange={this.onStatusSelect}
                       placeholder="Set a status"
                       placeholderClassName='myPlaceholderClassName'/>
                     <br/>
@@ -110,8 +113,6 @@ class SubjectPopUp extends React.Component {
   }
 
   onStatusSelect(e) {
-    console.log(e.value)
-    debugger
     this.setState({selectedStatus: e.value})
   }
 
@@ -120,6 +121,9 @@ class SubjectPopUp extends React.Component {
   }
 
   sendData() {
+    var tempStatus = this.state.selectedStatus;
+    if(this.state.selectedStatus === "")
+      tempStatus = "Not Archived"
 
     var data = this.props.popupBtnText === "Add" ? {
       "classname": this.state.classname,
@@ -130,10 +134,12 @@ class SubjectPopUp extends React.Component {
       "sid": this.setSubjectID()
 
     } : {
-      "firstname": this.state.classname,
-      "lastname": this.state.subjectname,
-      "role": this.state.selectedClass,
-      "uid": this.state.uid
+      "classname": this.state.classname,
+      "subjectname": this.state.subjectname,
+      "uid": this.state.selectedTeacher,
+      "cid": this.state.selectedClass, 
+      "status": tempStatus,
+      "sid": this.state.sid
     }
 
     this.resetState();
@@ -144,9 +150,9 @@ class SubjectPopUp extends React.Component {
         
       else alert("Subject and Teacher name cannot be empty");
     } else {
-      if (data.uid.length)
+      if (data.subjectname.length && data.uid.length && data.status.length)
         this.props.updateInfo(data);
-      else alert("Please choose a teacher")
+      else alert("Please provide all info")
     }
   }
 }

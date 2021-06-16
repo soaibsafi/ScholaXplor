@@ -242,3 +242,19 @@ export async function createSubject(sid, subname, status, uid, cid, token){
     console.log(error);
   }
 }
+
+
+export async function updateSubject(data, token){
+  url = host + "subject/" + data.sid;
+  try{
+    const response = await axios.put(url, data,{
+      headers: {
+        'Authorization': token
+      }
+    });
+    console.log(response);
+    return response.data;
+  }catch(error){
+    console.log(error);
+  }
+}

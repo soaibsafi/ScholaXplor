@@ -5,7 +5,8 @@ import {
   getAllClass, 
   getSubjectClassTeacherTogether,
   checkSubjectExists,
-  createSubject
+  createSubject,
+  updateSubject
  } from '../../../api/AdminAPI'
 import SubjectPopUp from "./SubjectPopUp";
 
@@ -153,7 +154,7 @@ export default class SubjectTab extends React.Component {
 
       return this.state.list.map(data => {
         return (
-          <tr key={data.cid}>
+          <tr key={data.sid}>
             <th>{data.classname}</th>
             <th>{data.subjectname}</th>
             <th>{data.tname}</th>
@@ -196,7 +197,8 @@ export default class SubjectTab extends React.Component {
         classname: data.classname,
         subjectname: data.subjectname,
         uid: data.uid,
-        tname: data.tname
+        tname: data.tname,
+        sid:data.sid
       },
       selectedClass: data.cid
     },
@@ -215,8 +217,9 @@ export default class SubjectTab extends React.Component {
 
   addSubject(data) {
     var that = this;
+    var tempCid = data.cid;
     checkSubjectExists(data.subjectname, data.uid, data.cid, that.state.token).then(response => {
-      var tempCid = data.cid
+      
       if (!response.data.length)
          createSubject(data.sid, data.subjectname, data.status, data.uid, data.cid, that.state.token).then(res => {
           if (res.status === "SUCCESS") {
@@ -245,7 +248,9 @@ export default class SubjectTab extends React.Component {
 
   updateInfo(data) {
     var that = this;
-    /* updateAUser(data, that.state.token).then(response => {
+    var tempCid = data.cid
+
+     updateSubject(data, that.state.token).then(response => {
       if (response.status === "SUCCESS") {
         that.togglePopup();
         that.setState({
@@ -259,10 +264,10 @@ export default class SubjectTab extends React.Component {
             username: ""
           },
           selectedRole: ""}, () => {
-          that.getAllUser(that.state.token)
+            that.LoadUpdatedData(tempCid, that.state.token)
         })
       }
-    }) */
+    }) 
   }
 
   deleteInfo(uid) {
