@@ -98,6 +98,7 @@ module.exports = (app) => {
                 msg: "Logged in!",
                 token,
                 role: result[0].role,
+                uid:result[0].uid
               });
             }
             return res.status(200).send({

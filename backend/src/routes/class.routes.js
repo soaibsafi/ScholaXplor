@@ -11,7 +11,7 @@ module.exports = app => {
 
     app.get('/class/', class_c.getAllClass)
 
-    app.get('/classname/:uid', class_c.getClassName)
+    app.get('/classname/:uid', userMiddleware.isPupilLoggedIn, class_c.getClassName)
 
   };
   

@@ -50,7 +50,7 @@ class PupilTestDetails extends React.Component {
         return (
             <tr key={data.tid}>
               <th>{data.tname}</th>
-              <th>{data.avgGrade}</th>
+              <th>{data.score}</th>
               {/*<td>{<button className="btn btn-info" onClick={() => this.openDetailsPopup(data)}>View Details</button>}</td>*/}
             </tr>
         )
