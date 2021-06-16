@@ -38,7 +38,7 @@ export default class SubjectTab extends React.Component {
      this.togglePopup = this.togglePopup.bind(this);
 
      /// Popup functions
-    this.addUser = this.addUser.bind(this);
+    this.addSubject = this.addSubject.bind(this);
     this.updateInfo = this.updateInfo.bind(this);
     this.closePopup = this.closePopup.bind(this);
      
@@ -101,12 +101,15 @@ export default class SubjectTab extends React.Component {
                             popupHeaderText={that.state.popupHeaderText}
                             popupBtnText={that.state.popupBtnText}
                             updateInfo={that.updateInfo}
-                            addUser={that.addUser}
+                            addSubject={that.addSubject}
                             closePopup={that.closePopup}
               /> : null}
         </div>
     )
   }
+
+
+  //******************* Changes On Select ********************/
 
   onClassSelect(e){
     var that = this;
@@ -210,7 +213,7 @@ export default class SubjectTab extends React.Component {
 
 
 
-  addUser(data) {
+  addSubject(data) {
     var that = this;
     /* checkDuplicateUsername(data.username, that.state.token).then(response => {
       if (!response.data.length)
