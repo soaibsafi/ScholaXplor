@@ -13,7 +13,7 @@ Class.create = (newClass, result) => {
       return;
     }
 
-   // console.log("Created Class: ", { ...newClass });
+    // console.log("Created Class: ", { ...newClass });
     result(null, { ...newClass });
   });
 };
@@ -112,5 +112,20 @@ Class.getAll = (result) => {
   });
 };
 
+Class.getClassNameByPupilId = (uid, result) => {
+  sql.query(
+    "SELECT Class.classname FROM Class Where Class.cid = (SELECT ClassStudent.cid FROM ClassStudent WHERE ClassStudent.uid = ?)",
+    uid,
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+      console.log("class: ", res);
+      result(null, res);
+    }
+  );
+};
 
 module.exports = Class;
