@@ -185,7 +185,7 @@ Subject.getAverageGradeBySubAndPupil = (sid, pid, result) => {
 Subject.getSubjectClassTeacherByCid = (cid, result) => {
   
   var query =
-    "SELECT Subject.uid, Subject.subjectname, Class.cid, Class.classname, CONCAT(User.firstname, ' ',User.lastname) AS tname, Subject.status FROM Subject "+
+    "SELECT Subject.sid, Subject.uid, Subject.subjectname, Class.cid, Class.classname, CONCAT(User.firstname, ' ',User.lastname) AS tname, Subject.status FROM Subject "+
     "INNER JOIN Class ON Subject.cid = Class.cid INNER JOIN User ON Subject.uid = User.uid WHERE Subject.cid = '"+cid+"' ORDER BY Class.cid DESC";
   sql.query(query, (err, res) => {
     if (err) {
@@ -197,5 +197,24 @@ Subject.getSubjectClassTeacherByCid = (cid, result) => {
     result(null, res);
   });
 };
+
+Subject.checkSubExists = (subname,uid,cid, result) => {
+
+  sql.query("SELECT * FROM Subject WHERE subjectname='"+subname+"' AND uid='"+uid+"' AND cid='"+cid+"'", 
+  (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+
+    if (res.affectedRows == 0) {
+      result({ kind: "not_found" }, null);
+      return;
+    }
+    result(null, res);
+  })
+
+}
 
 module.exports = Subject;

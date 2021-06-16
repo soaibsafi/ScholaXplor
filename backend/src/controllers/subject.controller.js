@@ -103,11 +103,11 @@ exports.createSubject = (req, res) => {
 
   // Create a Subject
   const subject = new Subject({
-    sid: req.body.sid,
-    subjectname: req.body.subjectname,
-    status: req.body.status,
-    uid: req.body.uid,
-    cid: req.body.cid,
+    sid: req.query.sid,
+    subjectname: req.query.subjectname,
+    status: req.query.status,
+    uid: req.query.uid,
+    cid: req.query.cid,
   });
 
   // Save Customer in the database
@@ -167,6 +167,26 @@ exports.getAverageGradePupilSUbject = (req, res) => {
 
 exports.getSubClassTeacherByCid = (req, res) => {
   Subject.getSubjectClassTeacherByCid(req.params.cid, (err, data) => {
+    if (err)
+      res.status(200).send({
+        message:
+          err.message || "Some error occurred while retrieving Subjects.",
+        status: "FAILED",
+        statusCode: 500,
+      });
+    else
+      res.status(200).send({
+        data: data,
+        status: "SUCCESS",
+        statusCode: 200,
+      });
+  });
+};
+
+
+exports.checkSubjectExists = (req, res) => {
+  Subject.checkSubExists(
+    req.query.subname, req.query.uid, req.query.cid, (err, data) => {
     if (err)
       res.status(200).send({
         message:
