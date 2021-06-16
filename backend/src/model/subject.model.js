@@ -25,7 +25,7 @@ Subject.getAll = (cid, result) => {
 Subject.getAllTestGrades = (sid, pid, result) => {
   console.log(sid, pid);
   var query =
-    "SELECT Test.testname, Test.testdate, T.marks FROM Test INNER JOIN (SELECT result.marks, result.tid FROM result WHERE result.aid = (SELECT AssignedSubject.aid FROM AssignedSubject WHERE uid = ? AND sid = ?)) as T ON Test.tid = T.tid";
+    "SELECT Test.tid, Test.testname as tname, Test.testdate, T.marks as score FROM Test INNER JOIN (SELECT result.marks, result.tid FROM result WHERE result.aid = (SELECT AssignedSubject.aid FROM AssignedSubject WHERE uid = ? AND sid = ?)) as T ON Test.tid = T.tid";
   sql.query(query, [pid, sid], (err, res) => {
     if (err) {
       console.log("error: ", err);

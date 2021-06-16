@@ -20,7 +20,7 @@ module.exports = (app) => {
     subject.getAllSubjectByPupilId
   );
   app.get("/pupil-average/", subject.getAverageGradePupilSUbject); //pupil-average/?sid=s20&pid=u1
-  app.get("/test-grades/", subject.getAllGradeBySubjectPupilId); // test-grades/?sid=s20&pid=u2
+  app.get("/test-grades/", userMiddleware.isPupilLoggedIn, subject.getAllGradeBySubjectPupilId); // test-grades/?sid=s20&pid=u2
   app.get(
     "/subject/avgGrade/:pid",
     userMiddleware.isPupilLoggedIn,
