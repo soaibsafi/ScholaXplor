@@ -15,6 +15,7 @@ class SubjectPopUp extends React.Component {
       tname: this.props.subjectInfo.tname,
       uid: this.props.subjectInfo.uid,
       selectedClass: this.props.selectedClass,
+      allTeacher: this.props.allTeacher
     }
     this.oninputChange = this.oninputChange.bind(this);
     this.onRoleSelect = this.onRoleSelect.bind(this);
@@ -32,21 +33,26 @@ class SubjectPopUp extends React.Component {
             <h2>{that.props.popupHeaderText + " " + (that.props.popupHeaderText !== "Update" ? that.props.selectedClass : '')}</h2>
             <div style={{alignItem: 'left'}}>
               {console.log(that.state.selectedClass)}
-              <label> Class name</label><br/>
+              <label> <b>Class name</b></label>
+              <br/>
               <input className="form-control" type="text" name="classname" defaultValue={this.state.classname}
                      onChange={that.oninputChange.bind(this, "classname")} disabled
               />
+              <br/>
 
-              <label> Subject Name:</label>
+              <label><b> Subject Name</b></label>
               <input className="form-control" type="text" name="subjectname" defaultValue={this.state.subjectname}
                      onChange={that.oninputChange.bind(this, "subjectname")}
               />
               <br/>
 
-              <label> Teacher name</label><br/>
-                <input className="form-control" type="text" name="tname" defaultValue={this.state.tname}
-                        onChange={that.oninputChange.bind(this, "tname")} disabled
-                />
+              <label><b> Teacher </b></label>
+              <br/>
+              <Dropdown classname='style.dropDown'
+                      options={this.state.allTeacher}
+                      onChange={this.onTeacherSelect}
+                      placeholder="Choose a Teacher"
+                      placeholderClassName='myPlaceholderClassName'/>
               <br/>
 
             </div>

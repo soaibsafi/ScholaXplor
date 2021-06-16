@@ -1,6 +1,6 @@
 import React from 'react';
 import Dropdown from "react-dropdown";
-import {getAllUsers, getAllClass, getSubjectClassTeacherTogether} from '../../../api/AdminAPI'
+import {getUsersByRole, getAllClass, getSubjectClassTeacherTogether} from '../../../api/AdminAPI'
 import SubjectPopUp from "./SubjectPopUp";
 
 import style from './SubjectTab.css'
@@ -15,6 +15,7 @@ export default class SubjectTab extends React.Component {
 
     this.state = {
       allClass: [],
+      allTeacher: [],
       list: [],
       showPopup: false,
       selectedClass:'',
@@ -30,21 +31,23 @@ export default class SubjectTab extends React.Component {
       token: "token " + this.props.token
     }
     this.loadFillData = this.loadFillData.bind(this);
-    this.getAllUser = this.getAllUser.bind(this);
     this.getAllClass = this.getAllClass.bind(this);
-    this.addNewUser = this.addNewUser.bind(this);
+    this.addNewSubject = this.addNewSubject.bind(this);
     this.onClassSelect = this.onClassSelect.bind(this);
-
-    // this.addUser = this.addUser.bind(this);
-    // this.updateUser = this.updateUser.bind(this);
+    this.onTeacherSelect = this.onTeacherSelect.bind(this);
      this.togglePopup = this.togglePopup.bind(this);
+
+     /// Popup functions
+    this.addUser = this.addUser.bind(this);
+    this.updateInfo = this.updateInfo.bind(this);
+    this.closePopup = this.closePopup.bind(this);
      
   }
 
   componentDidMount() {
     var token = this.props.token;
-    this.getAllUser("tokeon " + token);
     this.getAllClass("tokeon " + token);
+    this.getAllTeacher("tokeon " + token);
   }
 
   render() {
@@ -64,11 +67,13 @@ export default class SubjectTab extends React.Component {
             <input className="form-control-lg"  type="text" name="subject"  placeholder="Enter Subject Name"
                        // onChange={this.oninputChange.bind(this, "fname")}
                 />
-            <input className="form-control-lg"  type="text" name="teacher"  placeholder="Search Teacher"
-                       // onChange={this.oninputChange.bind(this, "fname")}
-                />
+            <Dropdown classname='style.dropDown'
+                      options={this.state.allTeacher}
+                      onChange={this.onTeacherSelect}
+                      placeholder="Choose a Teacher"
+                      placeholderClassName='myPlaceholderClassName'/>
                 <br/>
-            <button className="btn btn-success " onClick={this.addNewUser}>Add</button>
+            <button className="btn btn-success " onClick={this.addNewSubject}>Add</button>
           </div>
           <br/>
           <br/>
@@ -92,6 +97,7 @@ export default class SubjectTab extends React.Component {
           {that.state.showPopup ?
               <SubjectPopUp subjectInfo={that.state.subjectInfo}
                             selectedClass={that.state.selectedClass}
+                            allTeacher={that.state.allTeacher}
                             popupHeaderText={that.state.popupHeaderText}
                             popupBtnText={that.state.popupBtnText}
                             updateInfo={that.updateInfo}
@@ -104,36 +110,30 @@ export default class SubjectTab extends React.Component {
 
   onClassSelect(e){
     var that = this;
+    this.setState({selectedClass: e.value}, () => {    
+        getSubjectClassTeacherTogether(e.value, that.state.token).then(data => {
+          //debugger;
+          that.setState({list: data.data})
+        })   
+    })
+  }
 
+
+  onTeacherSelect(e){
+    var that = this;
     this.setState({selectedClass: e.value}, () => {
-       
         getSubjectClassTeacherTogether(e.value, that.state.token).then(data => {
           //debugger;
           that.setState({list: data.data})
         })
-      
     })
   }
 
-  // addUser(data) {
-  //   addAUser(data).then(data => {
-  //     this.getAllInfo();
-  //     this.togglePopup();
-  //   })
-  // }
-  //
-  // updateUser(data) {
-  //   updateUser(data).then(res => {
-  //     this.getAllInfo();
-  //     this.togglePopup();
-  //   })
-  // }
 
-  togglePopup(){
-    this.setState({showPopup : !this.state.showPopup});
-  }
 
-  addNewUser() {
+  
+
+  addNewSubject() {
     if(this.state.selectedClass)
     this.setState({
           popupHeaderText: "Add A New",
@@ -143,9 +143,15 @@ export default class SubjectTab extends React.Component {
 
   }
 
-  getAllUser(token) {
-    getAllUsers(token).then(data => {
-      this.setState({list: data.data})
+  getAllTeacher(token) {
+    var tList = [];
+    getUsersByRole("Teacher",token).then(data => {     
+      data.data.forEach(info => {
+          var tname = info.firstname +" "+info.lastname
+          var obj = {value: info.uid, label: tname}
+          tList.push(obj);            
+      });
+      this.setState({allTeacher: tList});
     })
   }
 
@@ -170,11 +176,8 @@ export default class SubjectTab extends React.Component {
               <th>{data.subjectname}</th>
               <th>{data.tname}</th>
               <th>{data.status}</th>
-              
-              {<td>{<button className="btn btn-info" onClick={() => this.openUpdatePopup(data)} disabled>Update</button>}</td>}
-              {<td>{<button className="btn btn-info" onClick={() => this.openUpdatePopup(data)} >Update</button>}</td>}
-              
-              <td>{<button className="btn btn-danger" onClick={() => this.deleteInfo(data.id)}>Delete</button>}</td>
+              <td>{<button className="btn btn-info" onClick={() => this.openUpdatePopup(data)} disabled={data.status === "Archived" ? true : false}>Update</button>}</td>         
+              <td>{<button className="btn btn-danger" onClick={() => this.deleteInfo(data.id)} disabled={data.status === "Archived" ? true : false}>Delete</button>}</td>
             </tr>
         )
       })
@@ -201,20 +204,93 @@ export default class SubjectTab extends React.Component {
         })
   }
 
-  close(){
-    this.resetState();
-    this.props.closePopup();
+
+
+
+
+
+
+  addUser(data) {
+    var that = this;
+    /* checkDuplicateUsername(data.username, that.state.token).then(response => {
+      if (!response.data.length)
+        createNewUser(data, that.state.token).then(data => {
+          if (data.status === "SUCCESS") {
+            that.togglePopup();
+            that.setState({
+              list: [],
+              popupHeaderText: "",
+              popupBtnText: "",
+              userinfo: {
+                fname: "",
+                lname: "",
+                uid: "",
+                username: ""
+              },
+              selectedRole: ""}, () => {
+              that.getAllUser(that.state.token)
+            })
+          } else {
+            alert("Error!!")
+          }
+        })
+      else alert("This username is already existed");
+    }) */
+
   }
 
-  resetState(){
+  updateInfo(data) {
+    var that = this;
+    /* updateAUser(data, that.state.token).then(response => {
+      if (response.status === "SUCCESS") {
+        that.togglePopup();
+        that.setState({
+          list: [],
+          popupHeaderText: "",
+          popupBtnText: "",
+          userinfo: {
+            fname: "",
+            lname: "",
+            uid: "",
+            username: ""
+          },
+          selectedRole: ""}, () => {
+          that.getAllUser(that.state.token)
+        })
+      }
+    }) */
+  }
+
+  deleteInfo(uid) {
+    var that = this;
+
+    if (!window.confirm("Do you really want to delete it?")) return;
+    /* deleteAUser(uid, that.state.token).then(data => {
+      alert(data.message);
+      that.getAllUser(that.state.token);
+    }) */
+  }
+
+  closePopup(){
     this.setState({
-      fname: "",
-      lname: "",
-      username: "",
-      uid: "",
-      selectedRole: "",
-      password: ''
-    })
+          popupHeaderText: "",
+          popupBtnText: "",
+          userinfo: {
+            fname: "",
+            lname: "",
+            uid: "",
+            username: ""
+          },
+          selectedRole: ""
+
+        },
+        () => {
+          this.togglePopup();
+        })
+  }
+
+  togglePopup(){
+    this.setState({showPopup : !this.state.showPopup});
   }
 
 }
