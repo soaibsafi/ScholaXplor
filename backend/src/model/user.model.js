@@ -61,7 +61,8 @@ User.findById = (userId, result) => {
 };
 
 User.searchPupil = (sp, result) => {
-  sql.query("SELECT * from User where role='pupil' AND (firstname LIKE '%"+sp+"%' OR lastname LIKE '%"+sp+"%')", (err, res) => {
+  var query = "SELECT Class.classname, TT.* FROM Class INNER JOIN (SELECT ClassStudent.cid, T.* FROM ClassStudent INNER JOIN (SELECT * from User where role='Pupil' AND (firstname LIKE '%"+sp+"%' OR lastname LIKE '%"+sp+"%')) as T ON ClassStudent.uid = T.uid) as TT ON Class.cid = TT.cid"
+  sql.query(query, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
