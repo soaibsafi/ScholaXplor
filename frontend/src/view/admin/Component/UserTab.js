@@ -117,7 +117,7 @@ export default class UserTab extends React.Component {
             </tr>
         )
       })
-    } //else console.log("No data");
+    }
   }
 
   getAllUser(token) {

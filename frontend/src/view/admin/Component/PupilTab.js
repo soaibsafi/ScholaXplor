@@ -14,6 +14,7 @@ class PupilTab extends React.Component {
       selectedClass: '',
       classList: [],
       pupilList: [],
+      selectedPupilList:[],
       token: "token " + this.props.token,
       checkedPupil: [],
       isPupilExists: true
@@ -70,34 +71,39 @@ class PupilTab extends React.Component {
     )
   }
 
-  goClassTab(){
+  goClassTab() {
     this.props.tabSelection(1);
   }
 
-  onClassSelect(e){
-    this.setState({selectedClass : e.value})
+  onClassSelect(e) {
+    this.setState({selectedClass: e.value})
   }
 
-  viewStudentList(){
+  viewStudentList() {
     var that = this;
     // debugger;
-    if(that.state.selectedClass) {
+    if (that.state.selectedClass) {
       getPupilByClass(that.state.selectedClass, that.state.token).then(response => {
-        console.log(response);
-        that.setState({pupilList: response.data, classByList: true, isPupilExists: response.data.length ? true : false}, () =>{
-          // if(!response.data.length){
-          //   alert("There is no pupil assigned for the selected class");
-          // }
+        that.setState({
+          pupilList: response.data,
+          classByList: true,
+          isPupilExists: response.data.length ? true : false
         });
 
       })
-    } else{alert("Please select a class first") }
+    } else {
+      alert("Please select a class first")
+    }
   }
 
   oninputChange(e) {
     var that = this;
     searchPupil(e, that.state.token).then((response) => {
-      that.setState({pupilList: response.data, classByList: false, isPupilExists: response.data.length ? true : false}, () => {
+      that.setState({
+        pupilList: response.data,
+        classByList: false,
+        isPupilExists: response.data.length ? true : false
+      }, () => {
         that.loadFillData();
       })
     })
@@ -112,13 +118,18 @@ class PupilTab extends React.Component {
         tempList.push(obj);
       });
       this.setState({classList: tempList}, () => {
-        console.log(that.state.classList)
+        // console.log(that.state.classList)
       });
     });
   }
 
   assignStudent() {
-
+    var that = this;
+    if(that.state.selectedClass && that.state.selectedPupilList){
+      alert("Hi")
+    }else{
+      alert("Please select Class and one or more pupil to assign them");
+    }
   }
 
 
@@ -156,7 +167,7 @@ class PupilTab extends React.Component {
     }
     console.log(resultArray);
     that.setState({
-      checkedPupil:resultArray
+      checkedPupil: resultArray
     })
   }
 }
