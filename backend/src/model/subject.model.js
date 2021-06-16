@@ -23,9 +23,9 @@ Subject.getAll = (cid, result) => {
 };
 
 Subject.getAllTestGrades = (sid, pid, result) => {
-  console.log(sid, pid)
+  console.log(sid, pid);
   var query =
-    "SELECT Test.testname, Test.testdate, T.marks FROM Test INNER JOIN (SELECT result.marks, result.tid FROM result WHERE result.aid = (SELECT AssignedSubject.aid FROM AssignedSubject WHERE uid = ? AND sid = ?)) as T ON Test.tid = T.tid"
+    "SELECT Test.testname, Test.testdate, T.marks FROM Test INNER JOIN (SELECT result.marks, result.tid FROM result WHERE result.aid = (SELECT AssignedSubject.aid FROM AssignedSubject WHERE uid = ? AND sid = ?)) as T ON Test.tid = T.tid";
   sql.query(query, [pid, sid], (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -157,7 +157,7 @@ Subject.getAverageGrade = (subjectId, result) => {
 Subject.getAllSUbjectOfPupil = (pid, result) => {
   var query =
     "SELECT Subject.sid, subjectname FROM Subject INNER JOIN (SELECT sid FROM AssignedSubject WHERE uid = ?) as T ON Subject.sid = T.sid";
-  sql.query(query, pid,(err, res) => {
+  sql.query(query, pid, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
@@ -169,8 +169,9 @@ Subject.getAllSUbjectOfPupil = (pid, result) => {
 };
 
 Subject.getAverageGradeBySubAndPupil = (sid, pid, result) => {
-  console.log(sid, pid)
-  var query = "SELECT AVG(marks) as AVG_MARK FROM result INNER JOIN (SELECT tid FROM Test WHERE sid = ?) as T INNER JOIN (SELECT AssignedSubject.aid FROM AssignedSubject WHERE uid = ? AND sid = ?) as TT ON result.aid = TT.aid";
+  console.log(sid, pid);
+  var query =
+    "SELECT AVG(marks) as AVG_MARK FROM result INNER JOIN (SELECT tid FROM Test WHERE sid = ?) as T INNER JOIN (SELECT AssignedSubject.aid FROM AssignedSubject WHERE uid = ? AND sid = ?) as TT ON result.aid = TT.aid";
   sql.query(query, [sid, pid, sid], (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -183,11 +184,35 @@ Subject.getAverageGradeBySubAndPupil = (sid, pid, result) => {
 };
 
 Subject.getSubjectClassTeacherByCid = (cid, result) => {
-  
   var query =
-    "SELECT Subject.uid, Subject.subjectname, Class.cid, Class.classname, CONCAT(User.firstname, ' ',User.lastname) AS tname, Subject.status FROM Subject "+
-    "INNER JOIN Class ON Subject.cid = Class.cid INNER JOIN User ON Subject.uid = User.uid WHERE Subject.cid = '"+cid+"' ORDER BY Class.cid DESC";
+    "SELECT Subject.uid, Subject.subjectname, Class.cid, Class.classname, CONCAT(User.firstname, ' ',User.lastname) AS tname, Subject.status FROM Subject " +
+    "INNER JOIN Class ON Subject.cid = Class.cid INNER JOIN User ON Subject.uid = User.uid WHERE Subject.cid = '" +
+    cid +
+    "' ORDER BY Class.cid DESC";
   sql.query(query, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    console.log("class: ", res);
+    result(null, res);
+  });
+};
+
+Subject.getAvgGradeByPupilId = (pid, result) => {
+  var query = `SELECT R_T_S_AS.sid as sid, R_T_S_AS.subjectname as subjectname,  AVG(marks) as avgGrade FROM result INNER JOIN (SELECT Test.tid, T_S_AS.*
+    FROM Test
+    INNER JOIN (
+    SELECT Subject.subjectname, Subject.sid
+    FROM Subject
+    INNER JOIN (SELECT AssignedSubject.sid FROM AssignedSubject Where AssignedSubject.uid = ?) as S_AS
+    ON Subject.sid = S_AS.sid) as T_S_AS
+    ON Test.sid = T_S_AS.sid
+    )as R_T_S_AS
+    ON result.tid=R_T_S_AS.tid
+    GROUP BY sid`;
+  sql.query(query, pid, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
