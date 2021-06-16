@@ -1,6 +1,6 @@
 import React from 'react';
 import Dropdown from "react-dropdown";
-import {getAllClass, searchPupil, getPupilByClass} from "../../../api/AdminAPI";
+import {getAllClass, searchPupil, getPupilByClass, updateAssignedPupil, assignPupil} from "../../../api/AdminAPI";
 import SearchField from 'react-search-field';
 
 
@@ -17,7 +17,8 @@ class PupilTab extends React.Component {
       selectedPupilList:[],
       token: "token " + this.props.token,
       checkedPupil: [],
-      isPupilExists: true
+      isPupilExists: true,
+      searchBy:''
     }
     this.oninputChange = this.oninputChange.bind(this);
     this.loadAllClass = this.loadAllClass.bind(this);
@@ -27,6 +28,8 @@ class PupilTab extends React.Component {
     this.goClassTab = this.goClassTab.bind(this);
     this.viewStudentList = this.viewStudentList.bind(this);
     this.onClassSelect = this.onClassSelect.bind(this);
+    this.setID = this.setID.bind(this);
+
   }
 
   componentDidMount() {
@@ -58,6 +61,7 @@ class PupilTab extends React.Component {
                     <th scope="col">Username</th>
                     <th scope="col">First Name</th>
                     <th scope="col">Last Name</th>
+                    {that.state.classByList ? null : <th scope="col">Assigned In</th>}
                   </tr>
                   </thead>
                   <tbody>
@@ -76,12 +80,11 @@ class PupilTab extends React.Component {
   }
 
   onClassSelect(e) {
-    this.setState({selectedClass: e.value})
+    this.setState({selectedClass: e.value, pupilList:[], isPupilExists:true})
   }
 
   viewStudentList() {
     var that = this;
-    // debugger;
     if (that.state.selectedClass) {
       getPupilByClass(that.state.selectedClass, that.state.token).then(response => {
         that.setState({
@@ -102,7 +105,8 @@ class PupilTab extends React.Component {
       that.setState({
         pupilList: response.data,
         classByList: false,
-        isPupilExists: response.data.length ? true : false
+        isPupilExists: response.data.length ? true : false,
+        searchBy: e
       }, () => {
         that.loadFillData();
       })
@@ -125,49 +129,84 @@ class PupilTab extends React.Component {
 
   assignStudent() {
     var that = this;
-    if(that.state.selectedClass && that.state.selectedPupilList){
-      alert("Hi")
+    if(that.state.selectedClass && that.state.selectedPupilList.length){
+      that.state.selectedPupilList.forEach(pupil =>{
+        if(pupil.cid) {
+          if (pupil.cid !== that.state.selectedClass) {
+            updateAssignedPupil(pupil.uid, {cid:that.state.selectedClass}, that.state.token).then(response => {
+
+            })
+          }
+        }else{
+          var dataObj = {
+            csid: that.setID(),
+            uid: pupil.uid,
+            cid: that.state.selectedClass
+          }
+          assignPupil(dataObj, that.state.token).then(response => {
+
+          })
+        }
+      })
+      // that.setState({})
+
+      searchPupil(that.state.searchBy, that.state.token).then((response) => {
+        that.setState({
+          pupilList: response.data,
+          classByList: false,
+          isPupilExists: response.data.length ? true : false
+        }, () => {
+          // that.loadFillData();
+        })
+      })
     }else{
       alert("Please select Class and one or more pupil to assign them");
     }
+  }
+
+  setID(){
+    return "ASGN" + Date.now()
   }
 
 
   loadFillData() {
     var that = this;
     if (this.state.pupilList.length) {
+      // debugger;
       return this.state.pupilList.map(data => {
         return (
             <tr key={data.uid}>
               {that.state.classByList ? null :
                   <td>{<input id={data.uid} name={data.uid} type="checkbox"
-                              onChange={(e) => this.handleCheckBox(e, data.uid)}/>}</td>}
+                              onChange={(e) => this.handleCheckBox(e, data)}/>}</td>}
               <th>{data.username}</th>
               <th>{data.firstname}</th>
               <td>{data.lastname}</td>
+              {that.state.classByList ? null : <td>{data.classname}</td>}
             </tr>
         )
       })
     }
   }
 
-  handleCheckBox(e, id) {
+  handleCheckBox(e, data) {
     var that = this;
-    console.log(e.target)
+
     let resultArray = []
+    let tempSelectedList = []
+
     if (e.target.checked) {
-      resultArray = that.state.checkedPupil.filter(checkedID =>
-          checkedID !== e.target.id
-      )
+      resultArray = that.state.checkedPupil.filter(checkedID => checkedID !== e.target.id)
+      tempSelectedList = that.state.selectedPupilList.filter(obj => obj.uid !== e.target.id)
       resultArray.push(e.target.id)
-    } else {
-      resultArray = that.state.checkedPupil.filter(checkedID =>
-          checkedID !== e.target.id
-      )
+      tempSelectedList.push(data)
+      }else {
+      resultArray = that.state.checkedPupil.filter(checkedID => checkedID !== e.target.id)
+      tempSelectedList = that.state.selectedPupilList.filter(obj => obj.uid !== e.target.id)
     }
-    console.log(resultArray);
     that.setState({
-      checkedPupil: resultArray
+      checkedPupil: resultArray,
+      selectedPupilList: tempSelectedList
     })
   }
 }

@@ -32,17 +32,17 @@ export default class pupilPanel extends React.Component{
         {
           tid:1,
           tname:'test1',
-          avgGrade:1.2
+          score:1.2
         },
         {
           tid:2,
           tname:'test2',
-          avgGrade:2.2
+          score:2.2
         },
         {
           tid:3,
           tname:'test3',
-          avgGrade:1.2
+          score:1.2
         }
       ],
       showPopup:false,

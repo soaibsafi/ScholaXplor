@@ -65,3 +65,22 @@ exports.assignNewPupil = (req, res) => {
       });
   });
 };
+
+exports.searchAssignedPupil = (req, res) => {
+  ClassPupil.searchAssignedPupil(req.params.uid, (err, data) => {
+    if (err)
+      res.status(200).send({
+        message:
+            err.message || "Some error occurred while retrieving customers.",
+        data: [],
+        status: "FAILED",
+        statusCode: 500,
+      });
+    else
+      res.status(200).send({
+        data: data,
+        status: "SUCCESS",
+        statusCode: 200,
+      });
+  });
+};

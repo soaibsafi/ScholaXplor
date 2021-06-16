@@ -103,7 +103,9 @@ export async function searchPupil(str, token){
   }catch(error){
     console.log(error);
   }
-}export async function getPupilByClass(cid, token){
+}
+
+export async function getPupilByClass(cid, token){
   url = host + "users/class/" + cid;
   try{
     const response = await  axios.get(url,{
@@ -112,6 +114,36 @@ export async function searchPupil(str, token){
       }
     });
     // debugger;
+    return response.data;
+  }catch(error){
+    console.log(error);
+  }
+}
+
+export async function updateAssignedPupil(uid, data, token){
+  url = host + "assign-pupil/" + uid;
+  try{
+    const response = await  axios.put(url, data, {
+      headers: {
+        'Authorization': token
+      }
+    });
+     debugger;
+    return response.data;
+  }catch(error){
+    console.log(error);
+  }
+}
+
+export async function assignPupil(data, token){
+  url = host + "assign-pupil/";
+  try{
+    const response = await  axios.post(url, data, {
+      headers: {
+        'Authorization': token
+      }
+    });
+    debugger;
     return response.data;
   }catch(error){
     console.log(error);

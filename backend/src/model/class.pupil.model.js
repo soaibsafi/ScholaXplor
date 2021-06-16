@@ -42,4 +42,22 @@ ClassPupil.updatePupilAssign = (uid, classPupil, result) => {
   );
 };
 
+ClassPupil.searchAssignedPupil = (uid, result) => {
+  sql.query("SELECT * from ClassStudent where uid= '" + uid + "'", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+
+    if (res.length) {
+      result(null, res);
+      return;
+    }
+
+    // not found Customer with the id
+    result({ kind: "not_found" }, null);
+  });
+};
+
 module.exports = ClassPupil;
