@@ -1,6 +1,12 @@
 import React from 'react';
 import Dropdown from "react-dropdown";
-import {getUsersByRole, getAllClass, getSubjectClassTeacherTogether} from '../../../api/AdminAPI'
+import { 
+  getUsersByRole, 
+  getAllClass, 
+  getSubjectClassTeacherTogether,
+  checkSubjectExists,
+  createSubject
+ } from '../../../api/AdminAPI'
 import SubjectPopUp from "./SubjectPopUp";
 
 import style from './SubjectTab.css'
@@ -18,30 +24,27 @@ export default class SubjectTab extends React.Component {
       allTeacher: [],
       list: [],
       showPopup: false,
-      selectedClass:'',
-      popupHeaderText:'',
-      popupBtnText:'',
+      selectedClass: '',
+      popupHeaderText: '',
+      popupBtnText: '',
       subjectInfo: {
         classname: '',
         subjectname: '',
         tname: '',
         uid: '',
-        status:''
+        status: ''
       },
       token: "token " + this.props.token
     }
-    this.loadFillData = this.loadFillData.bind(this);
-    this.getAllClass = this.getAllClass.bind(this);
-    this.addNewSubject = this.addNewSubject.bind(this);
     this.onClassSelect = this.onClassSelect.bind(this);
-    this.onTeacherSelect = this.onTeacherSelect.bind(this);
-     this.togglePopup = this.togglePopup.bind(this);
-
-     /// Popup functions
+    this.getAllClass = this.getAllClass.bind(this);
+    this.loadFillData = this.loadFillData.bind(this);
+    /// Popup functions
+    this.openAddNewSubjectPopUp = this.openAddNewSubjectPopUp.bind(this);
     this.addSubject = this.addSubject.bind(this);
     this.updateInfo = this.updateInfo.bind(this);
     this.closePopup = this.closePopup.bind(this);
-     
+    this.togglePopup = this.togglePopup.bind(this);
   }
 
   componentDidMount() {
@@ -53,33 +56,24 @@ export default class SubjectTab extends React.Component {
   render() {
     var that = this;
     return (
-        <div className="App">
-          <h2 className={style.dropDown}>Subject Managment</h2>
+      <div className="App">
+        <h2 className={style.dropDown}>Subject Management</h2>
 
-          <div className="select-class-area">
+        <div className="select-class-area">
           <Dropdown classname='style.dropDown'
-                      options={this.state.allClass}
-                      onChange={this.onClassSelect}
-                      placeholder="Choose a class"
-                      placeholderClassName='myPlaceholderClassName'/>
-          </div>
-          <div className='row add-subject-area'>     
-            <input className="form-control-lg"  type="text" name="subject"  placeholder="Enter Subject Name"
-                       // onChange={this.oninputChange.bind(this, "fname")}
-                />
-            <Dropdown classname='style.dropDown'
-                      options={this.state.allTeacher}
-                      onChange={this.onTeacherSelect}
-                      placeholder="Choose a Teacher"
-                      placeholderClassName='myPlaceholderClassName'/>
-                <br/>
-            <button className="btn btn-success " onClick={this.addNewSubject}>Add</button>
-          </div>
-          <br/>
-          <br/>
-          <div className="ag-theme-alpine" style={{height: 400, width: 800}}>
-            <table className="table table-hover table-striped">
-              <thead className="thead-dark">
+            options={this.state.allClass}
+            onChange={this.onClassSelect}
+            placeholder="Choose a class"
+            placeholderClassName='myPlaceholderClassName' />
+        </div>
+        <div className='row add-subject-area'>
+          <button className="btn btn-success " onClick={this.openAddNewSubjectPopUp}>Add</button>
+        </div>
+        <br />
+        <br />
+        <div className="ag-theme-alpine" style={{ height: 400, width: 800 }}>
+          <table className="table table-hover table-striped">
+            <thead className="thead-dark">
               <tr key={"user_key1"}>
                 <th scope="col">Class</th>
                 <th scope="col">Subject</th>
@@ -88,100 +82,85 @@ export default class SubjectTab extends React.Component {
                 <th scope="col">Update</th>
                 <th scope="col">Remove Subject</th>
               </tr>
-              </thead>
-              <tbody>
+            </thead>
+            <tbody>
               {this.loadFillData()}
-              </tbody>
-            </table>
-          </div>
-          {that.state.showPopup ?
-              <SubjectPopUp subjectInfo={that.state.subjectInfo}
-                            selectedClass={that.state.selectedClass}
-                            allTeacher={that.state.allTeacher}
-                            popupHeaderText={that.state.popupHeaderText}
-                            popupBtnText={that.state.popupBtnText}
-                            updateInfo={that.updateInfo}
-                            addSubject={that.addSubject}
-                            closePopup={that.closePopup}
-              /> : null}
+            </tbody>
+          </table>
         </div>
+        {that.state.showPopup ?
+          <SubjectPopUp subjectInfo={that.state.subjectInfo}
+            selectedClass={that.state.selectedClass}
+            allTeacher={this.state.allTeacher}
+            popupHeaderText={that.state.popupHeaderText}
+            popupBtnText={that.state.popupBtnText}
+            updateInfo={that.updateInfo}
+            addSubject={that.addSubject}
+            closePopup={that.closePopup}
+          /> : null}
+      </div>
     )
   }
 
 
   //******************* Changes On Select ********************/
 
-  onClassSelect(e){
+  onClassSelect(e) {
     var that = this;
-    this.setState({selectedClass: e.value}, () => {    
-        getSubjectClassTeacherTogether(e.value, that.state.token).then(data => {
-          //debugger;
-          that.setState({list: data.data})
-        })   
-    })
-  }
 
+    that.setState({ subjectInfo: {classname: e.label} })
 
-  onTeacherSelect(e){
-    var that = this;
-    this.setState({selectedClass: e.value}, () => {
-        getSubjectClassTeacherTogether(e.value, that.state.token).then(data => {
-          //debugger;
-          that.setState({list: data.data})
-        })
+    this.setState({ selectedClass: e.value }, () => {
+      getSubjectClassTeacherTogether(e.value, that.state.token).then(data => {
+        //debugger;
+        that.setState({ list: data.data })
+      })
     })
   }
 
 
 
-  
-
-  addNewSubject() {
-    if(this.state.selectedClass)
-    this.setState({
-          popupHeaderText: "Add A New",
-          popupBtnText:"Add"},
-        ()=>{this.togglePopup();})
-    else alert("Please select a role.");
-
-  }
+  //******************* Load Dropdown ********************/
 
   getAllTeacher(token) {
     var tList = [];
-    getUsersByRole("Teacher",token).then(data => {     
+    getUsersByRole("Teacher", token).then(data => {      
       data.data.forEach(info => {
-          var tname = info.firstname +" "+info.lastname
-          var obj = {value: info.uid, label: tname}
-          tList.push(obj);            
+        var tname = info.firstname + " " + info.lastname
+        var obj = { value: info.uid, label: tname }
+        tList.push(obj);
       });
-      this.setState({allTeacher: tList});
+      this.setState({ allTeacher: tList });
     })
   }
 
   getAllClass(token) {
     var tList = [];
-    getAllClass(token).then(data => {     
+    getAllClass(token).then(data => {
       data.data.forEach(info => {
-          var obj = {value: info.cid, label: info.classname}
-          tList.push(obj);            
+        var obj = { value: info.cid, label: info.classname }
+        tList.push(obj);
       });
-      this.setState({allClass: tList});
+      this.setState({ allClass: tList });
     })
   }
 
+
+  //******************* Load Table ********************/
+
   loadFillData() {
-    if(this.state.list.length) {
+    if (this.state.list.length) {
 
       return this.state.list.map(data => {
         return (
-            <tr key={data.cid}>
-              <th>{data.classname}</th>
-              <th>{data.subjectname}</th>
-              <th>{data.tname}</th>
-              <th>{data.status}</th>
-              <td>{<button className="btn btn-info" onClick={() => this.openUpdatePopup(data)} disabled={data.status === "Archived" ? true : false}>Update</button>}</td>         
-              <td>{<button className="btn btn-danger" onClick={() => this.deleteInfo(data.id)} disabled={data.status === "Archived" ? true : false}>Delete</button>}</td>
-            </tr>
+          <tr key={data.cid}>
+            <th>{data.classname}</th>
+            <th>{data.subjectname}</th>
+            <th>{data.tname}</th>
+            <th>{data.status}</th>
+            <td>{<button className="btn btn-info" onClick={() => this.openUpdatePopup(data)} disabled={data.status === "Archived" ? true : false}>Update</button>}</td>
+            <td>{<button className="btn btn-danger" onClick={() => this.deleteInfo(data.id)} disabled={data.status === "Archived" ? true : false}>Delete</button>}</td>
+          </tr>
         )
       })
     }
@@ -189,36 +168,58 @@ export default class SubjectTab extends React.Component {
   }
 
 
+
+  //******************* Show PopUp ********************/
+
+  openAddNewSubjectPopUp() {
+    if (this.state.selectedClass)
+      this.setState({
+        popupHeaderText: "Add A New",
+        popupBtnText: "Add",
+        subjectInfo: {
+          classname: this.state.subjectInfo.classname,
+          subjectname: '',
+          uid: '',
+          tname: ''
+        }
+      },
+        () => { this.togglePopup(); })
+    else alert("Please select a class");
+
+  }
+
   openUpdatePopup(data) {
     this.setState({
-          popupHeaderText: "Update",
-          popupBtnText: "Update",
-          subjectInfo: {
-            classname: data.classname,
-            subjectname: data.subjectname,
-            uid: data.uid,
-            tname: data.tname
-          },
-          selectedClass: data.cid
-          
-        },
-        () => {
-          this.togglePopup();
-        })
+      popupHeaderText: "Update",
+      popupBtnText: "Update",
+      subjectInfo: {
+        classname: data.classname,
+        subjectname: data.subjectname,
+        uid: data.uid,
+        tname: data.tname
+      },
+      selectedClass: data.cid
+    },
+      () => {
+        this.togglePopup();
+      })
+  }
+
+  togglePopup() {
+    this.setState({ showPopup: !this.state.showPopup });
   }
 
 
 
-
-
-
+  //******************* Post PopUp Action ********************/
 
   addSubject(data) {
     var that = this;
-    /* checkDuplicateUsername(data.username, that.state.token).then(response => {
+    checkSubjectExists(data.subjectname, data.uid, data.cid, that.state.token).then(response => {
+      var tempCid = data.cid
       if (!response.data.length)
-        createNewUser(data, that.state.token).then(data => {
-          if (data.status === "SUCCESS") {
+         createSubject(data.sid, data.subjectname, data.status, data.uid, data.cid, that.state.token).then(res => {
+          if (res.status === "SUCCESS") {
             that.togglePopup();
             that.setState({
               list: [],
@@ -231,14 +232,14 @@ export default class SubjectTab extends React.Component {
                 username: ""
               },
               selectedRole: ""}, () => {
-              that.getAllUser(that.state.token)
+                that.LoadUpdatedData(tempCid, that.state.token)
             })
           } else {
             alert("Error!!")
           }
-        })
-      else alert("This username is already existed");
-    }) */
+        }) 
+      else alert("This Subject already existed");
+    })
 
   }
 
@@ -274,26 +275,31 @@ export default class SubjectTab extends React.Component {
     }) */
   }
 
-  closePopup(){
+  closePopup() {
     this.setState({
-          popupHeaderText: "",
-          popupBtnText: "",
-          userinfo: {
-            fname: "",
-            lname: "",
-            uid: "",
-            username: ""
-          },
-          selectedRole: ""
+      popupHeaderText: "",
+      popupBtnText: "",
+      userinfo: {
+        fname: "",
+        lname: "",
+        uid: "",
+        username: ""
+      },
+      selectedRole: ""
 
-        },
-        () => {
-          this.togglePopup();
-        })
+    },
+      () => {
+        this.togglePopup();
+      })
   }
 
-  togglePopup(){
-    this.setState({showPopup : !this.state.showPopup});
+  //******************** Load Updated Data After PopUp Action ************/
+
+  LoadUpdatedData(cid, token) {
+    getSubjectClassTeacherTogether(cid, token).then(data => {
+      this.setState({ list: data.data })
+    })
   }
+
 
 }
