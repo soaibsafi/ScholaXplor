@@ -228,6 +228,20 @@ export async function deleteAClass(cid, token){
 
 //API for Subject Management Tab
 
+export async function getAllClassWithRemoved(token){
+  url = host + "class-with-removed/";
+  try{
+    const response = await  axios.get(url,{
+      headers: {
+        'Authorization': token
+      }
+    });
+    return response.data;
+  }catch(error){
+    console.log(error);
+  }
+}
+
 export async function getSubjectClassTeacherTogether(cid, token){
   url = host + "subjects/class-teacher/"+cid;
   try{

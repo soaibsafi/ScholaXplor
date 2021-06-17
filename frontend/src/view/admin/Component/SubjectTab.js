@@ -2,7 +2,7 @@ import React from 'react';
 import Dropdown from "react-dropdown";
 import {
   getUsersByRole,
-  getAllClass,
+  getAllClassWithRemoved,
   getSubjectClassTeacherTogether,
   checkSubjectExists,
   createSubject,
@@ -39,7 +39,7 @@ export default class SubjectTab extends React.Component {
       token: "token " + this.props.token
     }
     this.onClassSelect = this.onClassSelect.bind(this);
-    this.getAllClass = this.getAllClass.bind(this);
+    this.getAllClassWithRemoved = this.getAllClassWithRemoved.bind(this);
     this.loadFillData = this.loadFillData.bind(this);
     /// Popup functions
     this.openAddNewSubjectPopUp = this.openAddNewSubjectPopUp.bind(this);
@@ -51,7 +51,7 @@ export default class SubjectTab extends React.Component {
 
   componentDidMount() {
     var token = this.props.token;
-    this.getAllClass("tokeon " + token);
+    this.getAllClassWithRemoved("tokeon " + token);
     this.getAllTeacher("tokeon " + token);
   }
 
@@ -138,9 +138,9 @@ export default class SubjectTab extends React.Component {
     })
   }
 
-  getAllClass(token) {
+  getAllClassWithRemoved(token) {
     var tList = [];
-    getAllClass(token).then(data => {
+    getAllClassWithRemoved(token).then(data => {
       if (data.data != null) {
         data.data.forEach(info => {
           var obj = { value: info.cid, label: info.classname }
