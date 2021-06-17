@@ -287,16 +287,13 @@ export default class SubjectTab extends React.Component {
 
   closePopup() {
     this.setState({
-      popupHeaderText: "",
-      popupBtnText: "",
-      userinfo: {
-        fname: "",
-        lname: "",
-        uid: "",
-        username: ""
-      },
-      selectedRole: ""
-
+      subjectInfo: {
+        classname: '',
+        subjectname: '',
+        tname: '',
+        uid: '',
+        status: ''
+      }
     },
       () => {
         this.togglePopup();

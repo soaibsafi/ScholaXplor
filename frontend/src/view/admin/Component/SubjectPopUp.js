@@ -5,8 +5,8 @@ import Dropdown from "react-dropdown";
 import 'react-dropdown/style.css';
 
 const StatusOptions = [
-  {value: 'Archived', label: 'Archived'},
-  {value: 'Not Archived', label: 'Not Archived'}
+  { value: 'Archived', label: 'Archived' },
+  { value: 'Not Archived', label: 'Not Archived' }
 ];
 
 class SubjectPopUp extends React.Component {
@@ -37,71 +37,58 @@ class SubjectPopUp extends React.Component {
   render() {
     var that = this;
     return (
-        <div className='popup'>
-          <div className='App popup_inner'>
-            <h2>{that.props.popupHeaderText + " " + (that.props.popupHeaderText !== "Update" ? 'Subject' : '')}</h2>
-            <div style={{alignItem: 'left'}}>
-              {console.log(that.state.selectedClass)}
-              <label> <b>Class name</b></label>
-              <br/>
-              <input className="form-control" type="text" name="classname" defaultValue={that.state.classname} disabled/>
-              <br/>
+      <div className='popup'>
+        <div className='App popup_inner'>
+          <h2>{that.props.popupHeaderText + " " + (that.props.popupHeaderText !== "Update" ? 'Subject' : '')}</h2>
+          <div style={{ alignItem: 'left' }}>
+            {console.log(that.state.selectedClass)}
+            <label> <b>Class name</b></label>
+            <br />
+            <input className="form-control" type="text" name="classname" defaultValue={that.state.classname} disabled />
+            <br />
 
-              <label><b> Subject Name</b></label>
-                  <input className="form-control" type="text" name="subjectname" defaultValue={that.props.popupHeaderText === "Update" ? that.state.subjectname : ""}
-                        onChange={that.oninputChange.bind(this, "subjectname")}
-                  /> 
-              <br/>
+            <label><b> Subject Name</b></label>
+            <input className="form-control" type="text" name="subjectname" defaultValue={that.props.popupHeaderText === "Update" ? that.state.subjectname : ""}
+              onChange={that.oninputChange.bind(this, "subjectname")}
+            />
+            <br />
 
-              <label><b> Teacher </b></label>
-              <br/>
-              <Dropdown classname='style.dropDown'
-                      options={this.state.allTeacher}
-                      value={this.state.uid}
-                      onChange={this.onTeacherSelect}
-                      placeholder="Choose a Teacher"
-                      placeholderClassName='myPlaceholderClassName'/>
-              <br/>
+            <label><b> Teacher </b></label>
+            <br />
+            <Dropdown classname='style.dropDown'
+              options={this.state.allTeacher}
+              value={this.state.uid}
+              onChange={this.onTeacherSelect}
+              placeholder="Choose a Teacher"
+              placeholderClassName='myPlaceholderClassName' />
+            <br />
 
-              {that.props.popupHeaderText === "Update" ?
-                  <div>
-                    <label><b> Status </b></label>
-                    <Dropdown classname='style.dropDown'
-                      options={StatusOptions}
-                      value={"Not Archived"}
-                      onChange={this.onStatusSelect}
-                      placeholder="Set a status"
-                      placeholderClassName='myPlaceholderClassName'/>
-                    <br/>
-                  </div> : null}
-            </div>
-            <button className='btn btn-primary' onClick={that.sendData}>{this.props.popupBtnText}</button>
-            <button className='btn btn-danger' onClick={this.close}>{"Close"}</button>
+            {that.props.popupHeaderText === "Update" ?
+              <div>
+                <label><b> Status </b></label>
+                <Dropdown classname='style.dropDown'
+                  options={StatusOptions}
+                  value={"Not Archived"}
+                  onChange={this.onStatusSelect}
+                  placeholder="Set a status"
+                  placeholderClassName='myPlaceholderClassName' />
+                <br />
+              </div> : null}
           </div>
+          <button className='btn btn-primary' onClick={that.sendData}>{this.props.popupBtnText}</button>
+          <button className='btn btn-danger' onClick={this.close}>{"Close"}</button>
         </div>
+      </div>
     )
   }
 
-  close(){
-    this.resetState();
-    this.props.closePopup();
-  }
 
-  resetState(){
-    this.setState({
-      classname: "",
-      subjectname: "",
-      uid: "",
-      cid: "",
-      selectedClass: "",
-      selectedStatus: ''
-    })
-  }
+  //******************* Changes On Select ********************/
 
   oninputChange(key, e) {
     switch (key) {
       case "subjectname":
-        this.setState({subjectname: e.target.value});
+        this.setState({ subjectname: e.target.value });
         break;
       default:
         break;
@@ -109,27 +96,30 @@ class SubjectPopUp extends React.Component {
   }
 
   onTeacherSelect(e) {
-    this.setState({uid: e.value})
+    this.setState({ uid: e.value })
   }
 
   onStatusSelect(e) {
-    this.setState({selectedStatus: e.value})
+    this.setState({ selectedStatus: e.value })
   }
 
-  setSubjectID(){
+
+ //******************* Send Data to Subject Tab Component ********************/
+
+  setSubjectID() {
     return "SUB" + Date.now()
   }
 
   sendData() {
     var tempStatus = this.state.selectedStatus;
-    if(this.state.selectedStatus === "")
+    if (this.state.selectedStatus === "")
       tempStatus = "Not Archived"
 
     var data = this.props.popupBtnText === "Add" ? {
       "classname": this.state.classname,
       "subjectname": this.state.subjectname,
       "uid": this.state.uid,
-      "cid": this.state.selectedClass, 
+      "cid": this.state.selectedClass,
       "status": "Not Archived",
       "sid": this.setSubjectID()
 
@@ -137,7 +127,7 @@ class SubjectPopUp extends React.Component {
       "classname": this.state.classname,
       "subjectname": this.state.subjectname,
       "uid": this.state.uid,
-      "cid": this.state.selectedClass, 
+      "cid": this.state.selectedClass,
       "status": tempStatus,
       "sid": this.state.sid
     }
@@ -147,7 +137,7 @@ class SubjectPopUp extends React.Component {
     if (this.props.popupBtnText === "Add") {
       if (data.subjectname.length && data.uid.length)
         this.props.addSubject(data)
-        
+
       else alert("Subject and Teacher name cannot be empty");
     } else {
       if (data.subjectname.length && data.uid.length && data.status.length)
@@ -155,6 +145,29 @@ class SubjectPopUp extends React.Component {
       else alert("Please provide all info")
     }
   }
+
+
+  //******************* Close PopUp & Reset State ********************/
+
+  close() {
+    this.resetState();
+    this.props.closePopup();
+  }
+
+  resetState() {
+    this.setState({
+      classname: '',
+      subjectname: '',
+      tname: '',
+      //Here uid is the teacher id
+      uid: '',
+      sid: '',
+      selectedClass: '',
+      allTeacher: '',
+      selectedStatus: ''
+    })
+  }
+
 }
 
 export default SubjectPopUp;
