@@ -192,7 +192,6 @@ exports.getSubClassTeacherByCid = (req, res) => {
   });
 };
 
-
 exports.checkSubjectExists = (req, res) => {
   Subject.checkSubExists(
     req.query.subname, req.query.uid, req.query.cid, (err, data) => {
@@ -211,3 +210,23 @@ exports.checkSubjectExists = (req, res) => {
         });
     });
 };
+
+exports.getSubAvgGradeByPupilId = (req, res) => {
+  Subject.getAvgGradeByPupilId(req.params.pid, (err, data) => {
+    if (err)
+      res.status(200).send({
+        message:
+            err.message || "Some error occurred while retrieving Subjects.",
+        status: "FAILED",
+        statusCode: 500,
+      });
+    else
+      res.status(200).send({
+        data: data,
+        status: "SUCCESS",
+        statusCode: 200,
+      });
+  });
+}
+
+
