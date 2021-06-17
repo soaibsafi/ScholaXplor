@@ -114,8 +114,7 @@ Class.getAll = (result) => {
 
 Class.getClassNameByPupilId = (uid, result) => {
   sql.query(
-    "SELECT Class.classname FROM Class Where Class.cid = (SELECT ClassStudent.cid FROM ClassStudent WHERE ClassStudent.uid = ?)",
-    uid,
+    "SELECT Class.classname FROM Class Where Class.cid = (SELECT ClassStudent.cid FROM ClassStudent WHERE ClassStudent.uid = '" + uid + "')",
     (err, res) => {
       if (err) {
         console.log("error: ", err);
