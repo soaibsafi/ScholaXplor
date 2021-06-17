@@ -30,4 +30,9 @@ module.exports = (app) => {
   app.put("/subject/:subjectId", subject.updateSubjectById);
   app.delete("/subject/:subjectId", subject.deleteSubjectById);
   app.post("/subject/", subject.createSubject);
+
+  app.get(
+    "/subjects-exists/",
+    subject.checkSubjectExists
+  );
 };

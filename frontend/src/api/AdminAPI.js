@@ -243,3 +243,66 @@ export async function getSubjectClassTeacherTogether(cid, token){
   }
 }
 
+
+export async function checkSubjectExists(subname, uid, cid, token){
+  url = host + "subjects-exists/?subname=" + subname +"&uid="+ uid +"&cid="+cid;
+  try{
+    const response = await axios.get(url, {
+      headers: {
+        'Authorization': token
+      }
+    })
+    console.log(response);
+    return response.data;
+  }catch(error){
+    console.log(error);
+  }
+}
+
+
+export async function createSubject(sid, subname, status, uid, cid, token){
+  url = host + "subject/?subjectname=" + subname +"&status="+ status +"&uid="+ uid +"&cid="+cid+"&sid="+sid;
+  try{
+    const response = await axios.post(url, {
+      headers: {
+        'Authorization': token
+      }
+    })
+    console.log(response);
+    return response.data;
+  }catch(error){
+    console.log(error);
+  }
+}
+
+
+export async function updateSubject(data, token){
+  url = host + "subject/" + data.sid;
+  try{
+    const response = await axios.put(url, data,{
+      headers: {
+        'Authorization': token
+      }
+    });
+    console.log(response);
+    return response.data;
+  }catch(error){
+    console.log(error);
+  }
+}
+
+
+export async function deleteSubject(sid, token){
+  url = host + "subject/" + sid;
+  try{
+    const response = await axios.delete(url, {
+      headers: {
+        'Authorization': token
+      }
+    })
+    console.log(response);
+    return response.data;
+  }catch(error){
+    console.log(error);
+  }
+}

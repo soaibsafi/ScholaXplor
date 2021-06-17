@@ -23,7 +23,7 @@ Subject.getAll = (cid, result) => {
 };
 
 Subject.getAllTestGrades = (sid, pid, result) => {
-  console.log(sid, pid);
+  console.log(sid, pid)
   var query =
     "SELECT Test.tid, Test.testname as tname, Test.testdate, T.marks as score FROM Test INNER JOIN (SELECT result.marks, result.tid FROM result WHERE result.aid = (SELECT AssignedSubject.aid FROM AssignedSubject WHERE uid = ? AND sid = ?)) as T ON Test.tid = T.tid";
   sql.query(query, [pid, sid], (err, res) => {
@@ -122,7 +122,8 @@ Subject.deleteOne = (sid, result) => {
         return;
       }
 
-      result(null, { msg: "Dependent Test. Can't Delete" });
+      result({ kind: "cant_delete" }, null);
+      return;
     }
   );
 };
@@ -184,11 +185,10 @@ Subject.getAverageGradeBySubAndPupil = (sid, pid, result) => {
 };
 
 Subject.getSubjectClassTeacherByCid = (cid, result) => {
+
   var query =
-    "SELECT Subject.uid, Subject.subjectname, Class.cid, Class.classname, CONCAT(User.firstname, ' ',User.lastname) AS tname, Subject.status FROM Subject " +
-    "INNER JOIN Class ON Subject.cid = Class.cid INNER JOIN User ON Subject.uid = User.uid WHERE Subject.cid = '" +
-    cid +
-    "' ORDER BY Class.cid DESC";
+    "SELECT Subject.sid, Subject.uid, Subject.subjectname, Class.cid, Class.classname, CONCAT(User.firstname, ' ',User.lastname) AS tname, Subject.status FROM Subject "+
+    "INNER JOIN Class ON Subject.cid = Class.cid INNER JOIN User ON Subject.uid = User.uid WHERE Subject.cid = '"+cid+"' ORDER BY Class.cid DESC";
   sql.query(query, (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -222,5 +222,24 @@ Subject.getAvgGradeByPupilId = (pid, result) => {
     result(null, res);
   });
 };
+
+Subject.checkSubExists = (subname,uid,cid, result) => {
+
+  sql.query("SELECT * FROM Subject WHERE subjectname='"+subname+"' AND uid='"+uid+"' AND cid='"+cid+"'",
+  (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+
+    if (res.affectedRows == 0) {
+      result({ kind: "not_found" }, null);
+      return;
+    }
+    result(null, res);
+  })
+
+}
 
 module.exports = Subject;
