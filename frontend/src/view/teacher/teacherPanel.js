@@ -15,16 +15,15 @@ export default class adminPanel extends React.Component {
       subjectsDetails: [],
       token: this.props.location.state ? this.props.location.state.token : "",
     };
-    this.loadFillData = this.loadFillData.bind(this);
     this.logoutAction = this.logoutAction.bind(this);
-    this.tabSelectionAction = this.tabSelectionAction.bind(this);
+    this.loadFillData = this.loadFillData.bind(this);
+    
     this.getAllSUbjectsOfTeacher = this.getAllSUbjectsOfTeacher.bind(this);
   }
 
   componentDidMount() {
     var that = this;
-    var tid = that.state.uid;
-    debugger
+    var tid = that.state.tid;
     var token = that.state.token;
     if (token) {
       window.onpopstate = function (event) {
@@ -34,13 +33,11 @@ export default class adminPanel extends React.Component {
     checkUserType("token " + token).then((res) => {
       if (res.status === "FAILED") that.props.history.push("/");
     });
-    console.log(tid)
     that.getAllSUbjectsOfTeacher(tid, token);
   }
 
   render() {
     var that = this;
-    var state = this.state;
     return (
       <div style={{ width: "1024px" }}>
         <div className="row">
@@ -81,7 +78,6 @@ export default class adminPanel extends React.Component {
   loadFillData() {
     var that = this;
     if (that.state.subjectsDetails.length) {
-      console.log(this.state.subjectsDetails)
       return this.state.subjectsDetails.map((data, idx) => {
         return (
           <tr key={data.sid}>
@@ -113,7 +109,7 @@ export default class adminPanel extends React.Component {
 
   getAllSUbjectsOfTeacher(tid, token) {
     getSubjectDetails(tid, "Token " + token).then((data) => {
-      this.setState({ subjectList: data.data}, ()=>{console.log(this.state.subjectList)});
+      this.setState({ subjectsDetails: data.data});
     });
   }
 }
