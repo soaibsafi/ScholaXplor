@@ -2,7 +2,7 @@ import React from 'react';
 import Dropdown from "react-dropdown";
 import {getAllClass, searchPupil, getPupilByClass, updateAssignedPupil, assignPupil} from "../../../api/AdminAPI";
 import SearchField from 'react-search-field';
-
+import './PupilTab.css'
 
 class PupilTab extends React.Component {
 
@@ -14,11 +14,11 @@ class PupilTab extends React.Component {
       selectedClass: '',
       classList: [],
       pupilList: [],
-      selectedPupilList:[],
+      selectedPupilList: [],
       token: "token " + this.props.token,
       checkedPupil: [],
       isPupilExists: true,
-      searchBy:''
+      searchBy: ''
     }
     this.oninputChange = this.oninputChange.bind(this);
     this.loadAllClass = this.loadAllClass.bind(this);
@@ -80,7 +80,11 @@ class PupilTab extends React.Component {
   }
 
   onClassSelect(e) {
-    this.setState({selectedClass: e.value, pupilList:[], isPupilExists:true})
+    this.setState({
+      selectedClass: e.value,
+      // pupilList:[],
+      // isPupilExists:true
+    })
   }
 
   viewStudentList() {
@@ -92,7 +96,6 @@ class PupilTab extends React.Component {
           classByList: true,
           isPupilExists: response.data.length ? true : false
         });
-
       })
     } else {
       alert("Please select a class first")
@@ -129,42 +132,46 @@ class PupilTab extends React.Component {
 
   assignStudent() {
     var that = this;
-    if(that.state.selectedClass && that.state.selectedPupilList.length){
-      that.state.selectedPupilList.forEach(pupil =>{
-        if(pupil.cid) {
-          if (pupil.cid !== that.state.selectedClass) {
-            updateAssignedPupil(pupil.uid, {cid:that.state.selectedClass}, that.state.token).then(response => {
+    if (that.state.selectedClass && that.state.selectedPupilList.length) {
+        that.state.selectedPupilList.forEach(pupil => {
+          if(that.state.selectedPupilList.length === 1 && pupil.cid === that.state.selectedClass){
+            alert('This student is already in the selected class');
+            return;
+          }
+          if (pupil.cid) {
+            if (pupil.cid !== that.state.selectedClass) {
+              updateAssignedPupil(pupil.uid, {cid: that.state.selectedClass}, that.state.token).then(response => {
+
+              })
+            }
+          } else {
+            var dataObj = {
+              csid: that.setID(),
+              uid: pupil.uid,
+              cid: that.state.selectedClass
+            }
+            assignPupil(dataObj, that.state.token).then(response => {
 
             })
           }
-        }else{
-          var dataObj = {
-            csid: that.setID(),
-            uid: pupil.uid,
-            cid: that.state.selectedClass
-          }
-          assignPupil(dataObj, that.state.token).then(response => {
+        })
 
-          })
-        }
-      })
-      // that.setState({})
-
-      searchPupil(that.state.searchBy, that.state.token).then((response) => {
+      getPupilByClass(that.state.selectedClass, that.state.token).then(response => {
         that.setState({
           pupilList: response.data,
-          classByList: false,
+          classByList: true,
           isPupilExists: response.data.length ? true : false,
-          checkedPupil:[],
-          selectedPupilList:[]
-        })
+          checkedPupil: [],
+          selectedPupilList: []
+        });
       })
-    }else{
+
+    } else {
       alert("Please select Class and one or more pupil to assign them");
     }
   }
 
-  setID(){
+  setID() {
     return "ASGN" + Date.now()
   }
 
@@ -199,7 +206,7 @@ class PupilTab extends React.Component {
       tempSelectedList = that.state.selectedPupilList.filter(obj => obj.uid !== e.target.id)
       resultArray.push(e.target.id)
       tempSelectedList.push(data)
-      }else {
+    } else {
       resultArray = that.state.checkedPupil.filter(checkedID => checkedID !== e.target.id)
       tempSelectedList = that.state.selectedPupilList.filter(obj => obj.uid !== e.target.id)
     }

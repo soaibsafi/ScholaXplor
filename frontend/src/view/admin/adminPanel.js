@@ -18,7 +18,7 @@ export default class adminPanel extends React.Component {
 
     this.state = {
       token: this.props.location.state ? this.props.location.state.token : '',
-      selectedTab: 3 /// TODO: Change it to 0
+      selectedTab: 0
     };
 
     this.logoutAction = this.logoutAction.bind(this);
