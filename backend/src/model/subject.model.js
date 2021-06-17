@@ -242,4 +242,18 @@ Subject.checkSubExists = (subname,uid,cid, result) => {
 
 }
 
+Subject.getSubjectDetailsForTeacher = (tid, result) => {
+  var query = "Select T.sid, Class.classname, T.subjectname FROM Class INNER JOIN (SELECT * FROM Subject WHERE Subject.uid='"+tid+"') as T ON Class.cid = T.cid"
+  console.log(query)
+  sql.query(query, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    console.log("Subjects: ", res);
+    result(null, res);
+  });
+};
+
 module.exports = Subject;

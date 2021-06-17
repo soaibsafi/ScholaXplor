@@ -29,9 +29,10 @@ class loginView extends React.Component{
     }
     login(data).then(response => {
       console.log(response);
+      debugger
       if(response.status === 'SUCCESS' ) {
         if(response.role === "Admin" )that.props.history.push({pathname:redirectadminpath, state: {token:response.token}});
-        else if(response.role === "Teacher") that.props.history.push({pathname:redirectteacherpath, state: {token:response.token}});
+        else if(response.role === "Teacher") that.props.history.push({pathname:redirectteacherpath, state: {token:response.token, uid:response.uid}});
         else that.props.history.push({pathname:redirectpupilpath, state: {token:response.token, uid:response.uid}});
         
       }

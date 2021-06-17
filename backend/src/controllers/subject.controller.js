@@ -229,4 +229,22 @@ exports.getSubAvgGradeByPupilId = (req, res) => {
   });
 }
 
+exports.getSubjectDetailsBYTeacherId = (req, res) => {
+  Subject.getSubjectDetailsForTeacher(req.params.tid, (err, data) => {
+    if (err)
+      res.status(200).send({
+        message:
+            err.message || "Some error occurred while retrieving Subjects.",
+        status: "FAILED",
+        statusCode: 500,
+      });
+    else
+      res.status(200).send({
+        data: data,
+        status: "SUCCESS",
+        statusCode: 200,
+      });
+  });
+}
+
 

@@ -35,4 +35,9 @@ module.exports = (app) => {
     "/subjects-exists/",
     subject.checkSubjectExists
   );
+
+  app.get(
+    "/subjectDetails/:tid",
+    subject.getSubjectDetailsBYTeacherId
+  );
 };
