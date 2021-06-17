@@ -85,6 +85,7 @@ Subject.update = (sid, subject, result) => {
 };
 
 Subject.deleteOne = (sid, result) => {
+  
   res_count = 0;
   sql.query(
     "SELECT COUNT(tid) as count FROM Test WHERE sid = ?",
@@ -122,7 +123,8 @@ Subject.deleteOne = (sid, result) => {
         return;
       }
 
-      result(null, { msg: "Dependent Test. Can't Delete" });
+      result({ kind: "cant_delete" }, null);
+      return;
     }
   );
 };

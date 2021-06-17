@@ -76,15 +76,24 @@ exports.updateSubjectById = (req, res) => {
 exports.deleteSubjectById = (req, res) => {
   Subject.deleteOne(req.params.subjectId, (err, data) => {
     if (err)
-      res.status(200).send({
-        message:
-          err.message || "Some error occurred while retrieving Subjects.",
-        status: "FAILED",
-        statusCode: 500,
-      });
+      if (err.kind === "cant_delete") {
+        res.status(200).send({
+          message: "Dependent Test Found. Subject cannot be deleted",
+          status: "FAILED",
+          statusCode: 500,
+        });
+      } else {
+        res.status(200).send({
+          message:
+            err.message || "Some error occurred while deleting subject",
+          status: "FAILED",
+          statusCode: 500,
+        });
+      }
     else
       res.status(200).send({
         data: data,
+        message: "Subject deleted",
         status: "SUCCESS",
         statusCode: 200,
       });
@@ -187,18 +196,18 @@ exports.getSubClassTeacherByCid = (req, res) => {
 exports.checkSubjectExists = (req, res) => {
   Subject.checkSubExists(
     req.query.subname, req.query.uid, req.query.cid, (err, data) => {
-    if (err)
-      res.status(200).send({
-        message:
-          err.message || "Some error occurred while retrieving Subjects.",
-        status: "FAILED",
-        statusCode: 500,
-      });
-    else
-      res.status(200).send({
-        data: data,
-        status: "SUCCESS",
-        statusCode: 200,
-      });
-  });
+      if (err)
+        res.status(200).send({
+          message:
+            err.message || "Some error occurred while retrieving Subjects.",
+          status: "FAILED",
+          statusCode: 500,
+        });
+      else
+        res.status(200).send({
+          data: data,
+          status: "SUCCESS",
+          statusCode: 200,
+        });
+    });
 };
