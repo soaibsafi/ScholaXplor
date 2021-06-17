@@ -52,8 +52,8 @@ Class.remove = (cid, result) => {
     }
   });
 
-  // Delete from class table
-  sql.query("UPDATE Class SET is_romoved='Yes' WHERE cid = ?", cid, (err, res) => {
+  // Delete(Update) from class table
+  sql.query("UPDATE Class SET is_removed='Yes' WHERE cid = ?", cid, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
