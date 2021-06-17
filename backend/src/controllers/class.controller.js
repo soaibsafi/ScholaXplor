@@ -14,6 +14,7 @@ exports.createClass = (req, res) => {
   const class_c = new Class({
     cid: req.body.cid,
     classname: req.body.classname,
+    is_removed: 'NO'
   });
 
   // Save Customer in the database

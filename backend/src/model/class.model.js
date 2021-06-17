@@ -3,6 +3,7 @@ const sql = require("../model/db");
 const Class = function (class_c) {
   this.cid = class_c.cid;
   this.classname = class_c.classname;
+  this.is_removed = 'No';
 };
 
 Class.create = (newClass, result) => {
@@ -52,7 +53,7 @@ Class.remove = (cid, result) => {
   });
 
   // Delete from class table
-  sql.query("DELETE FROM Class WHERE cid = ?", cid, (err, res) => {
+  sql.query("UPDATE Class SET is_romoved='Yes' WHERE cid = ?", cid, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
