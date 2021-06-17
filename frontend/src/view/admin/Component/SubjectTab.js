@@ -6,7 +6,8 @@ import {
   getSubjectClassTeacherTogether,
   checkSubjectExists,
   createSubject,
-  updateSubject
+  updateSubject,
+  deleteSubject
  } from '../../../api/AdminAPI'
 import SubjectPopUp from "./SubjectPopUp";
 
@@ -160,7 +161,7 @@ export default class SubjectTab extends React.Component {
             <th>{data.tname}</th>
             <th>{data.status}</th>
             <td>{<button className="btn btn-info" onClick={() => this.openUpdatePopup(data)} disabled={data.status === "Archived" ? true : false}>Update</button>}</td>
-            <td>{<button className="btn btn-danger" onClick={() => this.deleteInfo(data.id)} disabled={data.status === "Archived" ? true : false}>Delete</button>}</td>
+            <td>{<button className="btn btn-danger" onClick={() => this.deleteInfo(data.sid)} disabled={data.status === "Archived" ? true : false}>Delete</button>}</td>
           </tr>
         )
       })
@@ -228,13 +229,14 @@ export default class SubjectTab extends React.Component {
               list: [],
               popupHeaderText: "",
               popupBtnText: "",
-              userinfo: {
-                fname: "",
-                lname: "",
-                uid: "",
-                username: ""
+              subjectInfo: {
+                classname: '',
+                subjectname: '',
+                tname: '',
+                uid: '',
+                status: ''
               },
-              selectedRole: ""}, () => {
+              selectedClass: tempCid}, () => {
                 that.LoadUpdatedData(tempCid, that.state.token)
             })
           } else {
@@ -257,27 +259,30 @@ export default class SubjectTab extends React.Component {
           list: [],
           popupHeaderText: "",
           popupBtnText: "",
-          userinfo: {
-            fname: "",
-            lname: "",
-            uid: "",
-            username: ""
+          subjectInfo: {
+            classname: '',
+            subjectname: '',
+            tname: '',
+            uid: '',
+            status: ''
           },
-          selectedRole: ""}, () => {
+          selectedClass: tempCid}, () => {
             that.LoadUpdatedData(tempCid, that.state.token)
         })
+      }else {
+        alert("Error!!")
       }
     }) 
   }
 
-  deleteInfo(uid) {
+  deleteInfo(sid) {
     var that = this;
 
     if (!window.confirm("Do you really want to delete it?")) return;
-    /* deleteAUser(uid, that.state.token).then(data => {
-      alert(data.message);
-      that.getAllUser(that.state.token);
-    }) */
+      deleteSubject(sid, that.state.token).then(data => {
+      alert(data.status + ": " +data.message);
+      that.LoadUpdatedData(that.state.selectedClass, that.state.token);
+    })
   }
 
   closePopup() {

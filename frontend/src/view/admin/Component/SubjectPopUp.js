@@ -18,11 +18,11 @@ class SubjectPopUp extends React.Component {
       classname: this.props.subjectInfo.classname,
       subjectname: this.props.subjectInfo.subjectname,
       tname: this.props.subjectInfo.tname,
+      //Here uid is the teacher id
       uid: this.props.subjectInfo.uid,
       sid: this.props.subjectInfo.sid,
       selectedClass: this.props.selectedClass,
       allTeacher: this.props.allTeacher,
-      selectedTeacher: '',
       selectedStatus: ''
     }
     this.oninputChange = this.oninputChange.bind(this);
@@ -57,6 +57,7 @@ class SubjectPopUp extends React.Component {
               <br/>
               <Dropdown classname='style.dropDown'
                       options={this.state.allTeacher}
+                      value={this.state.uid}
                       onChange={this.onTeacherSelect}
                       placeholder="Choose a Teacher"
                       placeholderClassName='myPlaceholderClassName'/>
@@ -93,7 +94,6 @@ class SubjectPopUp extends React.Component {
       uid: "",
       cid: "",
       selectedClass: "",
-      selectedTeacher: '',
       selectedStatus: ''
     })
   }
@@ -109,7 +109,7 @@ class SubjectPopUp extends React.Component {
   }
 
   onTeacherSelect(e) {
-    this.setState({selectedTeacher: e.value})
+    this.setState({uid: e.value})
   }
 
   onStatusSelect(e) {
@@ -128,7 +128,7 @@ class SubjectPopUp extends React.Component {
     var data = this.props.popupBtnText === "Add" ? {
       "classname": this.state.classname,
       "subjectname": this.state.subjectname,
-      "uid": this.state.selectedTeacher,
+      "uid": this.state.uid,
       "cid": this.state.selectedClass, 
       "status": "Not Archived",
       "sid": this.setSubjectID()
@@ -136,7 +136,7 @@ class SubjectPopUp extends React.Component {
     } : {
       "classname": this.state.classname,
       "subjectname": this.state.subjectname,
-      "uid": this.state.selectedTeacher,
+      "uid": this.state.uid,
       "cid": this.state.selectedClass, 
       "status": tempStatus,
       "sid": this.state.sid

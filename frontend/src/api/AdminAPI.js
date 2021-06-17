@@ -258,3 +258,19 @@ export async function updateSubject(data, token){
     console.log(error);
   }
 }
+
+
+export async function deleteSubject(sid, token){
+  url = host + "subject/" + sid;
+  try{
+    const response = await axios.delete(url, {
+      headers: {
+        'Authorization': token
+      }
+    })
+    console.log(response);
+    return response.data;
+  }catch(error){
+    console.log(error);
+  }
+}
