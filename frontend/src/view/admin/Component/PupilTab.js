@@ -154,9 +154,9 @@ class PupilTab extends React.Component {
         that.setState({
           pupilList: response.data,
           classByList: false,
-          isPupilExists: response.data.length ? true : false
-        }, () => {
-          // that.loadFillData();
+          isPupilExists: response.data.length ? true : false,
+          checkedPupil:[],
+          selectedPupilList:[]
         })
       })
     }else{
@@ -167,7 +167,6 @@ class PupilTab extends React.Component {
   setID(){
     return "ASGN" + Date.now()
   }
-
 
   loadFillData() {
     var that = this;
