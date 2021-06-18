@@ -132,7 +132,7 @@ class SubjectPopUp extends React.Component {
       "sid": this.state.sid
     }
 
-    this.resetState();
+    //this.resetState();
 
     if (this.props.popupBtnText === "Add") {
       if (data.subjectname.length && data.uid.length)
