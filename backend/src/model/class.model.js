@@ -7,17 +7,26 @@ const Class = function (class_c) {
 };
 
 Class.create = (newClass, result) => {
-  sql.query("INSERT INTO Class SET ?", newClass, (err, res) => {
+ //First delete the class if it's status is 'Yes' (Previously removed)
+  sql.query("DELETE FROM Class WHERE classname = ?", newClass.classname, (err, res) => {
     if (err) {
       console.log("error: ", err);
-      result(err, null);
+      result(null, err);
       return;
     }
-
-    // console.log("Created Class: ", { ...newClass });
-    result(null, { ...newClass });
+    //Then insert a new one
+    sql.query("INSERT INTO Class SET ?", newClass, (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(err, null);
+        return;
+      }
+      // console.log("Created Class: ", { ...newClass });
+      result(null, { ...newClass });
+    });
   });
 };
+
 
 Class.updateOne = (class_c, result) => {
   sql.query(
