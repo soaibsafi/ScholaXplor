@@ -14,6 +14,7 @@ exports.createClass = (req, res) => {
   const class_c = new Class({
     cid: req.body.cid,
     classname: req.body.classname,
+    is_removed: 'NO'
   });
 
   // Save Customer in the database
@@ -94,6 +95,40 @@ exports.deleteClassById = (req, res) => {
 
 exports.getAllClass = (req, res) => {
   Class.getAll((err, data) => {
+    if (err)
+      res.status(200).send({
+        message: err.message || "Some error occurred while retrieving classes.",
+        status: "FAILED",
+        statusCode: "500",
+      });
+    else
+      res.status(200).send({
+        status: "SUCCESS",
+        statusCode: 200,
+        data: data,
+      });
+  });
+};
+
+exports.getAllClassWithRemoved = (req, res) => {
+  Class.getAllWithRemoved((err, data) => {
+    if (err)
+      res.status(200).send({
+        message: err.message || "Some error occurred while retrieving classes.",
+        status: "FAILED",
+        statusCode: "500",
+      });
+    else
+      res.status(200).send({
+        status: "SUCCESS",
+        statusCode: 200,
+        data: data,
+      });
+  });
+};
+
+exports.getAllClassesByPupil = (req, res) => {
+  Class.getPupilClasses(req.params.uid, (err, data) => {
     if (err)
       res.status(200).send({
         message: err.message || "Some error occurred while retrieving classes.",

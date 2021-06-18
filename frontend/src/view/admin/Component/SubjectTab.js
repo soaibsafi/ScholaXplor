@@ -1,14 +1,14 @@
 import React from 'react';
 import Dropdown from "react-dropdown";
-import { 
-  getUsersByRole, 
-  getAllClass, 
+import {
+  getUsersByRole,
+  getAllClassWithRemoved,
   getSubjectClassTeacherTogether,
   checkSubjectExists,
   createSubject,
   updateSubject,
   deleteSubject
- } from '../../../api/AdminAPI'
+} from '../../../api/AdminAPI'
 import SubjectPopUp from "./SubjectPopUp";
 
 import style from './SubjectTab.css'
@@ -25,6 +25,7 @@ export default class SubjectTab extends React.Component {
       allClass: [],
       allTeacher: [],
       list: [],
+      classIsRemovedStatus: [],
       showPopup: false,
       selectedClass: '',
       popupHeaderText: '',
@@ -39,7 +40,7 @@ export default class SubjectTab extends React.Component {
       token: "token " + this.props.token
     }
     this.onClassSelect = this.onClassSelect.bind(this);
-    this.getAllClass = this.getAllClass.bind(this);
+    this.getAllClassWithRemoved = this.getAllClassWithRemoved.bind(this);
     this.loadFillData = this.loadFillData.bind(this);
     /// Popup functions
     this.openAddNewSubjectPopUp = this.openAddNewSubjectPopUp.bind(this);
@@ -51,7 +52,7 @@ export default class SubjectTab extends React.Component {
 
   componentDidMount() {
     var token = this.props.token;
-    this.getAllClass("tokeon " + token);
+    this.getAllClassWithRemoved("tokeon " + token);
     this.getAllTeacher("tokeon " + token);
   }
 
@@ -110,7 +111,7 @@ export default class SubjectTab extends React.Component {
   onClassSelect(e) {
     var that = this;
 
-    that.setState({ subjectInfo: {classname: e.label} })
+    that.setState({ subjectInfo: { classname: e.label } })
 
     this.setState({ selectedClass: e.value }, () => {
       getSubjectClassTeacherTogether(e.value, that.state.token).then(data => {
@@ -126,24 +127,33 @@ export default class SubjectTab extends React.Component {
 
   getAllTeacher(token) {
     var tList = [];
-    getUsersByRole("Teacher", token).then(data => {      
-      data.data.forEach(info => {
-        var tname = info.firstname + " " + info.lastname
-        var obj = { value: info.uid, label: tname }
-        tList.push(obj);
-      });
-      this.setState({ allTeacher: tList });
+    getUsersByRole("Teacher", token).then(data => {
+      if (data.data != null) {
+        data.data.forEach(info => {
+          var tname = info.firstname + " " + info.lastname
+          var obj = { value: info.uid, label: tname }
+          tList.push(obj);
+        });
+        this.setState({ allTeacher: tList });
+      }
     })
   }
 
-  getAllClass(token) {
+  getAllClassWithRemoved(token) {
     var tList = [];
-    getAllClass(token).then(data => {
-      data.data.forEach(info => {
-        var obj = { value: info.cid, label: info.classname }
-        tList.push(obj);
-      });
-      this.setState({ allClass: tList });
+    var tList2 = [];
+    getAllClassWithRemoved(token).then(data => {
+      if (data.data != null) {
+        data.data.forEach(info => {
+          var obj = { value: info.cid, label: info.classname }
+          tList.push(obj);
+          var obj2 = { value: info.cid, is_removed: info.is_removed }
+          tList2.push(obj2)
+        });
+        console.log("tList2:  " + tList2)
+        this.setState({ allClass: tList });
+        this.setState({ classIsRemovedStatus: tList2 });
+      }
     })
   }
 
@@ -174,21 +184,38 @@ export default class SubjectTab extends React.Component {
   //******************* Show PopUp ********************/
 
   openAddNewSubjectPopUp() {
-    if (this.state.selectedClass)
-      this.setState({
-        popupHeaderText: "Add A New",
-        popupBtnText: "Add",
-        subjectInfo: {
-          classname: this.state.subjectInfo.classname,
-          subjectname: '',
-          uid: '',
-          tname: ''
-        }
-      },
-        () => { this.togglePopup(); })
-    else alert("Please select a class");
 
+    var isClassRemoved = 0;
+
+    //Check if the selected class is removed or not
+    for (var i = 0; i < this.state.classIsRemovedStatus.length; i++) {
+      if (this.state.classIsRemovedStatus[i].value === this.state.selectedClass) {
+        if (this.state.classIsRemovedStatus[i].is_removed === "Yes") {
+          isClassRemoved = 1;
+        }
+        break;
+      }
+    }
+
+    if (isClassRemoved === 1) {
+      alert(this.state.subjectInfo.classname + " has been deleted. You can only see archived subjects");
+    } else {
+      if (this.state.selectedClass)
+        this.setState({
+          popupHeaderText: "Add A New",
+          popupBtnText: "Add",
+          subjectInfo: {
+            classname: this.state.subjectInfo.classname,
+            subjectname: '',
+            uid: '',
+            tname: ''
+          }
+        },
+          () => { this.togglePopup(); })
+      else alert("Please select a class");
+    }
   }
+
 
   openUpdatePopup(data) {
     this.setState({
@@ -199,7 +226,7 @@ export default class SubjectTab extends React.Component {
         subjectname: data.subjectname,
         uid: data.uid,
         tname: data.tname,
-        sid:data.sid
+        sid: data.sid
       },
       selectedClass: data.cid
     },
@@ -220,9 +247,9 @@ export default class SubjectTab extends React.Component {
     var that = this;
     var tempCid = data.cid;
     checkSubjectExists(data.subjectname, data.uid, data.cid, that.state.token).then(response => {
-      
+
       if (!response.data.length)
-         createSubject(data.sid, data.subjectname, data.status, data.uid, data.cid, that.state.token).then(res => {
+        createSubject(data.sid, data.subjectname, data.status, data.uid, data.cid, that.state.token).then(res => {
           if (res.status === "SUCCESS") {
             that.togglePopup();
             that.setState({
@@ -236,13 +263,14 @@ export default class SubjectTab extends React.Component {
                 uid: '',
                 status: ''
               },
-              selectedClass: tempCid}, () => {
-                that.LoadUpdatedData(tempCid, that.state.token)
+              selectedClass: tempCid
+            }, () => {
+              that.LoadUpdatedData(tempCid, that.state.token)
             })
           } else {
             alert("Error!!")
           }
-        }) 
+        })
       else alert("This Subject already existed");
     })
 
@@ -252,7 +280,7 @@ export default class SubjectTab extends React.Component {
     var that = this;
     var tempCid = data.cid
 
-     updateSubject(data, that.state.token).then(response => {
+    updateSubject(data, that.state.token).then(response => {
       if (response.status === "SUCCESS") {
         that.togglePopup();
         that.setState({
@@ -266,21 +294,22 @@ export default class SubjectTab extends React.Component {
             uid: '',
             status: ''
           },
-          selectedClass: tempCid}, () => {
-            that.LoadUpdatedData(tempCid, that.state.token)
+          selectedClass: tempCid
+        }, () => {
+          that.LoadUpdatedData(tempCid, that.state.token)
         })
-      }else {
-        alert("Error!!")
+      } else {
+        alert(response.message)
       }
-    }) 
+    })
   }
 
   deleteInfo(sid) {
     var that = this;
 
     if (!window.confirm("Do you really want to delete it?")) return;
-      deleteSubject(sid, that.state.token).then(data => {
-      alert(data.status + ": " +data.message);
+    deleteSubject(sid, that.state.token).then(data => {
+      alert(data.status + ": " + data.message);
       that.LoadUpdatedData(that.state.selectedClass, that.state.token);
     })
   }

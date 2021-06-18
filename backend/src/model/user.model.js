@@ -282,7 +282,7 @@ User.duplicateUsername = (username, result) => {
 
 User.getPupilByClassId = (cid, result) => {
   var query =
-    "SELECT cs.uid, u.username, u.firstname as firstname, u.lastname as lastname, (SELECT classname from Class where cid = ?) as classname from ClassStudent cs INNER JOIN User u ON cs.uid = u.uid WHERE cs.cid = ? and u.role ='Pupil'";
+    "SELECT cs.uid, u.username, u.firstname as firstname, u.lastname as lastname, (SELECT classname from Class where cid = ?) as classname, cs.isAssigned from ClassStudent cs INNER JOIN User u ON cs.uid = u.uid WHERE cs.cid = ? and u.role ='Pupil'";
   sql.query(query, [cid, cid], (err, res) => {
     if (err) {
       console.log("error: ", err);

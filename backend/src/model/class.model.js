@@ -3,20 +3,30 @@ const sql = require("../model/db");
 const Class = function (class_c) {
   this.cid = class_c.cid;
   this.classname = class_c.classname;
+  this.is_removed = 'No';
 };
 
 Class.create = (newClass, result) => {
-  sql.query("INSERT INTO Class SET ?", newClass, (err, res) => {
+ //First delete the class if it's status is 'Yes' (Previously removed)
+  sql.query("DELETE FROM Class WHERE classname = ?", newClass.classname, (err, res) => {
     if (err) {
       console.log("error: ", err);
-      result(err, null);
+      result(null, err);
       return;
     }
-
-    // console.log("Created Class: ", { ...newClass });
-    result(null, { ...newClass });
+    //Then insert a new one
+    sql.query("INSERT INTO Class SET ?", newClass, (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(err, null);
+        return;
+      }
+      // console.log("Created Class: ", { ...newClass });
+      result(null, { ...newClass });
+    });
   });
 };
+
 
 Class.updateOne = (class_c, result) => {
   sql.query(
@@ -51,8 +61,8 @@ Class.remove = (cid, result) => {
     }
   });
 
-  // Delete from class table
-  sql.query("DELETE FROM Class WHERE cid = ?", cid, (err, res) => {
+  // Delete(Update) from class table
+  sql.query("UPDATE Class SET is_removed='Yes' WHERE cid = ?", cid, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
@@ -101,6 +111,30 @@ Class.remove = (cid, result) => {
 };
 
 Class.getAll = (result) => {
+  sql.query("SELECT * FROM Class WHERE is_removed='No'", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    console.log("class: ", res);
+    result(null, res);
+  });
+};
+
+Class.getAllWithRemoved = (result) => {
+  sql.query("SELECT * FROM Class", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    console.log("class: ", res);
+    result(null, res);
+  });
+};
+
+Class.getPupilClasses = (uid, result) => {
   sql.query("SELECT * FROM Class", (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -114,7 +148,7 @@ Class.getAll = (result) => {
 
 Class.getClassNameByPupilId = (uid, result) => {
   sql.query(
-    "SELECT Class.classname FROM Class Where Class.cid = (SELECT ClassStudent.cid FROM ClassStudent WHERE ClassStudent.uid = '" + uid + "')",
+    "SELECT Class.classname, T.isAssigned FROM Class INNER JOIN (SELECT ClassStudent.cid, ClassStudent.isAssigned FROM ClassStudent WHERE ClassStudent.uid = ?) as T ON Class.cid = T.cid",
     (err, res) => {
       if (err) {
         console.log("error: ", err);

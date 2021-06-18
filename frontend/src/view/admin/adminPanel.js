@@ -65,7 +65,7 @@ export default class adminPanel extends React.Component {
               <SubjectTab token={state.token}/>
             </TabPanel>
             <TabPanel>
-              <PupilTab token={state.token} tabSelection={that.tabSelectionAction}/>
+              <PupilTab token={state.token}/>
             </TabPanel>
           </Tabs>
 
