@@ -12,12 +12,18 @@ var testList = [{
   sid: 'SUB1623962177966'
 }]
 
+var redirectloginpath ="/teacherpanel"
+
 export default class manageTest extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      subjectname: 'English',
-      list: [],
+      token:this.props.location.state.token,
+      uid:this.props.location.state.uid,
+      subjectname: this.props.location.state.info.subjectname,
+      sid: this.props.location.state.info.sid,
+      classname: this.props.location.state.info.classname,
+      testList: [],
       studentList: [{name: 'abc', marks: 1.2, username: 'abc1'}],
       showPopup:false,
       selectedTest:''
@@ -28,6 +34,7 @@ export default class manageTest extends React.Component {
     this.openUpdatePopup = this.openUpdatePopup.bind(this);
     this.togglePopup = this.togglePopup.bind(this);
     this.onTestChange = this.onTestChange.bind(this);
+    this.gotoBack = this.gotoBack.bind(this);
   }
 
   componentDidMount() {
@@ -38,19 +45,19 @@ export default class manageTest extends React.Component {
     var that = this;
     return (
         <div className="App">
-          <h2>Test Management for {that.state.subjectname}</h2>
+          <h2>Test Management for {that.state.classname} - {that.state.subjectname}</h2>
           <div className="row" style={{width: 520}}>
+            <button className="btn btn-success" onClick={this.gotoBack}>Back </button>
+
             <Dropdown
                 classname="style.dropDown"
-                options={that.state.list}
+                options={that.state.testList}
                 onChange={this.onTestChange}
                 placeholder="Select a test"
                 placeholderClassName="myPlaceholderClassName"
             />
 
-            <button className="btn btn-success" onClick={this.openNewClassPopup}>
-              Add
-            </button>
+            <button className="btn btn-success" onClick={this.openNewClassPopup}>Add </button>
             <button className="btn btn-info" onClick={() => this.openUpdatePopup(that.state.classinfo)}>
               Update
             </button>
@@ -73,7 +80,7 @@ export default class manageTest extends React.Component {
           </div>
           {that.state.showPopup ?
               <ManageTestPopup
-                  testList={that.state.list}
+                  testList={that.state.testList}
                   selectedTest={that.state.selectedTest}
                   //        popupHeaderText={that.state.popupHeaderText}
                   //        popupBtnText={that.state.popupBtnText}
@@ -84,6 +91,10 @@ export default class manageTest extends React.Component {
         </div>
 
     )
+  }
+
+  gotoBack(){
+    this.props.history.push({pathname:redirectloginpath, state: {token:this.state.token, uid:this.state.uid}});
   }
 
   onTestChange(data){

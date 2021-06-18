@@ -21,7 +21,7 @@ export default class teacherPanel extends React.Component {
     this.logoutAction = this.logoutAction.bind(this);
     this.tabSelectionAction = this.tabSelectionAction.bind(this);
     this.getAllSUbjectsOfTeacher = this.getAllSUbjectsOfTeacher.bind(this);
-    this.loadManageTest = this.loadManageTest.bind(this);
+    this.openTestManager = this.openTestManager.bind(this);
   }
 
   componentDidMount() {
@@ -36,7 +36,7 @@ export default class teacherPanel extends React.Component {
     checkUserType("token " + token).then((res) => {
       if (res.status === "FAILED") that.props.history.push("/");
     });
-    console.log(tid)
+    // console.log(tid)
     that.getAllSUbjectsOfTeacher(tid, token);
   }
 
@@ -47,22 +47,7 @@ export default class teacherPanel extends React.Component {
         <div style={{width: "1024px"}}>
           <div className="row">
             <h1>Teacher Panel</h1>
-            <button
-                type="button"
-                className="btn btn-danger"
-                onClick={this.logoutAction}
-            >
-              Logout
-            </button>
-          </div>
-          <div className="row">
-            <button
-                type="button"
-                className="btn btn-success"
-                onClick={this.loadManageTest}
-            >
-              Manage Test
-            </button>
+            <button type="button" className="btn btn-danger" onClick={this.logoutAction}> Logout</button>
           </div>
           <div className="ag-theme-alpine" style={{height: 400, width: 800}}>
             <table className="table table-hover table-striped">
@@ -80,30 +65,26 @@ export default class teacherPanel extends React.Component {
     );
   }
 
-  loadManageTest() {
-    this.props.history.push({pathname:redirectpath, state:{}})
-  }
-
   loadFillData() {
     var that = this;
     if (that.state.subjectsDetails.length) {
-      console.log(this.state.subjectsDetails)
       return this.state.subjectsDetails.map((data, idx) => {
         return (
           <tr key={data.sid}>
             <th>{data.classname}</th>
             <th>{data.subjectname}</th>
-            <td><button
-            type="button"
-            className="btn btn-success"
-            onClick={this.logoutAction}
-          >
-            Manage
-          </button></td>
+            <td>{<button className="btn btn-info" onClick={() => this.openTestManager(data)}>Manage</button>}</td>
           </tr>
         );
       });
     } //else console.log("No data");
+  }
+
+  openTestManager(data){
+    console.log(data);
+    this.props.history.push({pathname:redirectpath,
+      state:{info : data, token:this.state.token, uid:this.state.tid}})
+
   }
 
   logoutAction() {

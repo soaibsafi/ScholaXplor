@@ -14,7 +14,7 @@ class ManageTestPopup extends React.Component {
       selectedTest: this.props.selectedTest,
     }
     // this.oninputChange = this.oninputChange.bind(this);
-    // this.onRoleSelect = this.onRoleSelect.bind(this);
+    this.onTestSelect = this.onTestSelect.bind(this);
     // this.setUserID = this.setUserID.bind(this);
     // this.sendData = this.sendData.bind(this);
     // this.resetState = this.resetState.bind(this);
@@ -36,7 +36,7 @@ class ManageTestPopup extends React.Component {
                   <Dropdown classname='style.dropDown'
                             value={that.state.testList[this.getIndex(this.state.testList, this.state.selectedTest)]}
                             options={that.state.testLists}
-                            onChange={that.onRoleSelect}
+                            onChange={that.onTestSelect}
                             placeholder="Select an option"
                             placeholderClassName='myPlaceholderClassName'/>
 
@@ -113,8 +113,8 @@ class ManageTestPopup extends React.Component {
     }
   }
 
-  onRoleSelect(e) {
-    this.setState({selectedRole: e.value})
+  onTestSelect(e) {
+    this.setState({selectedTest: e.value})
   }
 
   setUserID(){
