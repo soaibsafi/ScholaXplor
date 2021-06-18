@@ -18,12 +18,11 @@ class ManageTestPopup extends React.Component {
     // this.setUserID = this.setUserID.bind(this);
     // this.sendData = this.sendData.bind(this);
     // this.resetState = this.resetState.bind(this);
-    // this.close = this.close.bind(this);
+     this.close = this.close.bind(this);
     this.getIndex = this.getIndex.bind(this);
   }
 
   componentDidMount() {
-
   }
 
   render() {
@@ -31,41 +30,41 @@ class ManageTestPopup extends React.Component {
     return (
         <div className='popup'>
           <div className='App popup_inner'>
-            <h2>{that.props.popupHeaderText + " " + (that.props.popupHeaderText !== "Update" ? that.props.selectedRole : '')}</h2>
-            <div style={{alignItem: 'left'}}>
-                  <Dropdown classname='style.dropDown'
-                            value={that.state.testList[this.getIndex(this.state.testList, this.state.selectedTest)]}
-                            options={that.state.testLists}
-                            onChange={that.onTestSelect}
-                            placeholder="Select an option"
-                            placeholderClassName='myPlaceholderClassName'/>
+            <h2>{that.props.popupHeaderText}</h2>
+            {/*<div style={{alignItem: 'left'}}>*/}
+            {/*      <Dropdown classname='style.dropDown'*/}
+            {/*                value={that.state.testList[this.getIndex(this.state.testList, this.state.selectedTest)]}*/}
+            {/*                options={that.state.testLists}*/}
+            {/*                onChange={that.onTestSelect}*/}
+            {/*                placeholder="Select an option"*/}
+            {/*                placeholderClassName='myPlaceholderClassName'/>*/}
 
-              <label> User name</label><br/>
-              {that.props.popupHeaderText === "Update" ?
-                  <label>{this.state.username}</label> :
-                  <input className="form-control" type="text" name="username"
-                         onChange={that.oninputChange.bind(this, "username")}
-                  />}
-              <br/>
-              <label> First Name:</label>
-              <input className="form-control" type="text" name="fname" defaultValue={this.state.fname}
-                     onChange={that.oninputChange.bind(this, "fname")}
-              />
-              <br/>
-              <label>Last Name:</label>
-              <input className="form-control" type="text" name="lname" defaultValue={this.state.lname}
-                     onChange={that.oninputChange.bind(this, "lname")}
-              />
-              <br/>
-              {that.props.popupHeaderText !== "Update" ?
-                  <div>
-                    <label>Password:</label>
-                    <input className="form-control" type="password" name="password"
-                           onChange={that.oninputChange.bind(this, "password")}
-                    />
-                    <br/>
-                  </div> : null}
-            </div>
+            {/*  <label> User name</label><br/>*/}
+            {/*  {that.props.popupHeaderText === "Update" ?*/}
+            {/*      <label>{this.state.username}</label> :*/}
+            {/*      <input className="form-control" type="text" name="username"*/}
+            {/*             onChange={that.oninputChange.bind(this, "username")}*/}
+            {/*      />}*/}
+            {/*  <br/>*/}
+            {/*  <label> First Name:</label>*/}
+            {/*  <input className="form-control" type="text" name="fname" defaultValue={this.state.fname}*/}
+            {/*         onChange={that.oninputChange.bind(this, "fname")}*/}
+            {/*  />*/}
+            {/*  <br/>*/}
+            {/*  <label>Last Name:</label>*/}
+            {/*  <input className="form-control" type="text" name="lname" defaultValue={this.state.lname}*/}
+            {/*         onChange={that.oninputChange.bind(this, "lname")}*/}
+            {/*  />*/}
+            {/*  <br/>*/}
+            {/*  {that.props.popupHeaderText !== "Update" ?*/}
+            {/*      <div>*/}
+            {/*        <label>Password:</label>*/}
+            {/*        <input className="form-control" type="password" name="password"*/}
+            {/*               onChange={that.oninputChange.bind(this, "password")}*/}
+            {/*        />*/}
+            {/*        <br/>*/}
+            {/*      </div> : null}*/}
+            {/*</div>*/}
             <button className='btn btn-primary' onClick={that.sendData}>{this.props.popupBtnText}</button>
             <button className='btn btn-danger' onClick={this.close}>{"Close"}</button>
           </div>
@@ -79,7 +78,7 @@ class ManageTestPopup extends React.Component {
 
 
   close(){
-    this.resetState();
+    // this.resetState();
     this.props.closePopup();
   }
 

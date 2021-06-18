@@ -45,8 +45,7 @@ export default class teacherPanel extends React.Component {
   }
 
   render() {
-    var that = this;
-    var state = this.state;
+
     return (
         <div style={{width: "1024px"}}>
           <div className="row">
@@ -105,7 +104,7 @@ export default class teacherPanel extends React.Component {
   logoutAction() {
     var that = this;
     that.setState({ token: "" }, () => {
-      that.props.history.push({ pathname: redirectpath });
+      that.props.history.push({ pathname: redirectloginpath });
     });
   }
 
@@ -117,9 +116,5 @@ export default class teacherPanel extends React.Component {
     getSubjectDetails(tid, "Token " + token).then((data) => {
       this.setState({ subjectsDetails: data.data});
     });
-  }
-
-  logoutAction(){
-    this.props.history.push({pathname:redirectloginpath});
   }
 }
