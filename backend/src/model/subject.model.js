@@ -55,6 +55,7 @@ Subject.update = (sid, reqBody, result) => {
 
       if (reqBody.status == "Archived") {
         if (!res_count) {
+          console.log("##############")
           result({ kind: "cant_updated" }, null);
           return;
         } else {

@@ -57,10 +57,11 @@ exports.getAllSubjectByPupilId = (req, res) => {
 
 exports.updateSubjectById = (req, res) => {
   Subject.update(req.params.subjectId, new Subject(req.body), (err, data) => {
-    if (err)
+    
+    if (err){
       if (err.kind === "cant_updated") {
         res.status(200).send({
-          message: "No Dependent Test Found. Subject cannot be archived",
+          message: "FAILED: No Dependent Test Found. Subject cannot be archived",
           status: "FAILED",
           statusCode: 500,
         });
@@ -72,7 +73,7 @@ exports.updateSubjectById = (req, res) => {
           statusCode: 500,
         });
       }
-    else
+    }else
       res.status(200).send({
         data: data,
         status: "SUCCESS",

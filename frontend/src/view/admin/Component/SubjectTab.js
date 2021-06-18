@@ -178,6 +178,9 @@ export default class SubjectTab extends React.Component {
   //******************* Show PopUp ********************/
 
   openAddNewSubjectPopUp() {
+
+    //Check if the selected class is removed or not
+
     if (this.state.selectedClass)
       this.setState({
         popupHeaderText: "Add A New",
@@ -276,7 +279,7 @@ export default class SubjectTab extends React.Component {
           that.LoadUpdatedData(tempCid, that.state.token)
         })
       } else {
-        alert("Error!!")
+        alert(response.message)
       }
     })
   }
