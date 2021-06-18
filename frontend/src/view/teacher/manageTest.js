@@ -1,4 +1,5 @@
 import React from "react";
+
 import Dropdown from "react-dropdown";
 import {getStudentMarkDetails} from "../../api/TeacherAPI";
 import {CSVReader} from 'react-papaparse'
@@ -33,7 +34,7 @@ export default class manageTest extends React.Component {
       popupBtnText: '',
       studentData: '',
 
-      testResult:[],
+      testResult: [],
 
     }
 
@@ -58,10 +59,12 @@ export default class manageTest extends React.Component {
 
   }
 
-  uploadTestResult(){
-    if(this.state.testResult){
+  uploadTestResult() {
+    if (this.state.testResult.length) {
 
-    }else{alert("Please select a CSV file.")}
+    } else {
+      alert("Please select a CSV file.")
+    }
   }
 
   openUpdatePopup(data) {
@@ -120,7 +123,7 @@ export default class manageTest extends React.Component {
     that.setState({
       popupHeaderText: data.name + "'s test and grade update",
       popupBtnText: "Update",
-      studentData: data,
+      studentMarkData: data,
 
     }, () => {
       that.toggleStudentGradePopup();
@@ -143,14 +146,16 @@ export default class manageTest extends React.Component {
   }
 
   handleOpenDialog = (e) => {
-    // Note that the ref is set async, so it might be null at some point
     if (buttonRef.current) {
       buttonRef.current.open(e);
     }
   };
 
   handleOnRemoveFile = (data) => {
-    console.log(data);
+    var that = this;
+    this.setState({studentMarkData: data ? data : []}, () => {
+      console.log(that.state.studentMarkData)
+    })
   };
 
   handleRemoveFile = (e) => {
@@ -160,13 +165,21 @@ export default class manageTest extends React.Component {
   };
 
   handleOnFileLoad = (data) => {
-    console.log(data);
+    var that = this;
+    var obj = [];
+    if (data) {
+      data.forEach(dt => {
+        obj.push({uid:dt.UserID, grade: dt.Marks})
+      })
+
+    }
+
+    this.setState({studentMarkData: obj}, () => {
+      console.log(that.state.studentMarkData)
+    })
   };
 
   handleOnError = (err, file, inputElem, reason) => {
-    console.log('---------------------------');
-    console.log(err);
-    console.log('---------------------------');
   };
 
   render() {
@@ -205,25 +218,15 @@ export default class manageTest extends React.Component {
                       paddingRight: 0
                     }} type='button' onClick={this.handleOpenDialog}>Browse file
                     </button>
-                    <div style={{
-                      borderWidth: 1,
-                      borderStyle: 'solid',
-                      borderColor: '#ccc',
-                      height: 45,
-                      lineHeight: 2.5,
-                      marginTop: 5,
-                      marginBottom: 5,
-                      paddingLeft: 13,
-                      paddingTop: 3,
-                      width: '60%'
-                    }}>{file && file.name}</div>
+                    <div style={{}}>{file && file.name}</div>
                     <button style={{
                       borderRadius: 0,
                       marginLeft: 0,
                       marginRight: 0,
                       paddingLeft: 20,
                       paddingRight: 20
-                    }} onClick={this.handleRemoveFile}>Remove</button>
+                    }} onClick={this.handleRemoveFile}>Remove
+                    </button>
                   </aside>
               )}
             </CSVReader>
