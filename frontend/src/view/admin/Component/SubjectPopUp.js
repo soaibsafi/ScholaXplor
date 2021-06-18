@@ -150,7 +150,6 @@ class SubjectPopUp extends React.Component {
   //******************* Close PopUp & Reset State ********************/
 
   close() {
-    this.resetState();
     this.props.closePopup();
   }
 
