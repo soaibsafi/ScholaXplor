@@ -1,13 +1,14 @@
 import React from "react";
-import { checkUserType } from "../../api/APIUtils";
+import {checkUserType} from "../../api/APIUtils";
 import {
   getSubjectDetails
 } from "../../api/TeacherAPI";
 import "react-tabs/style/react-tabs.css";
 
-const redirectpath = "/login";
+var redirectpath = '/manageTestpanel';
 
-export default class adminPanel extends React.Component {
+export default class teacherPanel extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -19,12 +20,12 @@ export default class adminPanel extends React.Component {
     this.logoutAction = this.logoutAction.bind(this);
     this.tabSelectionAction = this.tabSelectionAction.bind(this);
     this.getAllSUbjectsOfTeacher = this.getAllSUbjectsOfTeacher.bind(this);
+    this.loadManageTest = this.loadManageTest.bind(this);
   }
 
   componentDidMount() {
     var that = this;
     var tid = that.state.uid;
-    debugger
     var token = that.state.token;
     if (token) {
       window.onpopstate = function (event) {
@@ -42,40 +43,44 @@ export default class adminPanel extends React.Component {
     var that = this;
     var state = this.state;
     return (
-      <div style={{ width: "1024px" }}>
-        <div className="row">
-          <h1>Teacher Panel</h1>
-          <button
-            type="button"
-            className="btn btn-danger"
-            onClick={this.logoutAction}
-          >
-            Logout
-          </button>
-        </div>
-        <div className="row">
-          <button
-            type="button"
-            className="btn btn-success"
-            onClick={this.logoutAction}
-          >
-            Manage Test
-          </button>
-        </div>
-        <div className="ag-theme-alpine" style={{ height: 400, width: 800 }}>
-          <table className="table table-hover table-striped">
-            <thead className="thead-dark">
+        <div style={{width: "1024px"}}>
+          <div className="row">
+            <h1>Teacher Panel</h1>
+            <button
+                type="button"
+                className="btn btn-danger"
+                onClick={this.logoutAction}
+            >
+              Logout
+            </button>
+          </div>
+          <div className="row">
+            <button
+                type="button"
+                className="btn btn-success"
+                onClick={this.loadManageTest}
+            >
+              Manage Test
+            </button>
+          </div>
+          <div className="ag-theme-alpine" style={{height: 400, width: 800}}>
+            <table className="table table-hover table-striped">
+              <thead className="thead-dark">
               <tr key={"user_key1"}>
                 <th scope="col">Class</th>
                 <th scope="col">Subjects</th>
                 <th scope="col">Manage Test</th>
               </tr>
-            </thead>
-            <tbody>{this.loadFillData()}</tbody>
-          </table>
+              </thead>
+              <tbody>{this.loadFillData()}</tbody>
+            </table>
+          </div>
         </div>
-      </div>
     );
+  }
+
+  loadManageTest() {
+    this.props.history.push({pathname:redirectpath, state:{}})
   }
 
   loadFillData() {
@@ -84,17 +89,19 @@ export default class adminPanel extends React.Component {
       console.log(this.state.subjectsDetails)
       return this.state.subjectsDetails.map((data, idx) => {
         return (
-          <tr key={data.sid}>
-            <th>{data.classname}</th>
-            <th>{data.subjectname}</th>
-            <td><button
-            type="button"
-            className="btn btn-success"
-            onClick={this.logoutAction}
-          >
-            Manage
-          </button></td>
-          </tr>
+            <tr key={data.sid}>
+              <th>{data.classname}</th>
+              <th>{data.subjectname}</th>
+              <td>
+                <button
+                    type="button"
+                    className="btn btn-success"
+                    onClick={this.logoutAction}
+                >
+                  Manage
+                </button>
+              </td>
+            </tr>
         );
       });
     } //else console.log("No data");
@@ -102,18 +109,24 @@ export default class adminPanel extends React.Component {
 
   logoutAction() {
     var that = this;
-    that.setState({ token: "" }, () => {
-      that.props.history.push({ pathname: redirectpath });
+    that.setState({token: ""}, () => {
+      that.props.history.push({pathname: redirectpath});
     });
   }
 
   tabSelectionAction(idx) {
-    this.setState({ selectedTab: idx });
+    this.setState({selectedTab: idx});
   }
 
   getAllSUbjectsOfTeacher(tid, token) {
     getSubjectDetails(tid, "Token " + token).then((data) => {
-      this.setState({ subjectList: data.data}, ()=>{console.log(this.state.subjectList)});
+      this.setState({subjectList: data.data}, () => {
+        console.log(this.state.subjectList)
+      });
     });
+  }
+
+  logoutAction(){
+    this.props.history.push({pathname:redirectpath});
   }
 }

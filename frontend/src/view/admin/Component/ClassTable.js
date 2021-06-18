@@ -95,7 +95,6 @@ export default class ClassTable extends React.Component {
             popupBtnText={that.state.popupBtnText}
             updateInfo={that.updateInfo}
             addClass={that.addClass}
-            // closePopup={that.closePopup}
           />
         ) : null}
       </div>
@@ -113,7 +112,7 @@ export default class ClassTable extends React.Component {
           </tr>
         );
       });
-    } //else console.log("No data");
+    }
   }
 
   getAllClasses(token) {
@@ -129,15 +128,12 @@ export default class ClassTable extends React.Component {
 
   getAllSubjectsDetails(e) {
     var that = this;
-    debugger
     getSubjectsDetails("token " + that.props.token, e.value).then((data) => {
       var obj = {
         cid: e.value,
         classname: e.label
       }
       that.setState({classinfo: obj, subjectsDetails: data.data })
-
-      //console.log(this.state.selectedClass)
     });
   }
 

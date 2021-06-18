@@ -8,6 +8,7 @@ import loginView from './view/loginView';
 import adminPanel from './view/admin/adminPanel'
 import pupilPanel from "./view/pupil/pupilPanel";
 import teacherPanel from "./view/teacher/teacherPanel";
+import manageTest from './view/teacher/manageTest'
 
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
@@ -23,6 +24,7 @@ render(){
               <Route path="/adminpanel" exact component={adminPanel}/>
               <Route path="/pupilpanel" exact component={pupilPanel}/>
               <Route path="/teacherpanel" exact component={teacherPanel}/>
+              <Route path="/manageTestpanel" exact component={manageTest}/>
             </div>
           </div>
         </div>
