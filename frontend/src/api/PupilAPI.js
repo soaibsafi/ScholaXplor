@@ -19,14 +19,32 @@ export async function getClassname(pid, token){
   }
 }
 
-export async function getAllAssignedSubjects(pid,token){
-    url = host + "subject/avgGrade/" + pid;
+export async function getAllClasses(pid, token){
+  url = host + "pupilClasses/" + pid;
+  try{
+    const response = await  axios.get(url,{
+      headers: {
+        'Authorization': token
+      }
+    });
+    console.log(response.data.data)
+    return response.data.data;
+    
+  }catch(error){
+    console.log(error);
+  }
+}
+
+export async function getAllAssignedSubjects(pid,cid,token){
+    url = host + "subject/avgGrade/" + pid + "/"+cid;
+    console.log(url)
     try{
       const response = await  axios.get(url,{
         headers: {
           'Authorization': token
         }
       });
+      console.log(response.data.data)
       return response.data;
     }catch(error){
       console.log(error);

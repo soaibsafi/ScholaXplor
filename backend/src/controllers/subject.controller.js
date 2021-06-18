@@ -212,7 +212,7 @@ exports.checkSubjectExists = (req, res) => {
 };
 
 exports.getSubAvgGradeByPupilId = (req, res) => {
-  Subject.getAvgGradeByPupilId(req.params.pid, (err, data) => {
+  Subject.getAvgGradeByPupilId(req.params.pid, req.params.cid, (err, data) => {
     if (err)
       res.status(200).send({
         message:
