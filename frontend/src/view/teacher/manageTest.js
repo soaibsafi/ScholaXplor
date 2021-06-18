@@ -1,6 +1,6 @@
 import React from "react";
 import Dropdown from "react-dropdown";
-import {getStudentMarkDetails} from "../../api/TeacherAPI";
+import {getStudentMarkDetails, updateResult} from "../../api/TeacherAPI";
 
 import '../../App.css';
 import ManageTestPopup from './ManageTestPopup'
@@ -50,6 +50,8 @@ export default class manageTest extends React.Component {
 
     this.closeStudentGradePopup = this.closeStudentGradePopup.bind(this);
     this.closeTestPopup = this.closeTestPopup.bind(this);
+
+    this.updateInfo = this.updateInfo.bind(this);
   }
 
   openUpdatePopup(data) {
@@ -183,6 +185,7 @@ export default class manageTest extends React.Component {
                   //        popupBtnText={that.state.popupBtnText}
                   //        updateInfo={that.updateInfo}
                   //        addUser={that.addUser}
+                  updateInfo={that.updateInfo}
                   closePopup={that.closeStudentGradePopup}
               /> : null}
         </div>
@@ -234,5 +237,24 @@ export default class manageTest extends React.Component {
 
     that.setState({testList: tempList}, () => {
     });
+  }
+
+
+  updateInfo(data) {
+    var that = this;
+
+    updateResult(data, that.state.token).then(response => {
+      console.log(response)
+      if (response.status === "SUCCESS") {
+        that.toggleStudentGradePopup();
+        that.setState({
+          
+        }, () => {
+          that.loadStudentList()
+        })
+      } else {
+        alert(response.message)
+      }
+    })
   }
 }

@@ -83,7 +83,7 @@ class SubjectPopUp extends React.Component {
   }
 
 
-  //******************* Changes On Select ********************/
+  //******************* Changes On Select/Input ********************/
 
   oninputChange(key, e) {
     switch (key) {

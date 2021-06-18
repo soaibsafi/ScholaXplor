@@ -11,10 +11,13 @@ export default class ManageStudentTestPopup extends React.Component{
       testList:this.props.testList,
       selectedTest:this.props.selectedTest,
       marks:this.props.studentData.marks,
+      resid:this.props.studentData.resid
     }
 
+    this.onTestSelect = this.onTestSelect.bind(this);
     this.getIndex = this.getIndex.bind(this);
     this.oninputChange = this.oninputChange.bind(this);
+    this.sendData = this.sendData.bind(this);
     this.close = this.close.bind(this);
 
   }
@@ -23,23 +26,7 @@ export default class ManageStudentTestPopup extends React.Component{
 
   }
 
-  close(){
-    this.props.closePopup();
-  }
-
-  oninputChange(key, e) {
-    switch (key) {
-      case "marks":
-        this.setState({marks: e.target.value});
-        break;
-      default:
-        break;
-    }
-  }
-
-  getIndex(arr, testVal) {
-    return arr.findIndex(obj => obj.value === testVal);
-  }
+  
 
   render() {
     var that = this;
@@ -51,7 +38,7 @@ export default class ManageStudentTestPopup extends React.Component{
             <div style={{alignItem: 'left'}}>
               <Dropdown classname='style.dropDown'
                         value={that.state.testList[this.getIndex(this.state.testList, this.state.selectedTest)]}
-                        options={that.state.testLists}
+                        options={that.state.testList}
                         onChange={that.onTestSelect}
                         placeholder="Select an option"
                         placeholderClassName='myPlaceholderClassName'/>
@@ -86,4 +73,51 @@ export default class ManageStudentTestPopup extends React.Component{
         </div>
     )
   }
+
+
+  close(){
+    this.props.closePopup();
+  }
+  
+
+
+  getIndex(arr, testVal) {
+    return arr.findIndex(obj => obj.value === testVal);
+  }
+
+
+   //******************* Changes On Select ********************/
+
+   onTestSelect(e) {
+     console.log(e.value)
+    this.setState({ selectedTest: e.value })
+  }
+
+
+  oninputChange(key, e) {
+    switch (key) {
+      case "marks":
+        this.setState({marks: e.target.value});
+        break;
+      default:
+        break;
+    }
+  }
+
+  //******************* Send Data to Subject Tab Component ********************/
+
+
+  sendData() {
+
+    var data =  {
+      "resid": this.state.resid,
+      "marks": this.state.marks
+    } 
+
+console.log(data.resid)
+      if (data.resid != null && data.marks.length)
+        this.props.updateInfo(data);
+      else alert("Please provide all info") 
+  }
+
 }

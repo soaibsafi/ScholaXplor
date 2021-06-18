@@ -50,3 +50,18 @@ export async function getStudentMarkDetails(tid, token){
     console.log(error);
   }
 }
+
+export async function updateResult(data, token){
+  url = host + "marks/" + data.resid;
+  try{
+    const response = await axios.put(url, data,{
+      headers: {
+        'Authorization': token
+      }
+    });
+    console.log(response);
+    return response.data;
+  }catch(error){
+    console.log(error);
+  }
+}
