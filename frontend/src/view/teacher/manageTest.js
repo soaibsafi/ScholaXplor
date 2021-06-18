@@ -1,10 +1,13 @@
 import React from "react";
 import Dropdown from "react-dropdown";
 import {getStudentMarkDetails} from "../../api/TeacherAPI";
+import {CSVReader} from 'react-papaparse'
 
 import '../../App.css';
 import ManageTestPopup from './ManageTestPopup'
 import ManageStudentTestPopup from './ManageStudentTestPopup'
+
+const buttonRef = React.createRef();
 
 var redirectloginpath = "/teacherpanel"
 
@@ -24,11 +27,13 @@ export default class manageTest extends React.Component {
 
       showTestPopup: false,
       showStudentGradePopup: false,
-      showPopUp:false,
+      showPopUp: false,
 
       popupHeaderText: '',
       popupBtnText: '',
       studentData: '',
+
+      testResult:[],
 
     }
 
@@ -43,13 +48,20 @@ export default class manageTest extends React.Component {
     this.toggleStudentGradePopup = this.toggleStudentGradePopup.bind(this);
 
 
-
     this.openStudentTestGradeUpdatePopup = this.openStudentTestGradeUpdatePopup.bind(this);
     this.openNewTestPopup = this.openNewTestPopup.bind(this);
     this.openUpdatePopup = this.openUpdatePopup.bind(this);
 
     this.closeStudentGradePopup = this.closeStudentGradePopup.bind(this);
     this.closeTestPopup = this.closeTestPopup.bind(this);
+    this.uploadTestResult = this.uploadTestResult.bind(this);
+
+  }
+
+  uploadTestResult(){
+    if(this.state.testResult){
+
+    }else{alert("Please select a CSV file.")}
   }
 
   openUpdatePopup(data) {
@@ -73,7 +85,7 @@ export default class manageTest extends React.Component {
       popupBtnText: "",
 
     }, () => {
-       that.toggleNewTestPopup();
+      that.toggleNewTestPopup();
     })
   }
 
@@ -130,6 +142,33 @@ export default class manageTest extends React.Component {
     this.loadStudentList();
   }
 
+  handleOpenDialog = (e) => {
+    // Note that the ref is set async, so it might be null at some point
+    if (buttonRef.current) {
+      buttonRef.current.open(e);
+    }
+  };
+
+  handleOnRemoveFile = (data) => {
+    console.log(data);
+  };
+
+  handleRemoveFile = (e) => {
+    if (buttonRef.current) {
+      buttonRef.current.removeFile(e);
+    }
+  };
+
+  handleOnFileLoad = (data) => {
+    console.log(data);
+  };
+
+  handleOnError = (err, file, inputElem, reason) => {
+    console.log('---------------------------');
+    console.log(err);
+    console.log('---------------------------');
+  };
+
   render() {
     var that = this;
     return (
@@ -151,6 +190,46 @@ export default class manageTest extends React.Component {
             <button className="btn  btn-danger" onClick={() => this.deleteInfo(that.state.classinfo.cid)}>Delete
             </button>
           </div>
+          <div className="row" style={{width: 1020}}>
+            <CSVReader noClick noDrag ref={buttonRef}
+                       onFileLoad={this.handleOnFileLoad}
+                       onError={this.handleOnError} onRemoveFile={this.handleOnRemoveFile}>
+              {({file}) => (
+                  <aside style={{display: 'flex', flexDirection: 'row', marginBottom: 10}}>
+                    <button style={{
+                      borderRadius: 0,
+                      marginLeft: 0,
+                      marginRight: 0,
+                      width: '40%',
+                      paddingLeft: 0,
+                      paddingRight: 0
+                    }} type='button' onClick={this.handleOpenDialog}>Browse file
+                    </button>
+                    <div style={{
+                      borderWidth: 1,
+                      borderStyle: 'solid',
+                      borderColor: '#ccc',
+                      height: 45,
+                      lineHeight: 2.5,
+                      marginTop: 5,
+                      marginBottom: 5,
+                      paddingLeft: 13,
+                      paddingTop: 3,
+                      width: '60%'
+                    }}>{file && file.name}</div>
+                    <button style={{
+                      borderRadius: 0,
+                      marginLeft: 0,
+                      marginRight: 0,
+                      paddingLeft: 20,
+                      paddingRight: 20
+                    }} onClick={this.handleRemoveFile}>Remove</button>
+                  </aside>
+              )}
+            </CSVReader>
+            <button className="btn  btn-danger" onClick={this.uploadTestResult}>Upload</button>
+
+          </div>
           <div className="ag-theme-alpine" style={{height: 400, width: 800}}>
             <table className="table table-hover table-striped">
               <thead className="thead-dark">
@@ -167,11 +246,11 @@ export default class manageTest extends React.Component {
               <ManageTestPopup
                   testList={that.state.testList}
                   selectedTest={that.state.selectedTest}
-                          popupHeaderText={that.state.popupHeaderText}
-                          popupBtnText={that.state.popupBtnText}
+                  popupHeaderText={that.state.popupHeaderText}
+                  popupBtnText={that.state.popupBtnText}
                   //        updateInfo={that.updateInfo}
                   //        addUser={that.addUser}
-                   closePopup={that.closeTestPopup}
+                  closePopup={that.closeTestPopup}
               /> : null}
 
           {that.state.showStudentGradePopup ?
@@ -204,8 +283,6 @@ export default class manageTest extends React.Component {
   onTestChange(data) {
     this.setState({selectedTest: data})
   }
-
-
 
 
   loadFillData() {
