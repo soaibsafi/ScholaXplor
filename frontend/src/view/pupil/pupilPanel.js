@@ -1,5 +1,6 @@
 import React from "react";
 import { checkUserType } from "../../api/APIUtils";
+import Dropdown from "react-dropdown";
 import {
   getClassname,
   getAllAssignedSubjects,
@@ -9,6 +10,13 @@ import {
 import PupilTestDetails from "./PupilTestDetails";
 
 const redirectpath = "/login";
+
+const options = [
+  {value: 'ALL', label: 'All Users'},
+  {value: 'Admin', label: 'Admin'},
+  {value: 'Pupil', label: 'Pupil'},
+  {value: 'Teacher', label: 'Teacher'}
+];
 
 export default class pupilPanel extends React.Component {
   constructor(props) {
@@ -67,6 +75,15 @@ export default class pupilPanel extends React.Component {
             >
               Logout
             </button>
+          </div>
+          <div className='row' style={{width: 340}}>
+          <Dropdown
+            classname="style.dropDown"
+            options={that.state.allClasses}
+            onChange={this.getAllSubjectsDetails}
+            placeholder="Select a class"
+            placeholderClassName="myPlaceholderClassName"
+          />
           </div>
           <div className="ag-theme-alpine" style={{ height: 400, width: 800 }}>
             <table className="table table-hover table-striped">

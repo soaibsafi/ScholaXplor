@@ -134,9 +134,21 @@ Class.getAllWithRemoved = (result) => {
   });
 };
 
+Class.getPupilClasses = (uid, result) => {
+  sql.query("SELECT * FROM Class", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    console.log("class: ", res);
+    result(null, res);
+  });
+};
+
 Class.getClassNameByPupilId = (uid, result) => {
   sql.query(
-    "SELECT Class.classname FROM Class Where Class.cid = (SELECT ClassStudent.cid FROM ClassStudent WHERE ClassStudent.uid = '" + uid + "')",
+    "SELECT Class.classname, T.isAssigned FROM Class INNER JOIN (SELECT ClassStudent.cid, ClassStudent.isAssigned FROM ClassStudent WHERE ClassStudent.uid = ?) as T ON Class.cid = T.cid",
     (err, res) => {
       if (err) {
         console.log("error: ", err);

@@ -127,6 +127,23 @@ exports.getAllClassWithRemoved = (req, res) => {
   });
 };
 
+exports.getAllClassesByPupil = (req, res) => {
+  Class.getPupilClasses(req.params.uid, (err, data) => {
+    if (err)
+      res.status(200).send({
+        message: err.message || "Some error occurred while retrieving classes.",
+        status: "FAILED",
+        statusCode: "500",
+      });
+    else
+      res.status(200).send({
+        status: "SUCCESS",
+        statusCode: 200,
+        data: data,
+      });
+  });
+};
+
 exports.getClassName = (req, res) => {
   Class.getClassNameByPupilId(req.params.uid, (err, data) => {
     if (err)
