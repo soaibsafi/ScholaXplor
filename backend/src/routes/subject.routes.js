@@ -31,13 +31,7 @@ module.exports = (app) => {
   app.delete("/subject/:subjectId", subject.deleteSubjectById);
   app.post("/subject/", subject.createSubject);
 
-  app.get(
-    "/subjects-exists/",
-    subject.checkSubjectExists
-  );
+  app.get("/subjects-exists/",subject.checkSubjectExists);
 
-  app.get(
-    "/subjectDetails/:tid",
-    subject.getSubjectDetailsBYTeacherId
-  );
+  app.get("/subjectDetails/:tid", subject.getSubjectDetailsBYTeacherId);
 };

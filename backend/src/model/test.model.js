@@ -48,6 +48,24 @@ Test.getAllMarks = (testId, result) => {
   });
 };
 
+Test.getAllTestInfoBySid = (sid, result) => {
+  sql.query("SELECT * FROM Test WHERE sid ='" + sid + "'", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    console.log("Data: ", res);
+    result(null, res);
+
+    if (res.length) {
+      console.log("found tests: ", res);
+      result(null, res);
+      return;
+    }
+  });
+};
+
 Test.updateByTid = (tid, test, result) => {
   sql.query("SET FOREIGN_KEY_CHECKS=0;", (err, res) => {
     if (err) {

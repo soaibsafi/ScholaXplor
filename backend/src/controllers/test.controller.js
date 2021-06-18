@@ -48,7 +48,7 @@ exports.createTest = (req, res) => {
 };
 
 exports.getAllTestsBySid = (req, res) => {
-  Test.getAllTestsBySid(req.params.sid, (err, data) => {
+  Test.getAllTestInfoBySid(req.params.sid, (err, data) => {
     if (err)
       res.status(200).send({
         message: err.message || "Some error occurred while retrieving Tests.",
