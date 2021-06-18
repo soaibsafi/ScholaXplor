@@ -135,7 +135,7 @@ Class.getAllWithRemoved = (result) => {
 };
 
 Class.getPupilClasses = (uid, result) => {
-  sql.query("SELECT * FROM Class", (err, res) => {
+  sql.query("SELECT Class.cid, Class.classname, T.isAssigned FROM Class INNER JOIN (SELECT ClassStudent.cid, ClassStudent.isAssigned FROM ClassStudent WHERE ClassStudent.uid = ?) as T ON Class.cid = T.cid", uid, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
@@ -146,9 +146,9 @@ Class.getPupilClasses = (uid, result) => {
   });
 };
 
-Class.getClassNameByPupilId = (uid, result) => {
+Class.getCurrentClassNameByPupilId = (uid, result) => {
   sql.query(
-    "SELECT Class.classname, T.isAssigned FROM Class INNER JOIN (SELECT ClassStudent.cid, ClassStudent.isAssigned FROM ClassStudent WHERE ClassStudent.uid = ?) as T ON Class.cid = T.cid",
+    "SELECT Class.cid, Class.classname, T.isAssigned FROM Class INNER JOIN (SELECT ClassStudent.cid, ClassStudent.isAssigned FROM ClassStudent WHERE ClassStudent.uid = ? AND ClassStudent.isAssigned='Y') as T ON Class.cid = T.cid", uid,
     (err, res) => {
       if (err) {
         console.log("error: ", err);

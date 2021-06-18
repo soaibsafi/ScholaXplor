@@ -29,6 +29,7 @@ require("./src/routes/class.routes")(app);
 require("./src/routes/subject.routes")(app);
 require("./src/routes/test.routes")(app);
 require("./src/routes/class.pupil.routes")(app);
+require("./src/routes/result.routes")(app);
 
 // set port, listen for requests
 app.listen(3000, () => {

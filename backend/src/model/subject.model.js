@@ -216,19 +216,19 @@ Subject.getSubjectClassTeacherByCid = (cid, result) => {
   });
 };
 
-Subject.getAvgGradeByPupilId = (pid, result) => {
+Subject.getAvgGradeByPupilId = (pid, cid, result) => {
   var query = `SELECT R_T_S_AS.sid as sid, R_T_S_AS.subjectname as subjectname,  AVG(marks) as avgGrade FROM result INNER JOIN (SELECT Test.tid, T_S_AS.*
     FROM Test
     INNER JOIN (
     SELECT Subject.subjectname, Subject.sid
     FROM Subject
     INNER JOIN (SELECT AssignedSubject.sid FROM AssignedSubject Where AssignedSubject.uid = ?) as S_AS
-    ON Subject.sid = S_AS.sid) as T_S_AS
+    ON Subject.sid = S_AS.sid AND Subject.cid=?) as T_S_AS
     ON Test.sid = T_S_AS.sid
     )as R_T_S_AS
     ON result.tid=R_T_S_AS.tid
     GROUP BY sid`;
-  sql.query(query, pid, (err, res) => {
+  sql.query(query, [pid, cid], (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);

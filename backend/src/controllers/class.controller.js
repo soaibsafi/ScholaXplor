@@ -145,7 +145,7 @@ exports.getAllClassesByPupil = (req, res) => {
 };
 
 exports.getClassName = (req, res) => {
-  Class.getClassNameByPupilId(req.params.uid, (err, data) => {
+  Class.getCurrentClassNameByPupilId(req.params.uid, (err, data) => {
     if (err)
       res.status(200).send({
         message: err.message || "Some error occurred while retrieving classes.",

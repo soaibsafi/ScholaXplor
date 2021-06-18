@@ -57,7 +57,7 @@ User.findById = (userId, result) => {
 
 User.searchPupil = (sp, result) => {
   var query =
-    "SELECT Class.classname, TT.* FROM Class RIGHT JOIN (SELECT ClassStudent.cid, T.* FROM ClassStudent RIGHT JOIN (SELECT * from User where role='Pupil' AND (firstname LIKE '%" +
+    "SELECT Class.classname, TT.* FROM Class RIGHT JOIN (SELECT ClassStudent.cid, ClassStudent.isAssigned, T.* FROM ClassStudent RIGHT JOIN (SELECT * from User where role='Pupil' AND (firstname LIKE '%" +
     sp +
     "%' OR lastname LIKE '%" +
     sp +
