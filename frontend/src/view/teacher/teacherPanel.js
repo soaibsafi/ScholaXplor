@@ -1,8 +1,6 @@
 import React from "react";
 import { checkUserType } from "../../api/APIUtils";
-import {
-  getSubjectDetails
-} from "../../api/TeacherAPI";
+import {  getSubjectDetails, getTestDetails } from "../../api/TeacherAPI";
 import "react-tabs/style/react-tabs.css";
 
 var redirectpath = '/manageTestpanel';
@@ -34,9 +32,15 @@ export default class teacherPanel extends React.Component {
       };
     }
     checkUserType("token " + token).then((res) => {
-      if (res.status === "FAILED") that.props.history.push("/");
+      if(res) {
+        if (res.status === "FAILED") that.props.history.push("/");
+        return;
+      }
+      else {
+        that.props.history.push("/");
+        return;
+      }
     });
-    // console.log(tid)
     that.getAllSUbjectsOfTeacher(tid, token);
   }
 
@@ -81,9 +85,20 @@ export default class teacherPanel extends React.Component {
   }
 
   openTestManager(data){
+    // debugger;
     console.log(data);
-    this.props.history.push({pathname:redirectpath,
-      state:{info : data, token:this.state.token, uid:this.state.tid}})
+    var that = this;
+    getTestDetails(data.sid, that.state.token).then(response => {
+      // debugger;
+      that.props.history.push({pathname:redirectpath,
+        state:{info : data,
+          token:that.state.token,
+          uid:that.state.tid,
+          testList: response.data,
+           selectedTest:response.data[0].tid,
+      }})
+    })
+
 
   }
 

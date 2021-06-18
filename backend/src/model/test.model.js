@@ -19,7 +19,6 @@ Test.getAllMarks = (testId, result) => {
           result(err, null);
           return;
         }
-
         console.log("created test: ", { id: res.insertId, ...newTest });
         result(null, { id: res.insertId, ...newTest });
       });
@@ -55,8 +54,8 @@ Test.getAllTestInfoBySid = (sid, result) => {
       result(null, err);
       return;
     }
-    console.log("Data: ", res);
-    result(null, res);
+    // console.log("Data: ", res);
+    // result(null, res);
 
     if (res.length) {
       console.log("found tests: ", res);
