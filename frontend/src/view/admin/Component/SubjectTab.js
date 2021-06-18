@@ -189,15 +189,15 @@ export default class SubjectTab extends React.Component {
 
     //Check if the selected class is removed or not
     for (var i = 0; i < this.state.classIsRemovedStatus.length; i++) {
-      if (this.state.classIsRemovedStatus[i].value == this.state.selectedClass) {
-        if (this.state.classIsRemovedStatus[i].is_removed == "Yes") {
+      if (this.state.classIsRemovedStatus[i].value === this.state.selectedClass) {
+        if (this.state.classIsRemovedStatus[i].is_removed === "Yes") {
           isClassRemoved = 1;
         }
         break;
       }
     }
 
-    if (isClassRemoved == 1) {
+    if (isClassRemoved === 1) {
       alert(this.state.subjectInfo.classname + " has been deleted. You can only see archived subjects");
     } else {
       if (this.state.selectedClass)
