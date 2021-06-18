@@ -9,7 +9,7 @@ const Test = function (test) {
 
 Test.getAllMarks = (testId, result) => {
   var query =
-    "SELECT name, username, marks FROM result INNER JOIN (SELECT CONCAT(firstname, ' ', lastname) as name, username FROM User WHERE uid = (SELECT uid FROM Subject WHERE sid = (SELECT sid FROM Test WHERE tid = ?))) AS T";
+    "SELECT name, username, marks FROM result INNER JOIN (SELECT CONCAT(firstname, ' ', lastname) as name, username FROM User WHERE uid = (SELECT uid FROM AssignedSubject WHERE sid = (SELECT sid FROM Test WHERE tid = ?))) AS T";
   sql.query(query, testId, (err, res) => {
     Test.create = (newTest, result) => {
       var query = "INSERT INTO Test SET ?";

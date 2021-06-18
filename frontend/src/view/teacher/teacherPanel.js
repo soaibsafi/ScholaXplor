@@ -1,11 +1,12 @@
 import React from "react";
-import {checkUserType} from "../../api/APIUtils";
+import { checkUserType } from "../../api/APIUtils";
 import {
   getSubjectDetails
 } from "../../api/TeacherAPI";
 import "react-tabs/style/react-tabs.css";
 
 var redirectpath = '/manageTestpanel';
+const redirectloginpath = "/login";
 
 export default class teacherPanel extends React.Component {
 
@@ -25,7 +26,7 @@ export default class teacherPanel extends React.Component {
 
   componentDidMount() {
     var that = this;
-    var tid = that.state.uid;
+    var tid = that.state.tid;
     var token = that.state.token;
     if (token) {
       window.onpopstate = function (event) {
@@ -71,11 +72,11 @@ export default class teacherPanel extends React.Component {
                 <th scope="col">Subjects</th>
                 <th scope="col">Manage Test</th>
               </tr>
-              </thead>
-              <tbody>{this.loadFillData()}</tbody>
-            </table>
-          </div>
+            </thead>
+            <tbody>{this.loadFillData()}</tbody>
+          </table>
         </div>
+      </div>
     );
   }
 
@@ -89,19 +90,17 @@ export default class teacherPanel extends React.Component {
       console.log(this.state.subjectsDetails)
       return this.state.subjectsDetails.map((data, idx) => {
         return (
-            <tr key={data.sid}>
-              <th>{data.classname}</th>
-              <th>{data.subjectname}</th>
-              <td>
-                <button
-                    type="button"
-                    className="btn btn-success"
-                    onClick={this.logoutAction}
-                >
-                  Manage
-                </button>
-              </td>
-            </tr>
+          <tr key={data.sid}>
+            <th>{data.classname}</th>
+            <th>{data.subjectname}</th>
+            <td><button
+            type="button"
+            className="btn btn-success"
+            onClick={this.logoutAction}
+          >
+            Manage
+          </button></td>
+          </tr>
         );
       });
     } //else console.log("No data");
@@ -109,24 +108,22 @@ export default class teacherPanel extends React.Component {
 
   logoutAction() {
     var that = this;
-    that.setState({token: ""}, () => {
-      that.props.history.push({pathname: redirectpath});
+    that.setState({ token: "" }, () => {
+      that.props.history.push({ pathname: redirectpath });
     });
   }
 
   tabSelectionAction(idx) {
-    this.setState({selectedTab: idx});
+    this.setState({ selectedTab: idx });
   }
 
   getAllSUbjectsOfTeacher(tid, token) {
     getSubjectDetails(tid, "Token " + token).then((data) => {
-      this.setState({subjectList: data.data}, () => {
-        console.log(this.state.subjectList)
-      });
+      this.setState({ subjectsDetails: data.data});
     });
   }
 
   logoutAction(){
-    this.props.history.push({pathname:redirectpath});
+    this.props.history.push({pathname:redirectloginpath});
   }
 }

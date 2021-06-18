@@ -7,16 +7,57 @@ const ClassPupil = function (classPupil) {
 };
 
 ClassPupil.assignNewPupil = (newClassPupil, result) => {
-  sql.query("INSERT INTO ClassStudent SET ?", newClassPupil, (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(err, null);
-      return;
-    }
+  sql.query(
+    "SELECT sid FROM Subject WHERE cid=? AND status='Not Archived'",
+    newClassPupil.cid,
+    (err, totalSub) => {
+      if (err) {
+        console.log("error: ", err);
+        result(err, null);
+        return;
+      } else {
+        totalSub.forEach((sub, idx) => {
+          var aid = "AI" + Date.now() + "A" + idx;
+          sql.query(
+            "INSERT INTO AssignedSubject VALUES (?, ?, ?, 'Not Archived')",
+            [aid, newClassPupil.uid, sub.sid],
+            (err, res) => {
+              if (err) {
+                console.log("error in inserting AssignSubject: ", err);
+                result(err, null);
+                return;
+              }
+            }
+          );
+        });
+        sql.query(
+          "UPDATE ClassStudent SET isAssigned = 'N' WHERE uid = ?",
+          newClassPupil.uid,
+          (err, res) => {
+            if (err) {
+              console.log("error in updating ClassStudent: ", err);
+              result(err, null);
+              return;
+            }
+          }
+        );
+        sql.query(
+          "INSERT INTO ClassStudent VALUES (?, ?, ?, 'Y')",
+          [newClassPupil.csid, newClassPupil.uid, newClassPupil.cid],
+          (err, res) => {
+            if (err) {
+              console.log("error: ", err);
+              result(err, null);
+              return;
+            }
 
-    // console.log("Created Class: ", { ...newClass });
-    result(null, { ...newClassPupil });
-  });
+            // console.log("Created Class: ", { ...newClass });
+            result(null, { ...newClassPupil });
+          }
+        );
+      }
+    }
+  );
 };
 
 ClassPupil.updatePupilAssign = (uid, classPupil, result) => {
@@ -43,21 +84,24 @@ ClassPupil.updatePupilAssign = (uid, classPupil, result) => {
 };
 
 ClassPupil.searchAssignedPupil = (uid, result) => {
-  sql.query("SELECT * from ClassStudent where uid= '" + uid + "'", (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(err, null);
-      return;
-    }
+  sql.query(
+    "SELECT * from ClassStudent where uid= '" + uid + "'",
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(err, null);
+        return;
+      }
 
-    if (res.length) {
-      result(null, res);
-      return;
-    }
+      if (res.length) {
+        result(null, res);
+        return;
+      }
 
-    // not found Customer with the id
-    result({ kind: "not_found" }, null);
-  });
+      // not found Customer with the id
+      result({ kind: "not_found" }, null);
+    }
+  );
 };
 
 module.exports = ClassPupil;
