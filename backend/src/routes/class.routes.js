@@ -11,6 +11,8 @@ module.exports = app => {
 
     app.get('/class/', class_c.getAllClass)
 
+    app.get('/class-with-removed/', class_c.getAllClassWithRemoved)
+
     app.get('/classname/:uid', userMiddleware.isPupilLoggedIn, class_c.getClassName)
 
     app.get('/pupilClasses/:uid', userMiddleware.isPupilLoggedIn, class_c.getAllClassesByPupil)

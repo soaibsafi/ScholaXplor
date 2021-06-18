@@ -19,7 +19,6 @@ Test.getAllMarks = (testId, result) => {
           result(err, null);
           return;
         }
-
         console.log("created test: ", { id: res.insertId, ...newTest });
         result(null, { id: res.insertId, ...newTest });
       });
@@ -45,6 +44,24 @@ Test.getAllMarks = (testId, result) => {
 
     // not found test with the sid
     result({ kind: "not_found" }, null);
+  });
+};
+
+Test.getAllTestInfoBySid = (sid, result) => {
+  sql.query("SELECT * FROM Test WHERE sid ='" + sid + "'", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    // console.log("Data: ", res);
+    // result(null, res);
+
+    if (res.length) {
+      console.log("found tests: ", res);
+      result(null, res);
+      return;
+    }
   });
 };
 

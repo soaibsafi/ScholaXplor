@@ -1,13 +1,13 @@
 import React from "react";
 import { checkUserType } from "../../api/APIUtils";
-import {
-  getSubjectDetails
-} from "../../api/TeacherAPI";
+import {  getSubjectDetails, getTestDetails } from "../../api/TeacherAPI";
 import "react-tabs/style/react-tabs.css";
 
-const redirectpath = "/login";
+var redirectpath = '/manageTestpanel';
+const redirectloginpath = "/login";
 
-export default class adminPanel extends React.Component {
+export default class teacherPanel extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -15,10 +15,11 @@ export default class adminPanel extends React.Component {
       subjectsDetails: [],
       token: this.props.location.state ? this.props.location.state.token : "",
     };
-    this.logoutAction = this.logoutAction.bind(this);
     this.loadFillData = this.loadFillData.bind(this);
-    
+    this.logoutAction = this.logoutAction.bind(this);
+    this.tabSelectionAction = this.tabSelectionAction.bind(this);
     this.getAllSUbjectsOfTeacher = this.getAllSUbjectsOfTeacher.bind(this);
+    this.openTestManager = this.openTestManager.bind(this);
   }
 
   componentDidMount() {
@@ -31,37 +32,29 @@ export default class adminPanel extends React.Component {
       };
     }
     checkUserType("token " + token).then((res) => {
-      if (res.status === "FAILED") that.props.history.push("/");
+      if(res) {
+        if (res.status === "FAILED") that.props.history.push("/");
+        return;
+      }
+      else {
+        that.props.history.push("/");
+        return;
+      }
     });
     that.getAllSUbjectsOfTeacher(tid, token);
   }
 
   render() {
-    var that = this;
+
     return (
-      <div style={{ width: "1024px" }}>
-        <div className="row">
-          <h1>Teacher Panel</h1>
-          <button
-            type="button"
-            className="btn btn-danger"
-            onClick={this.logoutAction}
-          >
-            Logout
-          </button>
-        </div>
-        <div className="row">
-          <button
-            type="button"
-            className="btn btn-success"
-            onClick={this.logoutAction}
-          >
-            Manage Test
-          </button>
-        </div>
-        <div className="ag-theme-alpine" style={{ height: 400, width: 800 }}>
-          <table className="table table-hover table-striped">
-            <thead className="thead-dark">
+        <div style={{width: "1024px"}}>
+          <div className="row">
+            <h1>Teacher Panel</h1>
+            <button type="button" className="btn btn-danger" onClick={this.logoutAction}> Logout</button>
+          </div>
+          <div className="ag-theme-alpine" style={{height: 400, width: 800}}>
+            <table className="table table-hover table-striped">
+              <thead className="thead-dark">
               <tr key={"user_key1"}>
                 <th scope="col">Class</th>
                 <th scope="col">Subjects</th>
@@ -83,23 +76,33 @@ export default class adminPanel extends React.Component {
           <tr key={data.sid}>
             <th>{data.classname}</th>
             <th>{data.subjectname}</th>
-            <td><button
-            type="button"
-            className="btn btn-success"
-            onClick={this.logoutAction}
-          >
-            Manage
-          </button></td>
+            <td>{<button className="btn btn-info" onClick={() => this.openTestManager(data)}>Manage</button>}</td>
           </tr>
         );
       });
-    } //else console.log("No data");
+    }
+  }
+
+  openTestManager(data){
+    console.log(data);
+    var that = this;
+    getTestDetails(data.sid, that.state.token).then(response => {
+      that.props.history.push({pathname:redirectpath,
+        state:{info : data,
+          token:that.state.token,
+          uid:that.state.tid,
+          testList: response.data,
+           selectedTest:response.data[0].tid,
+      }})
+    })
+
+
   }
 
   logoutAction() {
     var that = this;
     that.setState({ token: "" }, () => {
-      that.props.history.push({ pathname: redirectpath });
+      that.props.history.push({ pathname: redirectloginpath });
     });
   }
 

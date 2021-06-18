@@ -152,9 +152,11 @@ export default class UserTab extends React.Component {
       if (e.value === 'ALL') {
         that.getAllUser(that.state.token);
       } else {
-        //debugger;
+
         getUsersByRole(e.value, that.state.token).then(data => {
-          that.setState({list: data.data})
+          // if(data.status !== "FAILED")
+
+          that.setState({list: data.status !== "FAILED" ? data.data : []})
         })
       }
     })

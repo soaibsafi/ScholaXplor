@@ -57,14 +57,23 @@ exports.getAllSubjectByPupilId = (req, res) => {
 
 exports.updateSubjectById = (req, res) => {
   Subject.update(req.params.subjectId, new Subject(req.body), (err, data) => {
-    if (err)
-      res.status(200).send({
-        message:
-          err.message || "Some error occurred while retrieving Subjects.",
-        status: "FAILED",
-        statusCode: 500,
-      });
-    else
+    
+    if (err){
+      if (err.kind === "cant_updated") {
+        res.status(200).send({
+          message: "FAILED: No Dependent Test Found. Subject cannot be archived",
+          status: "FAILED",
+          statusCode: 500,
+        });
+      } else {
+        res.status(200).send({
+          message:
+            err.message || "Some error occurred while retrieving Subjects.",
+          status: "FAILED",
+          statusCode: 500,
+        });
+      }
+    }else
       res.status(200).send({
         data: data,
         status: "SUCCESS",
@@ -216,7 +225,7 @@ exports.getSubAvgGradeByPupilId = (req, res) => {
     if (err)
       res.status(200).send({
         message:
-            err.message || "Some error occurred while retrieving Subjects.",
+          err.message || "Some error occurred while retrieving Subjects.",
         status: "FAILED",
         statusCode: 500,
       });

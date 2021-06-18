@@ -113,7 +113,6 @@ export async function getPupilByClass(cid, token){
         'Authorization': token
       }
     });
-    // debugger;
     return response.data;
   }catch(error){
     console.log(error);
@@ -128,7 +127,6 @@ export async function updateAssignedPupil(uid, data, token){
         'Authorization': token
       }
     });
-     debugger;
     return response.data;
   }catch(error){
     console.log(error);
@@ -143,7 +141,6 @@ export async function assignPupil(data, token){
         'Authorization': token
       }
     });
-    debugger;
     return response.data;
   }catch(error){
     console.log(error);
@@ -169,7 +166,7 @@ export async function getAllClass(token){
 
 export async function getSubjectsDetails(token, cid){
   url = host + "subjects/"+cid;
-  debugger
+
   try{
     const response = await  axios.get(url,{
       headers: {
@@ -227,6 +224,20 @@ export async function deleteAClass(cid, token){
 }
 
 //API for Subject Management Tab
+
+export async function getAllClassWithRemoved(token){
+  url = host + "class-with-removed/";
+  try{
+    const response = await  axios.get(url,{
+      headers: {
+        'Authorization': token
+      }
+    });
+    return response.data;
+  }catch(error){
+    console.log(error);
+  }
+}
 
 export async function getSubjectClassTeacherTogether(cid, token){
   url = host + "subjects/class-teacher/"+cid;
