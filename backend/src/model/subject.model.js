@@ -37,52 +37,68 @@ Subject.getAllTestGrades = (sid, pid, result) => {
   });
 };
 
-Subject.update = (sid, subject, result) => {
-  sql.query("SET FOREIGN_KEY_CHECKS=0;", (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(null, err);
-      return;
-    }
-  });
 
-  sql.query("UPDATE AssignedSubject SET uid=?", subject.uid, (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(null, err);
-      return;
-    }
-  });
+Subject.update = (sid, reqBody, result) => {
 
+  res_count = 0;
   sql.query(
-    "UPDATE Subject SET subjectname = ?, status = ?, uid= ?, cid=? WHERE sid = ?",
-    [subject.subjectname, subject.status, subject.uid, subject.cid, sid],
-    (err, res) => {
+    "SELECT COUNT(tid) as count FROM Test WHERE sid = ?", sid, (err, res) => {
       if (err) {
-        console.log("error: ", err);
-        result(null, err);
+        console.log("Error: ", err);
+        result(null, res);
         return;
       }
+      res_count = res[0].count;
+      console.log("Count: ", res_count);
 
-      if (res.affectedRows == 0) {
-        // not found Customer with the id
-        result({ kind: "not_found" }, null);
-        return;
-      }
+      var isAllowToUpdate = 0;
 
-      sql.query("SET FOREIGN_KEY_CHECKS=1;", (err, res) => {
-        if (err) {
-          console.log("error: ", err);
-          result(null, err);
+      if (reqBody.status == "Archived") {
+        if (!res_count) {
+          console.log("##############")
+          result({ kind: "cant_updated" }, null);
           return;
+        } else {
+          isAllowToUpdate = 1;
         }
-      });
+      } {
+        isAllowToUpdate = 1;
+      }
 
-      //console.log("Updated Subject: ", { ...subject });
-      result(null, { ...subject });
+      if (isAllowToUpdate == 1) {
+        /*sql.query("UPDATE AssignedSubject SET uid=?", subject.uid, (err, res) => {
+          if (err) {
+            console.log("error: ", err);
+            result(null, err);
+            return;
+          }
+        });*/
+
+        sql.query(
+          "UPDATE Subject SET subjectname = ?, status = ?, uid= ?, cid=? WHERE sid = ?",
+          [reqBody.subjectname, reqBody.status, reqBody.uid, reqBody.cid, sid],
+          (err, res) => {
+            if (err) {
+              console.log("error: ", err);
+              result(null, err);
+              return;
+            }
+            if (res.affectedRows == 0) {
+              // not found Customer with the id
+              result({ kind: "not_found" }, null);
+              return;
+            }
+            //console.log("Updated Subject: ", { ...subject });
+            result(null, { ...reqBody });
+            return;
+          }
+        );
+      }
     }
   );
 };
+
+
 
 Subject.deleteOne = (sid, result) => {
   res_count = 0;
@@ -187,8 +203,8 @@ Subject.getAverageGradeBySubAndPupil = (sid, pid, result) => {
 Subject.getSubjectClassTeacherByCid = (cid, result) => {
 
   var query =
-    "SELECT Subject.sid, Subject.uid, Subject.subjectname, Class.cid, Class.classname, CONCAT(User.firstname, ' ',User.lastname) AS tname, Subject.status FROM Subject "+
-    "INNER JOIN Class ON Subject.cid = Class.cid INNER JOIN User ON Subject.uid = User.uid WHERE Subject.cid = '"+cid+"' ORDER BY Class.cid DESC";
+    "SELECT Subject.sid, Subject.uid, Subject.subjectname, Class.cid, Class.classname, CONCAT(User.firstname, ' ',User.lastname) AS tname, Subject.status FROM Subject " +
+    "INNER JOIN Class ON Subject.cid = Class.cid INNER JOIN User ON Subject.uid = User.uid WHERE Subject.cid = '" + cid + "' ORDER BY Class.cid DESC";
   sql.query(query, (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -223,22 +239,22 @@ Subject.getAvgGradeByPupilId = (pid, result) => {
   });
 };
 
-Subject.checkSubExists = (subname,uid,cid, result) => {
+Subject.checkSubExists = (subname, uid, cid, result) => {
 
-  sql.query("SELECT * FROM Subject WHERE subjectname='"+subname+"' AND uid='"+uid+"' AND cid='"+cid+"'",
-  (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(null, err);
-      return;
-    }
+  sql.query("SELECT * FROM Subject WHERE subjectname='" + subname + "' AND uid='" + uid + "' AND cid='" + cid + "'",
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
 
-    if (res.affectedRows == 0) {
-      result({ kind: "not_found" }, null);
-      return;
-    }
-    result(null, res);
-  })
+      if (res.affectedRows == 0) {
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      result(null, res);
+    })
 
 }
 
