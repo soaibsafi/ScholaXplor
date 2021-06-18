@@ -80,15 +80,13 @@ export default class teacherPanel extends React.Component {
           </tr>
         );
       });
-    } //else console.log("No data");
+    }
   }
 
   openTestManager(data){
-    // debugger;
     console.log(data);
     var that = this;
     getTestDetails(data.sid, that.state.token).then(response => {
-      // debugger;
       that.props.history.push({pathname:redirectpath,
         state:{info : data,
           token:that.state.token,

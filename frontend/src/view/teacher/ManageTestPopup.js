@@ -78,20 +78,9 @@ class ManageTestPopup extends React.Component {
 
 
   close(){
-    // this.resetState();
     this.props.closePopup();
   }
 
-  resetState(){
-    this.setState({
-      fname: "",
-      lname: "",
-      username: "",
-      uid: "",
-      selectedRole: "",
-      password: ''
-    })
-  }
 
   oninputChange(key, e) {
     switch (key) {
