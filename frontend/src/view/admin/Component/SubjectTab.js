@@ -25,6 +25,7 @@ export default class SubjectTab extends React.Component {
       allClass: [],
       allTeacher: [],
       list: [],
+      classIsRemovedStatus: [],
       showPopup: false,
       selectedClass: '',
       popupHeaderText: '',
@@ -140,13 +141,18 @@ export default class SubjectTab extends React.Component {
 
   getAllClassWithRemoved(token) {
     var tList = [];
+    var tList2 = [];
     getAllClassWithRemoved(token).then(data => {
       if (data.data != null) {
         data.data.forEach(info => {
           var obj = { value: info.cid, label: info.classname }
           tList.push(obj);
+          var obj2 = { value: info.cid, is_removed: info.is_removed }
+          tList2.push(obj2)
         });
+        console.log("tList2:  " + tList2)
         this.setState({ allClass: tList });
+        this.setState({ classIsRemovedStatus: tList2 });
       }
     })
   }
@@ -179,23 +185,37 @@ export default class SubjectTab extends React.Component {
 
   openAddNewSubjectPopUp() {
 
+    var isClassRemoved = 0;
+
     //Check if the selected class is removed or not
-
-    if (this.state.selectedClass)
-      this.setState({
-        popupHeaderText: "Add A New",
-        popupBtnText: "Add",
-        subjectInfo: {
-          classname: this.state.subjectInfo.classname,
-          subjectname: '',
-          uid: '',
-          tname: ''
+    for (var i = 0; i < this.state.classIsRemovedStatus.length; i++) {
+      if (this.state.classIsRemovedStatus[i].value == this.state.selectedClass) {
+        if (this.state.classIsRemovedStatus[i].is_removed == "Yes") {
+          isClassRemoved = 1;
         }
-      },
-        () => { this.togglePopup(); })
-    else alert("Please select a class");
+        break;
+      }
+    }
 
+    if (isClassRemoved == 1) {
+      alert(this.state.subjectInfo.classname + " has been deleted. You can only see archived subjects");
+    } else {
+      if (this.state.selectedClass)
+        this.setState({
+          popupHeaderText: "Add A New",
+          popupBtnText: "Add",
+          subjectInfo: {
+            classname: this.state.subjectInfo.classname,
+            subjectname: '',
+            uid: '',
+            tname: ''
+          }
+        },
+          () => { this.togglePopup(); })
+      else alert("Please select a class");
+    }
   }
+
 
   openUpdatePopup(data) {
     this.setState({
