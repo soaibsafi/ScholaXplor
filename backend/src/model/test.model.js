@@ -11,31 +11,6 @@ Test.getAllMarks = (testId, result) => {
   var query =
     "SELECT name, username, marks FROM result INNER JOIN (SELECT CONCAT(firstname, ' ', lastname) as name, username FROM User WHERE uid = (SELECT uid FROM AssignedSubject WHERE sid = (SELECT sid FROM Test WHERE tid = ?))) AS T";
   sql.query(query, testId, (err, res) => {
-    Test.create = (newTest, result) => {
-      var query = "INSERT INTO Test SET ?";
-      sql.query(query, newTest, (err, res) => {
-        if (err) {
-          console.log("error: ", err);
-          result(err, null);
-          return;
-        }
-        console.log("created test: ", { id: res.insertId, ...newTest });
-        result(null, { id: res.insertId, ...newTest });
-      });
-    };
-
-    Test.getAllTestsBySid = (sid, result) => {
-      sql.query("SELECT * FROM Test WHERE sid ='" + sid + "'", (err, res) => {
-        if (err) {
-          console.log("error: ", err);
-          result(null, err);
-          return;
-        }
-        console.log("Data: ", res);
-        result(null, res);
-      });
-    };
-
     if (res.length) {
       console.log("found tests: ", res);
       result(null, res);
@@ -44,6 +19,31 @@ Test.getAllMarks = (testId, result) => {
 
     // not found test with the sid
     result({ kind: "not_found" }, null);
+  });
+};
+
+Test.create = (newTest, result) => {
+  var query = "INSERT INTO Test SET ?";
+  sql.query(query, newTest, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    console.log("created test: ", { id: res.insertId, ...newTest });
+    result(null, {...newTest });
+  });
+};
+
+Test.getAllTestsBySid = (sid, result) => {
+  sql.query("SELECT * FROM Test WHERE sid ='" + sid + "'", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    console.log("Data: ", res);
+    result(null, res);
   });
 };
 

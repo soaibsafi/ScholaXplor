@@ -43,7 +43,12 @@ exports.createTest = (req, res) => {
         status: "FAILED",
         statusCode: "500",
       });
-    else res.send(data);
+    else
+      res.status(200).send({
+        status: "SUCCESS",
+        statusCode: 200,
+        data: data,
+      });
   });
 };
 
@@ -121,12 +126,10 @@ exports.deleteTestByTid = (req, res) => {
         });
       }
     } else
-      res
-        .status(200)
-        .send({
-          message: "Test was deleted successfully!",
-          status: "SUCCESS",
-          statusCode: 200,
-        });
+      res.status(200).send({
+        message: "Test was deleted successfully!",
+        status: "SUCCESS",
+        statusCode: 200,
+      });
   });
 };

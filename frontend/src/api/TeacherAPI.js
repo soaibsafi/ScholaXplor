@@ -50,3 +50,18 @@ export async function getStudentMarkDetails(tid, token){
     console.log(error);
   }
 }
+
+export async function createNewTest(test, token){
+  url = host + "test/";
+  debugger
+  try{
+    const response = await axios.post(url,test,{
+      headers: {
+        'Authorization': token
+      }
+    });
+    return response.data
+  }catch(error){
+    console.log(error)
+  }
+}
