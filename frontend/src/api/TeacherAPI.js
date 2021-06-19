@@ -82,6 +82,21 @@ export async function createNewTest(test, token){
   }
 }
 
+export async function updateATest(testObj, token){
+  url = host + "test/"+ testObj.tid;
+
+  try{
+    const response = await axios.put(url, testObj,{
+      headers: {
+        'Authorization': token
+      }
+    });
+    return response.data
+  }catch(error){
+    console.log("Error Res: "+error)
+  }
+}
+
 
 export async function deleteATest(tid, token){
   url = host + "test/" + tid;
