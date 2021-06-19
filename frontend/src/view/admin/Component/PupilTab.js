@@ -170,8 +170,6 @@ class PupilTab extends React.Component {
   loadFillData() {
     var that = this;
     if (this.state.pupilList.length) {
-      debugger;
-
       return this.state.pupilList.map(data => {
         if (data.isAssigned === 'Y' || data.isAssigned === null)
           return (
