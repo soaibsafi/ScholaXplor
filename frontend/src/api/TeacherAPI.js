@@ -37,12 +37,14 @@ export async function getTestDetails(sid, token){
 
 export async function getStudentMarkDetails(tid, token){
   url = host + "marks/" + tid;
+
   try{
     const response = await  axios.get(url,{
       headers: {
         'Authorization': token
       }
     });
+    debugger;
     //console.log(response.data)
     return response.data;
 

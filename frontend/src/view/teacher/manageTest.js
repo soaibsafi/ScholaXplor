@@ -8,6 +8,8 @@ import {
   deleteATest, updateResult
 } from "../../api/TeacherAPI";
 
+import {CSVReader} from 'react-papaparse'
+
 import '../../App.css';
 import ManageTestPopup from './ManageTestPopup'
 import ManageStudentTestPopup from './ManageStudentTestPopup'
@@ -150,6 +152,7 @@ export default class manageTest extends React.Component {
 
   loadStudentList() {
     var that = this;
+    debugger;
     getStudentMarkDetails(that.state.selectedTest, that.state.token).then(response => {
       console.log(response.data);
       if (response.data) {
