@@ -160,8 +160,9 @@ export default class UserTab extends React.Component {
         })
       }
     })
-
   }
+
+
 
   openUpdatePopup(data) {
     this.setState({
@@ -197,8 +198,10 @@ export default class UserTab extends React.Component {
                 uid: "",
                 username: ""
               },
-              selectedRole: ""}, () => {
-              that.getAllUser(that.state.token)
+              // selectedRole: ""
+            }, () => {
+              // that.getAllUser(that.state.token)
+              that.onRoleSelect({value: that.state.selectedRole})
             })
           } else {
             alert("Error!!")
@@ -251,8 +254,7 @@ export default class UserTab extends React.Component {
             uid: "",
             username: ""
           },
-          selectedRole: ""
-
+          //selectedRole: ""
         },
         () => {
           this.togglePopup();

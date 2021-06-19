@@ -37,6 +37,7 @@ export async function getTestDetails(sid, token){
 
 export async function getStudentMarkDetails(tid, token){
   url = host + "marks/" + tid;
+
   try{
     const response = await  axios.get(url,{
       headers: {
@@ -46,6 +47,21 @@ export async function getStudentMarkDetails(tid, token){
     //console.log(response.data)
     return response.data;
 
+  }catch(error){
+    console.log(error);
+  }
+}
+
+export async function updateResult(data, token){
+  url = host + "marks/" + data.resid;
+  try{
+    const response = await axios.put(url, data,{
+      headers: {
+        'Authorization': token
+      }
+    });
+    console.log(response);
+    return response.data;
   }catch(error){
     console.log(error);
   }
@@ -75,7 +91,7 @@ export async function deleteATest(tid, token){
         'Authorization': token
       }
     })
-    
+
     console.log(response);
     return response.data;
   }catch(error){
