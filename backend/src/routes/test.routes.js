@@ -7,7 +7,10 @@ module.exports = app => {
     app.put('/test/:tid', test.updateTestByTid)
     app.delete('/test/:tid', test.deleteTestByTid)
     app.post('/test/', test.createTest)
+
+    //Result API
     app.get("/marks/:testId", test.getMarksByTestId);
+    app.put("/marks/:resid", test.updateMarksByResid);
   };
   
   

@@ -5,11 +5,14 @@ const Test = function (test) {
   this.testname = test.testname;
   this.testdate = test.testdate;
   this.sid = test.sid;
+  this.resid = test.resid;
+  this.marks = test.marks;
 };
+
 
 Test.getAllMarks = (testId, result) => {
   var query =
-    "SELECT name, username, marks FROM result INNER JOIN (SELECT CONCAT(firstname, ' ', lastname) as name, username FROM User WHERE uid = (SELECT uid FROM AssignedSubject WHERE sid = (SELECT sid FROM Test WHERE tid = ?))) AS T";
+    "SELECT resid, name, username, marks FROM result INNER JOIN (SELECT CONCAT(firstname, ' ', lastname) as name, username FROM User WHERE uid = (SELECT uid FROM AssignedSubject WHERE sid = (SELECT sid FROM Test WHERE tid = ?))) AS T";
   sql.query(query, testId, (err, res) => {
     Test.create = (newTest, result) => {
       var query = "INSERT INTO Test SET ?";
@@ -161,6 +164,48 @@ Test.removeByTid = (tid, result) => {
       });
     }
   });
+};
+
+
+Test.updateMarks = (resid, test, result) => {
+
+  console.log("Hello There " + resid + " "+
+  test.marks )
+  sql.query("SET FOREIGN_KEY_CHECKS=0;", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+  });
+
+  sql.query(
+    "UPDATE result SET marks = ? WHERE resid = ?",[ test.marks, resid ],
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+
+      if (res.affectedRows == 0) {
+        // not found test with the tid
+        result({ kind: "not_found" }, null);
+        return;
+      }
+
+      sql.query("SET FOREIGN_KEY_CHECKS=1;", (err, res) => {
+        if (err) {
+          console.log("error: ", err);
+          result(null, err);
+          return;
+        }
+      });
+
+      console.log("updated test: ", { resid: resid, ...test });
+      result(null, { resid: resid, ...test });
+    }
+  );
 };
 
 module.exports = Test;
