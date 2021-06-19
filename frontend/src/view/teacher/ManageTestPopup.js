@@ -82,7 +82,6 @@ class ManageTestPopup extends React.Component {
     this.props.closePopup();
   }
 
-
   oninputChange(key, e) {
     switch (key) {
       case "username":

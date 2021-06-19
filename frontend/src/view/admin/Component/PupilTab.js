@@ -133,28 +133,20 @@ class PupilTab extends React.Component {
   assignStudent() {
     var that = this;
     if (that.state.selectedClass && that.state.selectedPupilList.length) {
-        that.state.selectedPupilList.forEach(pupil => {
-          if(that.state.selectedPupilList.length === 1 && pupil.cid === that.state.selectedClass){
-            alert('This student is already in the selected class');
-            return;
-          }
-          if (pupil.cid) {
-            if (pupil.cid !== that.state.selectedClass) {
-              updateAssignedPupil(pupil.uid, {cid: that.state.selectedClass}, that.state.token).then(response => {
+      that.state.selectedPupilList.forEach(pupil => {
+        if (that.state.selectedPupilList.length === 1 && pupil.cid === that.state.selectedClass) {
+          alert('This student is already in the selected class');
+          return;
+        }
+        var dataObj = {
+          csid: that.setID(),
+          uid: pupil.uid,
+          cid: that.state.selectedClass
+        }
+        assignPupil(dataObj, that.state.token).then(response => {
 
-              })
-            }
-          } else {
-            var dataObj = {
-              csid: that.setID(),
-              uid: pupil.uid,
-              cid: that.state.selectedClass
-            }
-            assignPupil(dataObj, that.state.token).then(response => {
-
-            })
-          }
         })
+      })
 
       getPupilByClass(that.state.selectedClass, that.state.token).then(response => {
         that.setState({
@@ -178,19 +170,21 @@ class PupilTab extends React.Component {
   loadFillData() {
     var that = this;
     if (this.state.pupilList.length) {
-      // debugger;
+      debugger;
+
       return this.state.pupilList.map(data => {
-        return (
-            <tr key={data.uid}>
-              {that.state.classByList ? null :
-                  <td>{<input id={data.uid} name={data.uid} type="checkbox"
-                              onChange={(e) => this.handleCheckBox(e, data)}/>}</td>}
-              <th>{data.username}</th>
-              <th>{data.firstname}</th>
-              <td>{data.lastname}</td>
-              {that.state.classByList ? null : <td>{data.classname}</td>}
-            </tr>
-        )
+        if (data.isAssigned === 'Y' || data.isAssigned === null)
+          return (
+              <tr key={data.uid}>
+                {that.state.classByList ? null :
+                    <td>{<input id={data.uid} name={data.uid} type="checkbox"
+                                onChange={(e) => this.handleCheckBox(e, data)}/>}</td>}
+                <th>{data.username}</th>
+                <th>{data.firstname}</th>
+                <td>{data.lastname}</td>
+                {that.state.classByList ? null : <td>{data.classname}</td>}
+              </tr>
+          )
       })
     }
   }
