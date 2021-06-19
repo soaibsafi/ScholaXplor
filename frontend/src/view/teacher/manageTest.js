@@ -29,7 +29,7 @@ export default class manageTest extends React.Component {
       classname: this.props.location.state.info.classname,
       testDetailsList: this.props.location.state.testList,
       testList: [],
-      studentList: [{name: 'abc', marks: 1.2, username: 'abc1'}],
+      studentList: [],
       selectedTest: this.props.location.state.selectedTest,
 
       showTestPopup: false,
@@ -73,7 +73,7 @@ export default class manageTest extends React.Component {
 
   uploadTestResult() {
     if (this.state.testResult.length) {
-
+      debugger;
     } else {
       alert("Please select a CSV file.")
     }
@@ -152,7 +152,6 @@ export default class manageTest extends React.Component {
 
   loadStudentList() {
     var that = this;
-    debugger;
     getStudentMarkDetails(that.state.selectedTest, that.state.token).then(response => {
       console.log(response.data);
       if (response.data) {
@@ -160,6 +159,43 @@ export default class manageTest extends React.Component {
       }
     })
   }
+
+  handleOpenDialog = (e) => {
+    if (buttonRef.current) {
+      buttonRef.current.open(e);
+    }
+  };
+
+  handleOnRemoveFile = (data) => {
+    var that = this;
+    this.setState({studentMarkData: data ? data : []}, () => {
+      console.log(that.state.studentMarkData)
+    })
+  };
+
+  handleRemoveFile = (e) => {
+    if (buttonRef.current) {
+      buttonRef.current.removeFile(e);
+    }
+  };
+
+  handleOnFileLoad = (data) => {
+    var that = this;
+    var obj = [];
+    if (data) {
+      data.forEach(dt => {
+        obj.push({uid:dt.UserID, grade: dt.Marks})
+      })
+
+    }
+
+    this.setState({studentMarkData: obj}, () => {
+      console.log(that.state.studentMarkData)
+    })
+  };
+
+  handleOnError = (err, file, inputElem, reason) => {
+  };
 
   componentDidMount() {
     this.getAllTests();
@@ -173,7 +209,6 @@ export default class manageTest extends React.Component {
           <h2>Test Management for {that.state.classname} - {that.state.subjectname}</h2>
           <div className="row" style={{width: 520}}>
             <button className="btn btn-success" onClick={this.gotoBack}>Back</button>
-
             <Dropdown
                 classname="style.dropDown"
                 value={that.state.testList[this.getIndex(this.state.testList, this.state.selectedTest)]}
@@ -217,7 +252,7 @@ export default class manageTest extends React.Component {
             <button className="btn  btn-danger" onClick={this.uploadTestResult}>Upload</button>
 
           </div>
-          <div className="ag-theme-alpine" style={{height: 400, width: 800}}>
+          {that.state.studentList.length ? <div className="ag-theme-alpine" style={{height: 400, width: 800}}>
             <table className="table table-hover table-striped">
               <thead className="thead-dark">
               <tr key={"user_key1"}>
@@ -225,10 +260,12 @@ export default class manageTest extends React.Component {
                 <th scope="col">Grade</th>
                 <th scope="col">Action</th>
               </tr>
-            </thead>
-            <tbody>{this.loadFillData()}</tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>{this.loadFillData()}</tbody>
+            </table>
+          </div> : <div>
+            <labe>No student is in this class and test</labe>
+          </div>}
         {that.state.showPopUp ? (
           <ManageTestPopup
             testList={that.state.testList}

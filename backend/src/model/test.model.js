@@ -14,6 +14,11 @@ Test.getAllMarks = (testId, result) => {
   var query =
     "SELECT resid, name, username, marks FROM result INNER JOIN (SELECT CONCAT(firstname, ' ', lastname) as name, username FROM User WHERE uid = (SELECT uid FROM AssignedSubject WHERE sid = (SELECT sid FROM Test WHERE tid = ?))) AS T";
   sql.query(query, testId, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
     if (res.length) {
       console.log("found tests: ", res);
       result(null, res);

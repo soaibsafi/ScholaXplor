@@ -44,7 +44,6 @@ export async function getStudentMarkDetails(tid, token){
         'Authorization': token
       }
     });
-    debugger;
     //console.log(response.data)
     return response.data;
 
