@@ -100,7 +100,7 @@ export async function deleteATest(tid, token) {
 }
 
 export async function checkResultID(data, token) {
-  url = host + "checkResId";
+  url = host + "checkResId/?tid="+data.tid+"&sid="+data.sid+"&uid="+data.uid;
 
   try {
     const response = await axios.get(url, data, {
@@ -108,10 +108,27 @@ export async function checkResultID(data, token) {
         'Authorization': token
       }
     });
+
     console.log(response.data)
     return response.data;
 
   } catch (error) {
     console.log(error);
+  }
+}
+
+export async function uploadResult(data, token) {
+  url = host + "uploadResult/";
+
+  try {
+    const response = await axios.post(url, data, {
+      headers: {
+        'Authorization': token
+      }
+    });
+    debugger;
+    return response.data
+  } catch (error) {
+    console.log(error)
   }
 }

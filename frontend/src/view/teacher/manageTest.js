@@ -5,7 +5,7 @@ import {
   getStudentMarkDetails,
   createNewTest,
   getTestDetails,
-  deleteATest, updateResult
+  deleteATest, updateResult, checkResultID, uploadResult
 } from "../../api/TeacherAPI";
 
 import {CSVReader} from 'react-papaparse'
@@ -13,6 +13,7 @@ import {CSVReader} from 'react-papaparse'
 import '../../App.css';
 import ManageTestPopup from './ManageTestPopup'
 import ManageStudentTestPopup from './ManageStudentTestPopup'
+
 
 const buttonRef = React.createRef();
 
@@ -34,7 +35,7 @@ export default class manageTest extends React.Component {
 
       showTestPopup: false,
       showStudentGradePopup: false,
-      showPopUp:false,
+      showPopUp: false,
 
       popupHeaderText: '',
       popupBtnText: '',
@@ -57,7 +58,7 @@ export default class manageTest extends React.Component {
     this.toggleStudentGradePopup = this.toggleStudentGradePopup.bind(this);
 
     this.openStudentTestGradeUpdatePopup =
-      this.openStudentTestGradeUpdatePopup.bind(this);
+        this.openStudentTestGradeUpdatePopup.bind(this);
     this.openNewTestPopup = this.openNewTestPopup.bind(this);
     this.openUpdatePopup = this.openUpdatePopup.bind(this);
 
@@ -67,13 +68,40 @@ export default class manageTest extends React.Component {
     this.updateInfo = this.updateInfo.bind(this);
 
     this.addTest = this.addTest.bind(this);
-    //this.getTestDetails = this.getTestDetails.bind(this);
+    this.setID = this.setID.bind(this);
     this.deleteInfo = this.deleteInfo.bind(this);
   }
 
+  setID() {
+    return "RSLT" + Date.now()
+  }
+
   uploadTestResult() {
-    if (this.state.testResult.length) {
-      debugger;
+    var that = this;
+    var countRow = 0;
+    if (this.state.studentMarkData.length) {
+      this.state.studentMarkData.forEach((stdData, idx) => {
+
+        checkResultID(stdData, "Tokenn " + that.state.token).then(response => {
+          if (response.res.length) {
+            stdData.rid = response.res[0].resid
+          } else {
+            stdData.rid = that.setID() + idx;
+          }
+
+          uploadResult(stdData, "Token "+ that.state.token).then(response => {
+            if(response.msg === "Inserted"){
+               that.loadStudentList();
+            }
+          })
+
+
+        })
+      })
+
+
+
+
     } else {
       alert("Please select a CSV file.")
     }
@@ -83,17 +111,17 @@ export default class manageTest extends React.Component {
   openUpdatePopup(data) {
     var that = this;
     that.setState(
-      {
-        popupHeaderText:
-          "Update selected Test for " +
-          that.state.classname +
-          " - " +
-          that.state.subjectname,
-        popupBtnText: "Update",
-      },
-      () => {
-        that.toggleNewTestPopup();
-      }
+        {
+          popupHeaderText:
+              "Update selected Test for " +
+              that.state.classname +
+              " - " +
+              that.state.subjectname,
+          popupBtnText: "Update",
+        },
+        () => {
+          that.toggleNewTestPopup();
+        }
     );
   }
 
@@ -108,7 +136,7 @@ export default class manageTest extends React.Component {
       popupBtnText: "",
 
     }, () => {
-       that.toggleNewTestPopup();
+      that.toggleNewTestPopup();
     })
   }
 
@@ -182,13 +210,18 @@ export default class manageTest extends React.Component {
   handleOnFileLoad = (data) => {
     var that = this;
     var obj = [];
+    // debugger;
     if (data) {
-      data.forEach(dt => {
-        obj.push({uid:dt.UserID, grade: dt.Marks})
+      data.forEach((dt, idx) => {
+        if (idx !== 0) obj.push({
+          uid: dt.data[0],
+          grade: dt.data[1],
+          sid: "SUB1623966305386",// that.state.sid,
+          tid: that.state.selectedTest,
+          rid: ''
+        })
       })
-
     }
-
     this.setState({studentMarkData: obj}, () => {
       console.log(that.state.studentMarkData)
     })
@@ -264,20 +297,20 @@ export default class manageTest extends React.Component {
               <tbody>{this.loadFillData()}</tbody>
             </table>
           </div> : <div>
-            <labe>No student is in this class and test</labe>
+            <label>No student is in this class and test</label>
           </div>}
-        {that.state.showPopUp ? (
-          <ManageTestPopup
-            testList={that.state.testList}
-            selectedTest={that.state.selectedTest}
-            popupHeaderText={that.state.popupHeaderText}
-            sid={that.state.sid}
-            popupBtnText={that.state.popupBtnText}
-            //        updateInfo={that.updateInfo}
-            addTest={that.addTest}
-            closePopup={that.closeTestPopup}
-          />
-        ) : null}
+          {that.state.showPopUp ? (
+              <ManageTestPopup
+                  testList={that.state.testList}
+                  selectedTest={that.state.selectedTest}
+                  popupHeaderText={that.state.popupHeaderText}
+                  sid={that.state.sid}
+                  popupBtnText={that.state.popupBtnText}
+                  //        updateInfo={that.updateInfo}
+                  addTest={that.addTest}
+                  closePopup={that.closeTestPopup}
+              />
+          ) : null}
 
           {that.state.showStudentGradePopup ?
               <ManageStudentTestPopup
@@ -310,8 +343,6 @@ export default class manageTest extends React.Component {
   onTestChange(data) {
     this.setState({selectedTest: data})
   }
-
-
 
 
   loadFillData() {
@@ -348,10 +379,10 @@ export default class manageTest extends React.Component {
     createNewTest(data, "Token " + that.state.token).then((data) => {
       if (data.status === "SUCCESS") {
         that.toggleNewTestPopup();
-        that.setState({ testList: [] }, () => {
+        that.setState({testList: []}, () => {
           getTestDetails(that.state.sid, "Token " + that.props.token).then(
               (response) => {
-                that.setState({ testDetailsList: response.data }, () => {
+                that.setState({testDetailsList: response.data}, () => {
                   that.getAllTests();
                 });
               }
@@ -370,10 +401,10 @@ export default class manageTest extends React.Component {
     deleteATest(data.value, "Token " + that.state.token).then((data) => {
       alert(data.message);
       if (data.status === "SUCCESS") {
-        that.setState({ testList: [] }, () => {
+        that.setState({testList: []}, () => {
           getTestDetails(that.state.sid, "Token " + that.props.token).then(
               (response) => {
-                that.setState({ testDetailsList: response.data }, () => {
+                that.setState({testDetailsList: response.data}, () => {
                   that.getAllTests();
                 });
               }
@@ -386,7 +417,6 @@ export default class manageTest extends React.Component {
   }
 
 
-
   updateInfo(data) {
     var that = this;
 
@@ -394,9 +424,7 @@ export default class manageTest extends React.Component {
       console.log(response)
       if (response.status === "SUCCESS") {
         that.toggleStudentGradePopup();
-        that.setState({
-
-        }, () => {
+        that.setState({}, () => {
           that.loadStudentList()
         })
       } else {
