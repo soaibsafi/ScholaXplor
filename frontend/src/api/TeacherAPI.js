@@ -53,7 +53,6 @@ export async function getStudentMarkDetails(tid, token){
 
 export async function createNewTest(test, token){
   url = host + "test/";
-  debugger
   try{
     const response = await axios.post(url,test,{
       headers: {

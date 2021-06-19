@@ -54,7 +54,6 @@ export default class manageTest extends React.Component {
     this.closeTestPopup = this.closeTestPopup.bind(this);
 
     this.addTest = this.addTest.bind(this);
-    this.getTestDetails = this.getTestDetails.bind(this)
   }
 
   openUpdatePopup(data) {
@@ -285,18 +284,25 @@ export default class manageTest extends React.Component {
       tempList.push(obj);
     });
 
-    that.setState({ testList: tempList }, () => {});
+    that.setState({ testList: tempList }, () => {
+      console.log(that.state.testList)
+    });
   }
 
   addTest(data) {
     var that = this;
     console.log(that.state.token)
     createNewTest(data, "Token "+that.state.token).then((data) => {
-      
+
       if (data.status === "SUCCESS") {
         that.toggleNewTestPopup();
-        that.setState({ allClasses: [] }, () => {
-          that.getTestDetails(that.state.sid, "Token " + that.props.token);
+        that.setState({ testList: [] }, () => {
+
+           getTestDetails(that.state.sid, "Token " + that.props.token).then(response => {
+             that.setState({testDetailsList : response.data},()=>{
+               that.getAllTests();
+             })
+           });
         });
       } else {
         alert("Error!!");
