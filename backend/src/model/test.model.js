@@ -9,7 +9,7 @@ const Test = function (test) {
 
 Test.getAllMarks = (testId, result) => {
   var query =
-    "SELECT name, username, marks FROM result INNER JOIN (SELECT CONCAT(firstname, ' ', lastname) as name, username FROM User WHERE uid = (SELECT uid FROM AssignedSubject WHERE sid = (SELECT sid FROM Test WHERE tid = ?))) AS T";
+    "SELECT resid, name, username, marks, uid, TT.aid FROM result RIGHT JOIN (SELECT CONCAT(firstname, ' ', lastname) as name, username, User.uid, aid FROM User RIGHT JOIN (SELECT aid, uid FROM AssignedSubject WHERE sid = (SELECT sid FROM Test WHERE tid = ?)) AS T ON User.uid=T.uid) as TT ON result.aid=TT.aid";
   sql.query(query, testId, (err, res) => {
     if (res.length) {
       console.log("found tests: ", res);
