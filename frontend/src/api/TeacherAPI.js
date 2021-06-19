@@ -53,9 +53,10 @@ export async function getStudentMarkDetails(tid, token){
 }
 
 export async function updateResult(data, token){
-  url = host + "marks/" + data.resid;
+  url = host + "uploadResult/";
+  debugger
   try{
-    const response = await axios.put(url, data,{
+    const response = await axios.post(url, data,{
       headers: {
         'Authorization': token
       }

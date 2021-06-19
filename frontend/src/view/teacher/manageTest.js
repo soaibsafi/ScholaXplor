@@ -44,6 +44,15 @@ export default class manageTest extends React.Component {
       tid: "",
       testname: "",
       testdate: "",
+
+      studentMarkData: {
+        aid:"",
+        marks: "",
+        name: "",
+        resid: "",
+        uid: "",
+        username: ""
+      }
     };
 
     this.getAllTests = this.getAllTests.bind(this);
@@ -73,7 +82,6 @@ export default class manageTest extends React.Component {
 
   uploadTestResult() {
     if (this.state.testResult.length) {
-      debugger;
     } else {
       alert("Please select a CSV file.")
     }
@@ -140,14 +148,19 @@ export default class manageTest extends React.Component {
 
   openStudentTestGradeUpdatePopup(data) {
     var that = this;
+    var rid = "RES"+Date.now()
+    if(data.resid === null){
+        data.resid=rid
+    }
     that.setState({
       popupHeaderText: data.name + "'s test and grade update",
       popupBtnText: "Update",
       studentMarkData: data,
-
+      
     }, () => {
       that.toggleStudentGradePopup();
     })
+    debugger
   }
 
   loadStudentList() {
@@ -219,7 +232,7 @@ export default class manageTest extends React.Component {
             />
             <button className="btn btn-success" onClick={this.openNewTestPopup}>Add</button>
             <button className="btn btn-info" onClick={() => this.openUpdatePopup(that.state.classinfo)}>Update</button>
-            <button className="btn  btn-danger" onClick={() => this.deleteInfo(that.state.classinfo.cid)}>Delete
+            <button className="btn  btn-danger" onClick={() => this.deleteInfo(that.state.selectedTest)}>Delete
             </button>
           </div>
           <div className="row" style={{width: 1020}}>
@@ -285,8 +298,8 @@ export default class manageTest extends React.Component {
                   selectedTest={that.state.selectedTest}
                   popupHeaderText={that.state.popupHeaderText}
                   studentData={that.state.studentData}
-                  //        popupBtnText={that.state.popupBtnText}
-                  //        updateInfo={that.updateInfo}
+                  popupBtnText={that.state.popupBtnText}
+                  studentMarkData={that.state.studentMarkData}
                   //        addUser={that.addUser}
                   updateInfo={that.updateInfo}
                   closePopup={that.closeStudentGradePopup}
@@ -322,7 +335,7 @@ export default class manageTest extends React.Component {
               <td>{data.name}</td>
               <td>{data.marks}</td>
               <td>{<button className="btn btn-info"
-                           onClick={() => this.openStudentTestGradeUpdatePopup(data)}>Update</button>}</td>
+                           onClick={() => this.openStudentTestGradeUpdatePopup(data)}>Change</button>}</td>
             </tr>
         );
       });
@@ -389,8 +402,15 @@ export default class manageTest extends React.Component {
 
   updateInfo(data) {
     var that = this;
-
-    updateResult(data, that.state.token).then(response => {
+    var result = {
+      rid: data.resid,
+      sid: this.state.sid,
+      tid: this.state.selectedTest,
+      uid: data.uid,
+      grade: data.marks
+    }
+    debugger
+    updateResult(result, that.state.token).then(response => {
       console.log(response)
       if (response.status === "SUCCESS") {
         that.toggleStudentGradePopup();

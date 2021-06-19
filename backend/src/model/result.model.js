@@ -31,7 +31,7 @@ Result.createResult = (newResult, result) => {
   );
 };
 
-Result.createResult = (tid, sid, uid, result) => {
+Result.checkRes = (tid, sid, uid, result) => {
     sql.query(
       "SELECT resid FROM result WHERE tid=? AND aid=(SELECT aid FROM AssignedSubject WHERE sid=? AND uid=?)",
       [

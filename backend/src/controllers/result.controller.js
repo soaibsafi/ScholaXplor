@@ -17,7 +17,7 @@ exports.uploadResult = (req, res) => {
     uid: req.body.uid,
     grade: req.body.grade,
   });
-
+  console.log(newResult);
   // Save Test in the database
   Result.createResult(newResult, (err, data) => {
     if (err)
@@ -26,12 +26,17 @@ exports.uploadResult = (req, res) => {
         status: "FAILED",
         statusCode: "500",
       });
-    else res.send(data);
+    else
+      res.status(200).send({
+        data: data,
+        status: "SUCCESS",
+        statusCode: 200,
+      });
   });
 };
 
 exports.checkResultId = (req, res) => {
-  Result.checkRes(req.query.tid, req.query.sid, req.query.uid,  (err, data) => {
+  Result.checkRes(req.query.tid, req.query.sid, req.query.uid, (err, data) => {
     if (err)
       res.status(200).send({
         message: err.message || "Some error occurred while creating the Test.",
