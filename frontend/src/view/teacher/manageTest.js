@@ -1,6 +1,11 @@
 import React from "react";
 import Dropdown from "react-dropdown";
-import { getStudentMarkDetails, createNewTest, getTestDetails } from "../../api/TeacherAPI";
+import {
+  getStudentMarkDetails,
+  createNewTest,
+  getTestDetails,
+  deleteATest,
+} from "../../api/TeacherAPI";
 
 import "../../App.css";
 import ManageTestPopup from "./ManageTestPopup";
@@ -31,7 +36,7 @@ export default class manageTest extends React.Component {
       studentData: "",
 
       tid: "",
-      testname:"",
+      testname: "",
       testdate: "",
     };
 
@@ -54,6 +59,8 @@ export default class manageTest extends React.Component {
     this.closeTestPopup = this.closeTestPopup.bind(this);
 
     this.addTest = this.addTest.bind(this);
+    //this.getTestDetails = this.getTestDetails.bind(this);
+    this.deleteInfo = this.deleteInfo.bind(this);
   }
 
   openUpdatePopup(data) {
@@ -191,7 +198,7 @@ export default class manageTest extends React.Component {
           </button>
           <button
             className="btn  btn-danger"
-            onClick={() => this.deleteInfo(that.state.classinfo.cid)}
+            onClick={() => this.deleteInfo(that.state.selectedTest)}
           >
             Delete
           </button>
@@ -285,24 +292,46 @@ export default class manageTest extends React.Component {
     });
 
     that.setState({ testList: tempList }, () => {
-      console.log(that.state.testList)
+      console.log(that.state.testList);
     });
   }
 
   addTest(data) {
     var that = this;
-    console.log(that.state.token)
-    createNewTest(data, "Token "+that.state.token).then((data) => {
-
+    console.log(that.state.token);
+    createNewTest(data, "Token " + that.state.token).then((data) => {
       if (data.status === "SUCCESS") {
         that.toggleNewTestPopup();
         that.setState({ testList: [] }, () => {
+          getTestDetails(that.state.sid, "Token " + that.props.token).then(
+            (response) => {
+              that.setState({ testDetailsList: response.data }, () => {
+                that.getAllTests();
+              });
+            }
+          );
+        });
+      } else {
+        alert("Error!!");
+      }
+    });
+  }
 
-           getTestDetails(that.state.sid, "Token " + that.props.token).then(response => {
-             that.setState({testDetailsList : response.data},()=>{
-               that.getAllTests();
-             })
-           });
+  deleteInfo(data) {
+    var that = this;
+    console.log(data);
+    if (!window.confirm("Do you really want to delete the class?")) return;
+    deleteATest(data.value, "Token " + that.state.token).then((data) => {
+      alert(data.message);
+      if (data.status === "SUCCESS") {
+        that.setState({ testList: [] }, () => {
+          getTestDetails(that.state.sid, "Token " + that.props.token).then(
+            (response) => {
+              that.setState({ testDetailsList: response.data }, () => {
+                that.getAllTests();
+              });
+            }
+          );
         });
       } else {
         alert("Error!!");

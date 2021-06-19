@@ -64,3 +64,21 @@ export async function createNewTest(test, token){
     console.log(error)
   }
 }
+
+
+export async function deleteATest(tid, token){
+  url = host + "test/" + tid;
+  debugger
+  try{
+    const response = await axios.delete(url, {
+      headers: {
+        'Authorization': token
+      }
+    })
+    
+    console.log(response);
+    return response.data;
+  }catch(error){
+    console.log(error);
+  }
+}
