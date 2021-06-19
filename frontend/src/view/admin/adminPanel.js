@@ -43,7 +43,7 @@ export default class adminPanel extends React.Component {
     var that = this;
     var state = this.state;
     return (
-        <div style={{width: '1024px'}}>
+        <div style={{width: '100vw'}}>
           <div className='row'>
             <h1>Admin Panel</h1>
             <button type="button" className="btn btn-danger" onClick={this.logoutAction}>Logout</button>

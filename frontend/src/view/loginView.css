@@ -1,0 +1,30 @@
+.parent-div{
+    width: 100%;
+    height: 100%;
+ }
+
+.title-area{
+    width: fit-content;
+    height: fit-content;
+
+    margin: 10% auto ;
+}
+
+.login-area{
+   width: 500px;
+   height: fit-content;
+   padding: 50px;
+   border-radius: 15px;
+   margin: 10% auto;
+   text-align: left;
+}
+
+.login-area label{
+    margin-top: 15px;
+}
+
+.login-area button{
+    width: 150px;
+    padding: 5px;
+    margin-top: 10px;
+}

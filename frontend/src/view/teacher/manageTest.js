@@ -354,7 +354,6 @@ export default class manageTest extends React.Component {
     var that = this;
 
     updateResult(data, that.state.token).then(response => {
-      console.log(response)
       if (response.status === "SUCCESS") {
         that.toggleStudentGradePopup();
         that.setState({
