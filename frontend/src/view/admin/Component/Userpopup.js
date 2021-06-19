@@ -137,18 +137,21 @@ class userpopup extends React.Component {
       "uid": this.state.uid
     }
 
-    this.resetState();
+    // this.resetState();
     if (this.props.popupBtnText === "Add") {
       if (data.firstname.length &&
           data.lastname.length &&
           data.username.length &&
-          data.password.length)
+          data.password.length) {
+
         this.props.addUser(data)
+      }
       else alert("No name provided");
     } else {
       if (data.firstname.length &&
           data.lastname.length)
         this.props.updateInfo(data);
+
       else alert("Please Provide all information")
     }
   }
