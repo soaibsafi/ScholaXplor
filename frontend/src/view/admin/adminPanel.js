@@ -43,32 +43,33 @@ export default class adminPanel extends React.Component {
     var that = this;
     var state = this.state;
     return (
-        <div style={{width: '100vw'}}>
-          <div className='row'>
+        <div className="fill-window">
+          <div className='main-title-area' >
             <h1>Admin Panel</h1>
             <button type="button" className="btn btn-danger" onClick={this.logoutAction}>Logout</button>
           </div>
-          <Tabs selectedIndex={state.selectedTab} onSelect={index => that.tabSelectionAction(index)}>
-            <TabList>
-              <Tab>User</Tab>
-              <Tab>Class</Tab>
-              <Tab>Subject</Tab>
-              <Tab>Pupil</Tab>
-            </TabList>
-            <TabPanel>
-              <UserTab token={state.token}/>
-            </TabPanel>
-            <TabPanel>
-              <ClassTable token={state.token}/>
-            </TabPanel>
-            <TabPanel>
-              <SubjectTab token={state.token}/>
-            </TabPanel>
-            <TabPanel>
-              <PupilTab token={state.token}/>
-            </TabPanel>
-          </Tabs>
-
+          <div className='tab-area'>
+            <Tabs selectedIndex={state.selectedTab} onSelect={index => that.tabSelectionAction(index)}>
+              <TabList>
+                <Tab>User</Tab>
+                <Tab>Class</Tab>
+                <Tab>Subject</Tab>
+                <Tab>Pupil</Tab>
+              </TabList>
+              <TabPanel>
+                <UserTab token={state.token}/>
+              </TabPanel>
+              <TabPanel>
+                <ClassTable token={state.token}/>
+              </TabPanel>
+              <TabPanel>
+                <SubjectTab token={state.token}/>
+              </TabPanel>
+              <TabPanel>
+                <PupilTab token={state.token}/>
+              </TabPanel>
+            </Tabs>
+          </div>
 
         </div>
     )

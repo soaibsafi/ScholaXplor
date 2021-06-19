@@ -1,3 +1,39 @@
+
+.fill-window {
+  height: 99vh;
+  width: 100vw;
+  top:0;
+  left: 0;
+  position: absolute;
+  overflow: hidden;
+}
+
+.main-title-area{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: fit-content;
+  padding: 10px 10px 0 10px;
+  text-align: left;
+  /* border: 1px solid blue; */
+}
+
+.main-title-area h1{
+  margin-left: 15px;
+}
+
+.main-title-area button{
+  float: right;
+  margin-right: 5px;
+  height: 40px;
+}
+
+.tab-area{
+  height: 100%;
+}
+
+
+
 .App {
   text-align: center;
 }

@@ -1,13 +1,12 @@
 .parent-div{
-    width: 100%;
-    height: 100%;
+    border:1px solid black;
  }
 
 .title-area{
     width: fit-content;
     height: fit-content;
 
-    margin: 10% auto ;
+    margin: 7% auto 0 auto ;
 }
 
 .login-area{
@@ -15,7 +14,7 @@
    height: fit-content;
    padding: 50px;
    border-radius: 15px;
-   margin: 10% auto;
+   margin: 5% auto;
    text-align: left;
 }
 
@@ -24,7 +23,7 @@
 }
 
 .login-area button{
-    width: 150px;
+    width: 100px;
     padding: 5px;
     margin-top: 10px;
 }

@@ -48,13 +48,13 @@ class loginView extends React.Component {
 
   render() {
     return (
-      <div className="parent-div">
+      <div className="parent-div fill-window">
         <div className="title-area">
            <h1>Application Title</h1>
         </div>
         <div className="login-area container p-33 border">
           <div className="form-group">
-            <h1>Login</h1>
+            <h2>Login</h2>
             <br />
             <label for="username">Username</label>
             <input type='text' className="form-control" name='username' id="username" onChange={this.onChangeHandler} />
