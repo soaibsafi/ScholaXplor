@@ -45,7 +45,6 @@ export default class teacherPanel extends React.Component {
   }
 
   render() {
-
     return (
         <div style={{width: "1024px"}}>
           <div className="row">

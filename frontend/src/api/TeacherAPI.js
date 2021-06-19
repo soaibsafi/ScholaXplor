@@ -65,3 +65,35 @@ export async function updateResult(data, token){
     console.log(error);
   }
 }
+
+export async function createNewTest(test, token){
+  url = host + "test/";
+  try{
+    const response = await axios.post(url,test,{
+      headers: {
+        'Authorization': token
+      }
+    });
+    return response.data
+  }catch(error){
+    console.log(error)
+  }
+}
+
+
+export async function deleteATest(tid, token){
+  url = host + "test/" + tid;
+  debugger
+  try{
+    const response = await axios.delete(url, {
+      headers: {
+        'Authorization': token
+      }
+    })
+
+    console.log(response);
+    return response.data;
+  }catch(error){
+    console.log(error);
+  }
+}

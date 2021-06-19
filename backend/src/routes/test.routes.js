@@ -5,7 +5,7 @@ module.exports = app => {
 
     app.get('/test/:sid', test.getAllTestsBySid)
     app.put('/test/:tid', test.updateTestByTid)
-    app.delete('/test/:tid', test.deleteTestByTid)
+    app.delete('/test/:tid', userMiddleware.isTeacherLoggedIn, test.deleteTestByTid)
     app.post('/test/', test.createTest)
 
     //Result API
