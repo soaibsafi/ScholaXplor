@@ -32,6 +32,7 @@ export default class manageTest extends React.Component {
       testList: [],
       studentList: [],
       selectedTest: this.props.location.state.selectedTest,
+      studentMarkData:[],
 
       showTestPopup: false,
       showStudentGradePopup: false,
@@ -94,14 +95,8 @@ export default class manageTest extends React.Component {
                that.loadStudentList();
             }
           })
-
-
         })
       })
-
-
-
-
     } else {
       alert("Please select a CSV file.")
     }
@@ -180,7 +175,8 @@ export default class manageTest extends React.Component {
 
   loadStudentList() {
     var that = this;
-    getStudentMarkDetails(that.state.selectedTest, that.state.token).then(response => {
+    debugger;
+    getStudentMarkDetails(that.state.selectedTest,"Token " + that.state.token).then(response => {
       console.log(response.data);
       if (response.data) {
         that.setState({studentList: response.data})
@@ -216,7 +212,7 @@ export default class manageTest extends React.Component {
         if (idx !== 0) obj.push({
           uid: dt.data[0],
           grade: dt.data[1],
-          sid: "SUB1623966305386",// that.state.sid,
+          sid: that.state.sid,
           tid: that.state.selectedTest,
           rid: ''
         })
@@ -341,7 +337,10 @@ export default class manageTest extends React.Component {
   }
 
   onTestChange(data) {
-    this.setState({selectedTest: data})
+    var that = this;
+    this.setState({selectedTest: data.value},()=>{
+      that.loadStudentList();
+    })
   }
 
 
