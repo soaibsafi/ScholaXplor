@@ -39,44 +39,49 @@ class SubjectPopUp extends React.Component {
     return (
       <div className='popup'>
         <div className='App popup_inner'>
-          <h2>{that.props.popupHeaderText + " " + (that.props.popupHeaderText !== "Update" ? 'Subject' : '')}</h2>
-          <div style={{ alignItem: 'left' }}>
-            {console.log(that.state.selectedClass)}
-            <label> <b>Class name</b></label>
+          <div className="custom_pop">
+            <h2>{that.props.popupHeaderText + " " + (that.props.popupHeaderText !== "Update" ? 'Subject' : '')}</h2>
             <br />
-            <input className="form-control" type="text" name="classname" defaultValue={that.state.classname} disabled />
-            <br />
+            <div>
+              {console.log(that.state.selectedClass)}
+              <label> <b>Class name</b></label>
+              <br />
+              <input className="form-control" type="text" name="classname" defaultValue={that.state.classname} disabled />
+              <br />
 
-            <label><b> Subject Name</b></label>
-            <input className="form-control" type="text" name="subjectname" defaultValue={that.props.popupHeaderText === "Update" ? that.state.subjectname : ""}
-              onChange={that.oninputChange.bind(this, "subjectname")}
-            />
-            <br />
+              <label><b> Subject Name</b></label>
+              <input className="form-control" type="text" name="subjectname" defaultValue={that.props.popupHeaderText === "Update" ? that.state.subjectname : ""}
+                onChange={that.oninputChange.bind(this, "subjectname")}
+              />
+              <br />
 
-            <label><b> Teacher </b></label>
-            <br />
-            <Dropdown classname='style.dropDown'
-              options={this.state.allTeacher}
-              value={this.state.uid}
-              onChange={this.onTeacherSelect}
-              placeholder="Choose a Teacher"
-              placeholderClassName='myPlaceholderClassName' />
-            <br />
+              <label><b> Teacher </b></label>
+              <br />
+              <Dropdown classname='style.dropDown'
+                options={this.state.allTeacher}
+                value={this.state.uid}
+                onChange={this.onTeacherSelect}
+                placeholder="Choose a Teacher"
+                placeholderClassName='myPlaceholderClassName' />
+              <br />
 
-            {that.props.popupHeaderText === "Update" ?
-              <div>
-                <label><b> Status </b></label>
-                <Dropdown classname='style.dropDown'
-                  options={StatusOptions}
-                  value={"Not Archived"}
-                  onChange={this.onStatusSelect}
-                  placeholder="Set a status"
-                  placeholderClassName='myPlaceholderClassName' />
-                <br />
-              </div> : null}
+              {that.props.popupHeaderText === "Update" ?
+                <div>
+                  <label><b> Status </b></label>
+                  <Dropdown classname='style.dropDown'
+                    options={StatusOptions}
+                    value={"Not Archived"}
+                    onChange={this.onStatusSelect}
+                    placeholder="Set a status"
+                    placeholderClassName='myPlaceholderClassName' />
+                  <br />
+                </div> : null}
+            </div>
+            <div className="popup-button-area">
+              <button className='btn btn-primary' onClick={that.sendData}>{this.props.popupBtnText}</button>
+              <button className='btn btn-danger' onClick={this.close}>{"Close"}</button>
+            </div>
           </div>
-          <button className='btn btn-primary' onClick={that.sendData}>{this.props.popupBtnText}</button>
-          <button className='btn btn-danger' onClick={this.close}>{"Close"}</button>
         </div>
       </div>
     )
@@ -104,7 +109,7 @@ class SubjectPopUp extends React.Component {
   }
 
 
- //******************* Send Data to Subject Tab Component ********************/
+  //******************* Send Data to Subject Tab Component ********************/
 
   setSubjectID() {
     return "SUB" + Date.now()

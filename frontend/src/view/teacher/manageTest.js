@@ -20,7 +20,7 @@ import ManageStudentTestPopup from "./ManageStudentTestPopup";
 
 const buttonRef = React.createRef();
 
-var redirectloginpath = "/teacherpanel";
+var redirectloginpath = "/teacherpanel"
 
 export default class manageTest extends React.Component {
   constructor(props) {
@@ -33,31 +33,22 @@ export default class manageTest extends React.Component {
       classname: this.props.location.state.info.classname,
       testDetailsList: this.props.location.state.testList,
       testList: [],
-      studentList: [],
+      studentList: [{name: 'abc', marks: 1.2, username: 'abc1'}],
       selectedTest: this.props.location.state.selectedTest,
       studentMarkData: [],
 
       showTestPopup: false,
       showStudentGradePopup: false,
-      showPopUp: false,
+      showPopUp:false,
 
-      popupHeaderText: "",
-      popupBtnText: "",
-      studentData: "",
+      popupHeaderText: '',
+      popupBtnText: '',
+      studentData: '',
 
       testResult: [],
       tid: "",
       testname: "",
       testdate: "",
-
-      // studentMarkData: {
-      //   aid: "",
-      //   marks: "",
-      //   name: "",
-      //   resid: "",
-      //   uid: "",
-      //   username: "",
-      // },
     };
 
     this.getAllTests = this.getAllTests.bind(this);
@@ -157,68 +148,51 @@ export default class manageTest extends React.Component {
 
   openNewTestPopup() {
     var that = this;
-    that.setState(
-      {
-        popupHeaderText:
-          "Add A new Test for " +
-          that.state.classname +
-          " - " +
-          that.state.subjectname,
-        popupBtnText: "Add",
-      },
-      () => {
-        that.toggleNewTestPopup();
-      }
-    );
+    that.setState({
+      popupHeaderText: "Add A new Test for " + that.state.classname + " - " + that.state.subjectname,
+      popupBtnText: "Add",
+    }, () => {
+      that.toggleNewTestPopup();
+    })
   }
 
   toggleStudentGradePopup() {
-    this.setState({ showStudentGradePopup: !this.state.showStudentGradePopup });
+    this.setState({showStudentGradePopup: !this.state.showStudentGradePopup})
   }
 
   closeStudentGradePopup() {
     var that = this;
-    this.setState(
-      {
-        popupHeaderText: "",
-        popupBtnText: "",
-        studentData: "",
-      },
-      () => {
-        that.toggleStudentGradePopup();
-      }
-    );
+    this.setState({
+          popupHeaderText: '',
+          popupBtnText: "",
+          studentData: '',
+        },
+        () => {
+          that.toggleStudentGradePopup();
+        })
   }
 
   openStudentTestGradeUpdatePopup(data) {
     var that = this;
-    var rid = "RES" + Date.now();
-    if (data.resid === null) {
-      data.resid = rid;
-    }
-    that.setState(
-      {
-        popupHeaderText: data.name + "'s test and grade update",
-        popupBtnText: "Update",
-        studentMarkData: data,
-      },
-      () => {
-        that.toggleStudentGradePopup();
-      }
-    );
+    that.setState({
+      popupHeaderText: data.name + "'s test and grade update",
+      popupBtnText: "Update",
+      studentMarkData: data,
+
+    }, () => {
+      that.toggleStudentGradePopup();
+    })
   }
 
   loadStudentList() {
     var that = this;
-    getStudentMarkDetails(
-      that.state.selectedTest,
-      "Token " + that.state.token
-    ).then((response) => {
+    debugger;
+    getStudentMarkDetails(that.state.selectedTest, that.state.token).then(response => {
       console.log(response.data);
       if (response.data) {
-        that.setState({ studentList: response.data });
+        that.setState({studentList: response.data})
       }
-    });
+    })
   }
 
   handleOpenDialog = (e) => {
@@ -529,6 +503,8 @@ export default class manageTest extends React.Component {
     }
     else{alert("Please select a test to delete")}
   }
+
+
 
   updateInfo(data) {
     var that = this;

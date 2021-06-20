@@ -1,8 +1,8 @@
 import React from 'react';
 import Dropdown from "react-dropdown";
-import {getAllClass, searchPupil, getPupilByClass, updateAssignedPupil, assignPupil} from "../../../api/AdminAPI";
+import { getAllClass, searchPupil, getPupilByClass, updateAssignedPupil, assignPupil } from "../../../api/AdminAPI";
 import SearchField from 'react-search-field';
-import './PupilTab.css'
+import './UserTab.css'
 
 class PupilTab extends React.Component {
 
@@ -39,39 +39,47 @@ class PupilTab extends React.Component {
   render() {
     var that = this;
     return (
-        <div className='App'>
-          <h2>Pupil Management</h2>
-          <div className='row add-subject-area'>
+      <div>
+        <h4 style={{ color: '#0275d8', textAlign: 'left', margin: '50px 0 10px 12.5%' }}>Pupil Management</h4>
+        <div className="box-container">
+
+          <div className="selection-area-pupil">
             <Dropdown classname='style.dropDown'
-                      options={this.state.classList}
-                      onChange={this.onClassSelect}
-                      placeholder="Choose a class"
-                      placeholderClassName='myPlaceholderClassName'/>
-            <SearchField placeholder='Search Pupil' onSearchClick={that.oninputChange}/>
-            <br/>
-            <button className="btn btn-success " onClick={that.assignStudent}>Assign</button>
-            <button className="btn btn-success " onClick={that.viewStudentList}>View Student List</button>
+              options={this.state.classList}
+              onChange={this.onClassSelect}
+              placeholder="Choose a class"
+              placeholderClassName='myPlaceholderClassName' />
+            <br />
+            <br />
+            <SearchField placeholder='Search Pupil' onSearchClick={that.oninputChange} />
+            <br />
+            <br />
+            <button style={{ marginTop: '20px' }} className="btn btn-success " onClick={that.assignStudent}>Assign</button>
+            <button style={{ marginTop: '20px' }} className="btn btn-success " onClick={that.viewStudentList}>View Student List</button>
           </div>
           {that.state.pupilList.length ?
-              <div className="ag-theme-alpine" style={{height: 400, width: 800}}>
+            <div className="ag-theme-alpine data-table">
+              <div className="table-scroll">
                 <table className="table table-hover table-striped">
                   <thead className="thead-dark">
-                  <tr key={"user_key1"}>
-                    {that.state.classByList ? null : <th scope="col"></th>}
-                    <th scope="col">Username</th>
-                    <th scope="col">First Name</th>
-                    <th scope="col">Last Name</th>
-                    {that.state.classByList ? null : <th scope="col">Assigned In</th>}
-                  </tr>
+                    <tr key={"user_key1"}>
+                      {that.state.classByList ? null : <th scope="col"></th>}
+                      <th scope="col">Username</th>
+                      <th scope="col">First Name</th>
+                      <th scope="col">Last Name</th>
+                      {that.state.classByList ? null : <th scope="col">Assigned In</th>}
+                    </tr>
                   </thead>
                   <tbody>
-                  {this.loadFillData()}
+                    {this.loadFillData()}
                   </tbody>
                 </table>
-              </div> : null}
+              </div>
+            </div> : null}
           {that.state.isPupilExists ? null : <div><label>There is no pupil information for this class</label></div>}
 
         </div>
+      </div>
     )
   }
 
@@ -124,10 +132,10 @@ class PupilTab extends React.Component {
     var that = this;
     getAllClass(that.state.token).then((data) => {
       data.data.forEach((info) => {
-        var obj = {value: info.cid, label: info.classname};
+        var obj = { value: info.cid, label: info.classname };
         tempList.push(obj);
       });
-      this.setState({classList: tempList}, () => {
+      this.setState({ classList: tempList }, () => {
         // console.log(that.state.classList)
       });
     });
@@ -176,15 +184,15 @@ class PupilTab extends React.Component {
       return this.state.pupilList.map(data => {
         if (data.isAssigned === 'Y' || data.isAssigned === null)
           return (
-              <tr key={data.uid}>
-                {that.state.classByList ? null :
-                    <td>{<input id={data.uid} name={data.uid} type="checkbox"
-                                onChange={(e) => this.handleCheckBox(e, data)}/>}</td>}
-                <th>{data.username}</th>
-                <th>{data.firstname}</th>
-                <td>{data.lastname}</td>
-                {that.state.classByList ? null : <td>{data.classname}</td>}
-              </tr>
+            <tr key={data.uid}>
+              {that.state.classByList ? null :
+                <td>{<input id={data.uid} name={data.uid} type="checkbox"
+                  onChange={(e) => this.handleCheckBox(e, data)} />}</td>}
+              <th>{data.username}</th>
+              <th>{data.firstname}</th>
+              <td>{data.lastname}</td>
+              {that.state.classByList ? null : <td>{data.classname}</td>}
+            </tr>
           )
       })
     }

@@ -10,7 +10,7 @@ import {
 } from '../../../api/AdminAPI'
 import Userpopup from "./Userpopup";
 
-import style from './UserTab.css'
+import './UserTab.css'
 import '../../../App.css';
 import 'react-dropdown/style.css';
 
@@ -62,17 +62,21 @@ export default class UserTab extends React.Component {
   render() {
     var that = this;
     return (
-        <div className="App">
-          <h2 className={style.dropDown}>User Managment</h2>
-          <div className='row' style={{width: 340}}>
+        <div>
+          <h4 style={{color:'#0275d8',textAlign:'left', margin:'50px 0 10px 12.5%'}}>User Management</h4>
+          <div className="box-container">
+          <div className='selection-area'>
             <Dropdown classname='style.dropDown'
                       options={options}
                       onChange={this.onRoleSelect}
                       value={options[0]}
                       placeholderClassName='myPlaceholderClassName'/>
+             <br/>         
             <button className="btn btn-success" onClick={this.openNewUserPopup}>Add</button>
           </div>
-          {that.state.list.length ? <div className="ag-theme-alpine" style={{height: 400, width: 800}}>
+          {that.state.list.length ? 
+          <div className="ag-theme-alpine data-table">
+            <div className="table-scroll">
             <table className="table table-hover table-striped">
               <thead className="thead-dark">
               <tr key={"user_key1"}>
@@ -88,6 +92,7 @@ export default class UserTab extends React.Component {
               {this.loadFillData()}
               </tbody>
             </table>
+            </div>
           </div> : <label>No data</label>}
           {that.state.showPopup ?
               <Userpopup userinfo={that.state.userinfo}
@@ -98,6 +103,7 @@ export default class UserTab extends React.Component {
                          addUser={that.addUser}
                          closePopup={that.closePopup}
               /> : null}
+              </div>
         </div>
     )
   }
