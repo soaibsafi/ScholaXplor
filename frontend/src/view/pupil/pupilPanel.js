@@ -9,6 +9,7 @@ import {
 } from "../../api/PupilAPI";
 
 import PupilTestDetails from "./PupilTestDetails";
+import '../../App.css';
 
 const redirectpath = "/login";
 
@@ -62,55 +63,60 @@ export default class pupilPanel extends React.Component {
     });
     that.getLoggedInClassname(pid, token);
     that.getAllPupilClasses(pid, token);
-    
-    
+
+
     //that.getLoggedInSUbjects(pid, cid, token);
   }
 
   render() {
     var that = this;
     return (
-      <div style={{ width: "1024px" }}>
-        <div className="row">
-          <h1>Pupil Panel</h1>
-          <h3>Assigned Class: {that.state.className}</h3>
-          <button
-            type="button"
-            className="btn btn-danger"
-            onClick={this.logoutAction}
-          >
-            Logout
-          </button>
+      <div>
+        <div className="fill-window">
+          <div className='main-title-area' style={{paddingBottom:'20px', borderBottom: '3px solid rgb(95, 0, 124)'}}>
+            <h3 style={{ color: '#6e6e6e' }}>Pupil Panel</h3>
+            <button type="button" className="btn btn-danger" onClick={this.logoutAction}>Logout</button>
+          </div>
+          <div className='tab-area'>
+            <h4 style={{ marginTop: '20px' }}>Current Assigned Class </h4>
+            <p style={{color:'#008720'}}>{that.state.className}</p>
+            <h4 style={{color:'#0275d8',textAlign:'left', margin:'0px 0 10px 12.5%'}}>Achievement</h4>
+            <div className="box-container">
+              <div className='selection-area'>
+                <Dropdown
+                  classname="style.dropDown"
+                  options={that.state.allClasses}
+                  onChange={that.getAllSUbjects}
+                  placeholder="Select a class"
+                  placeholderClassName="myPlaceholderClassName"
+                />
+              </div>
+                <div className="ag-theme-alpine data-table">
+                  <div className="table-scroll">
+                    <table className="table table-hover table-striped">
+                      <thead className="thead-dark">
+                        <tr key={"user_key1"}>
+                          <th scope="col">Subject</th>
+                          <th scope="col">Avg. Grade</th>
+                          <th scope="col"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {this.loadFillData()}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+            </div>
+          </div>
+          {that.state.showPopup ? (
+            <PupilTestDetails
+              subjectTestDetailsList={that.state.subjectTestDetailsList}
+              popupHeaderText={that.state.popupHeaderText}
+              closePopup={that.closePopup}
+            />
+          ) : null}
         </div>
-        <div className="row" style={{ width: 340 }}>
-          <Dropdown
-            classname="style.dropDown"
-            options={that.state.allClasses}
-            onChange={that.getAllSUbjects}
-            placeholder="Select a class"
-            placeholderClassName="myPlaceholderClassName"
-          />
-        </div>
-        <div className="ag-theme-alpine" style={{ height: 400, width: 800 }}>
-          <table className="table table-hover table-striped">
-            <thead className="thead-dark">
-              <tr key={"user_key1"}>
-                <th scope="col">Subject</th>
-                <th scope="col">Avg. Grade</th>
-                <th scope="col"></th>
-              </tr>
-            </thead>
-            <tbody>{this.loadFillData()}</tbody>
-          </table>
-        </div>
-        {that.state.showPopup ? (
-          <PupilTestDetails
-            subjectTestDetailsList={that.state.subjectTestDetailsList}
-            popupHeaderText={that.state.popupHeaderText}
-            closePopup={that.closePopup}
-          />
-        ) : null}
-
       </div>
     );
   }
@@ -178,7 +184,7 @@ export default class pupilPanel extends React.Component {
 
   getLoggedInClassname(pid, token) {
     getClassname(pid, "Token " + token).then((data) => {
-      this.setState({ className: data.classname, classId:data.cid }, ()=>{console.log(this.state.classId)});
+      this.setState({ className: data.classname, classId: data.cid }, () => { console.log(this.state.classId) });
     });
   }
 

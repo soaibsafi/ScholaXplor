@@ -51,10 +51,10 @@ export default class adminPanel extends React.Component {
           <div className='tab-area'>
             <Tabs selectedIndex={state.selectedTab} onSelect={index => that.tabSelectionAction(index)}>
               <TabList>
-                <Tab><b>User</b></Tab>
-                <Tab><b>Class</b></Tab>
-                <Tab><b>Subject</b></Tab>
-                <Tab><b>Pupil</b></Tab>
+                <Tab>User</Tab>
+                <Tab>Class</Tab>
+                <Tab>Subject</Tab>
+                <Tab>Pupil</Tab>
               </TabList>
               <TabPanel>
                 <UserTab token={state.token}/>
