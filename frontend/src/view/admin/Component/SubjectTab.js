@@ -11,7 +11,7 @@ import {
 } from '../../../api/AdminAPI'
 import SubjectPopUp from "./SubjectPopUp";
 
-import style from './SubjectTab.css'
+import './UserTab.css'
 import '../../../App.css';
 import 'react-dropdown/style.css';
 
@@ -59,48 +59,50 @@ export default class SubjectTab extends React.Component {
   render() {
     var that = this;
     return (
-      <div className="App">
-        <h2 className={style.dropDown}>Subject Management</h2>
+      <div>
+        <h4 style={{ color: '#0275d8', textAlign: 'left', margin: '50px 0 10px 12.5%' }}>Subject Management</h4>
+        <div className="box-container">
 
-        <div className="select-class-area">
-          <Dropdown classname='style.dropDown'
-            options={this.state.allClass}
-            onChange={this.onClassSelect}
-            placeholder="Choose a class"
-            placeholderClassName='myPlaceholderClassName' />
+          <div className="selection-area">
+            <Dropdown classname='style.dropDown'
+              options={this.state.allClass}
+              onChange={this.onClassSelect}
+              placeholder="Choose a class"
+              placeholderClassName='myPlaceholderClassName' />
+            
+            <br />
+            <button className="btn btn-success " onClick={this.openAddNewSubjectPopUp}>Add</button>
+          </div>
+          <div className="ag-theme-alpine data-table">
+            <div className="table-scroll">
+              <table className="table table-hover table-striped">
+                <thead className="thead-dark">
+                  <tr key={"user_key1"}>
+                    <th scope="col">Class</th>
+                    <th scope="col">Subject</th>
+                    <th scope="col">Teacher</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Update</th>
+                    <th scope="col">Remove Subject</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {this.loadFillData()}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          {that.state.showPopup ?
+            <SubjectPopUp subjectInfo={that.state.subjectInfo}
+              selectedClass={that.state.selectedClass}
+              allTeacher={this.state.allTeacher}
+              popupHeaderText={that.state.popupHeaderText}
+              popupBtnText={that.state.popupBtnText}
+              updateInfo={that.updateInfo}
+              addSubject={that.addSubject}
+              closePopup={that.closePopup}
+            /> : null}
         </div>
-        <div className='row add-subject-area'>
-          <button className="btn btn-success " onClick={this.openAddNewSubjectPopUp}>Add</button>
-        </div>
-        <br />
-        <br />
-        <div className="ag-theme-alpine" style={{ height: 400, width: 800 }}>
-          <table className="table table-hover table-striped">
-            <thead className="thead-dark">
-              <tr key={"user_key1"}>
-                <th scope="col">Class</th>
-                <th scope="col">Subject</th>
-                <th scope="col">Teacher</th>
-                <th scope="col">Status</th>
-                <th scope="col">Update</th>
-                <th scope="col">Remove Subject</th>
-              </tr>
-            </thead>
-            <tbody>
-              {this.loadFillData()}
-            </tbody>
-          </table>
-        </div>
-        {that.state.showPopup ?
-          <SubjectPopUp subjectInfo={that.state.subjectInfo}
-            selectedClass={that.state.selectedClass}
-            allTeacher={this.state.allTeacher}
-            popupHeaderText={that.state.popupHeaderText}
-            popupBtnText={that.state.popupBtnText}
-            updateInfo={that.updateInfo}
-            addSubject={that.addSubject}
-            closePopup={that.closePopup}
-          /> : null}
       </div>
     )
   }

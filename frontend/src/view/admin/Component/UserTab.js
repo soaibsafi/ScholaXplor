@@ -10,7 +10,7 @@ import {
 } from '../../../api/AdminAPI'
 import Userpopup from "./Userpopup";
 
-import style from './UserTab.css'
+import './UserTab.css'
 import '../../../App.css';
 import 'react-dropdown/style.css';
 
