@@ -11,6 +11,10 @@ class ManageTestPopup extends React.Component {
       sid: this.props.sid,
       testList: this.props.testList,
       selectedTest: this.props.selectedTest,
+      selectedTestName: "",
+      selectedTestDate: "",
+      selectedTestId: "",
+      testDetailsList: this.props.testDetailsList,
     };
     this.oninputChange = this.oninputChange.bind(this);
     this.onTestSelect = this.onTestSelect.bind(this);
@@ -21,7 +25,24 @@ class ManageTestPopup extends React.Component {
     this.getIndex = this.getIndex.bind(this);
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    var x =
+      this.state.testList[
+        this.getIndex(this.state.testList, this.state.selectedTest)
+      ];
+
+    var dt = this.state.testDetailsList.findIndex((obj) => obj.tid === x.value);
+    this.setState(
+      {
+        selectedTestName: x.label,
+        selectedTestDate: this.state.testDetailsList[dt].testdate,
+        selectedTestId: this.state.testDetailsList[dt].tid,
+      },
+      () => {
+        console.log(this.state.selectedTestDate);
+      }
+    );
+  }
 
   render() {
     var that = this;
@@ -37,7 +58,7 @@ class ManageTestPopup extends React.Component {
               className="form-control"
               type="text"
               name="testname"
-              defaultValue={that.state.classname}
+              defaultValue={that.state.selectedTestName}
               onChange={that.oninputChange.bind(this, "testname")}
             />
             <label>Test Date</label>
@@ -46,6 +67,7 @@ class ManageTestPopup extends React.Component {
               className="form-control"
               type="date"
               name="testdate"
+              defaultValue={that.state.selectedTestDate.slice(0, 10)}
               onChange={that.oninputChange.bind(this, "testdate")}
             />
           </div>
@@ -61,7 +83,7 @@ class ManageTestPopup extends React.Component {
   }
 
   getIndex(arr, testVal) {
-    return arr.findIndex((obj) => obj.value === testVal.value);
+    return arr.findIndex((obj) => obj.value === testVal);
   }
 
   close() {
@@ -71,10 +93,12 @@ class ManageTestPopup extends React.Component {
   oninputChange(key, e) {
     switch (key) {
       case "testname":
-        this.setState({ testname: e.target.value });
+        this.setState({ selectedTestName: e.target.value });
         break;
       case "testdate":
-        this.setState({ testdate: e.target.value });
+        this.setState({ selectedTestDate: e.target.value }, () => {
+          console.log(this.state.testdate);
+        });
         break;
       default:
         break;
@@ -94,16 +118,17 @@ class ManageTestPopup extends React.Component {
       this.props.popupBtnText === "Add"
         ? {
             tid: this.setUserID(),
-            testname: this.state.testname,
-            testdate: this.state.testdate,
+            testname: this.state.selectedTestName,
+            testdate: this.state.selectedTestDate,
             sid: this.state.sid,
           }
         : {
-            tid: this.state.tid,
-            testname: this.state.testname,
-            testdate: this.state.testdate,
+            tid: this.state.selectedTestId,
+            testname: this.state.selectedTestName,
+            testdate: this.state.selectedTestDate,
             sid: this.state.sid,
           };
+    debugger;
     this.resetState();
     if (this.props.popupBtnText === "Add") {
       if (data.testname.length && data.testdate.length)
@@ -111,7 +136,7 @@ class ManageTestPopup extends React.Component {
       else alert("No name provided");
     } else {
       if (data.testname.length && data.testdate.length)
-        this.props.updateInfo(data);
+        this.props.updateTest(data);
       else alert("Please Provide all information");
     }
   }

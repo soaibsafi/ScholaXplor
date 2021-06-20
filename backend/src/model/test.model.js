@@ -5,8 +5,6 @@ const Test = function (test) {
   this.testname = test.testname;
   this.testdate = test.testdate;
   this.sid = test.sid;
-  this.resid = test.resid;
-  this.marks = test.marks;
 };
 
 
