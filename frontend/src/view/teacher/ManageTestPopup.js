@@ -26,22 +26,24 @@ class ManageTestPopup extends React.Component {
   }
 
   componentDidMount() {
-    var x =
-      this.state.testList[
-        this.getIndex(this.state.testList, this.state.selectedTest)
-      ];
+    if(this.props.popupBtnText === "Update"){
+      var x =
+          this.state.testList[
+              this.getIndex(this.state.testList, this.state.selectedTest)
+              ];
 
-    var dt = this.state.testDetailsList.findIndex((obj) => obj.tid === x.value);
-    this.setState(
-      {
-        selectedTestName: x.label,
-        selectedTestDate: this.state.testDetailsList[dt].testdate,
-        selectedTestId: this.state.testDetailsList[dt].tid,
-      },
-      () => {
-        console.log(this.state.selectedTestDate);
-      }
-    );
+      var dt = this.state.testDetailsList.findIndex((obj) => obj.tid === x.value);
+      this.setState(
+          {
+            selectedTestName: x.label,
+            selectedTestDate: this.state.testDetailsList[dt].testdate,
+            selectedTestId: this.state.testDetailsList[dt].tid,
+          },
+          () => {
+            console.log(this.state.selectedTestDate);
+          }
+      );
+    }
   }
 
   render() {
@@ -128,12 +130,12 @@ class ManageTestPopup extends React.Component {
             testdate: this.state.selectedTestDate,
             sid: this.state.sid,
           };
-    debugger;
+    // debugger;
     this.resetState();
     if (this.props.popupBtnText === "Add") {
       if (data.testname.length && data.testdate.length)
         this.props.addTest(data);
-      else alert("No name provided");
+      else alert("Please Provide all information");
     } else {
       if (data.testname.length && data.testdate.length)
         this.props.updateTest(data);

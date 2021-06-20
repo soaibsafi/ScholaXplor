@@ -37,7 +37,7 @@ export async function getTestDetails(sid, token){
 
 export async function getStudentMarkDetails(tid, token){
   url = host + "marks/" + tid;
-  debugger
+  // debugger
   try{
     const response = await  axios.get(url,{
       headers: {
@@ -100,7 +100,7 @@ export async function updateATest(testObj, token){
 
 export async function deleteATest(tid, token){
   url = host + "test/" + tid;
-  debugger
+  //debugger
   try{
     const response = await axios.delete(url, {
       headers: {

@@ -120,6 +120,8 @@ export default class manageTest extends React.Component {
 
   openUpdatePopup(data) {
     var that = this;
+    debugger;
+    if(this.state.selectedTest)
     that.setState(
       {
         popupHeaderText:
@@ -133,6 +135,7 @@ export default class manageTest extends React.Component {
         that.toggleNewTestPopup();
       }
     );
+    else{alert("Please select a test")}
   }
 
   toggleNewTestPopup() {
@@ -459,6 +462,7 @@ export default class manageTest extends React.Component {
   addTest(data) {
     var that = this;
     console.log(that.state.token);
+     if(this.state.selectedTest)
     createNewTest(data, "Token " + that.state.token).then((data) => {
       if (data.status === "SUCCESS") {
         that.toggleNewTestPopup();
@@ -472,9 +476,12 @@ export default class manageTest extends React.Component {
           );
         });
       } else {
-        alert("Error!!");
+        // alert("Error!!");
       }
     });
+    else{
+      alert("Please select A")
+    }
   }
 
   updateTest(data) {
@@ -503,23 +510,26 @@ export default class manageTest extends React.Component {
     var that = this;
     console.log(data);
     debugger
-    if (!window.confirm("Do you really want to delete the class?")) return;
-    deleteATest(data, "Token " + that.state.token).then((data) => {
-      alert(data.message);
-      if (data.status === "SUCCESS") {
-        that.setState({ testList: [] }, () => {
-          getTestDetails(that.state.sid, "Token " + that.props.token).then(
-            (response) => {
-              that.setState({ testDetailsList: response.data }, () => {
-                that.getAllTests();
-              });
-            }
-          );
-        });
-      } else {
-        alert("Error!!");
-      }
-    });
+    if(this.state.selectedTest){
+      if (!window.confirm("Do you really want to delete the class?")) return;
+      deleteATest(data, "Token " + that.state.token).then((data) => {
+        alert(data.message);
+        if (data.status === "SUCCESS") {
+          that.setState({testList: []}, () => {
+            getTestDetails(that.state.sid, "Token " + that.props.token).then(
+                (response) => {
+                  that.setState({testDetailsList: response.data, selectedTest: null}, () => {
+                    that.getAllTests();
+                  });
+                }
+            );
+          });
+        } else {
+          alert("Error!!");
+        }
+      });
+    }
+    else{alert("Please select a test to delete")}
   }
 
   updateInfo(data) {
