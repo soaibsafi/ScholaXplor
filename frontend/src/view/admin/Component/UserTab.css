@@ -34,3 +34,15 @@
     height: 100%;
     overflow: scroll;
 }
+
+
+.selection-area-pupil{
+    width: 15vw;
+    height: auto;
+    padding: 50px 20px;
+    border: 1px solid #dee2e6;
+}
+
+.selection-area-pupil button{
+    width: 100%;
+}
