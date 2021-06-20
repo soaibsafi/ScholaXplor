@@ -45,7 +45,7 @@ export default class adminPanel extends React.Component {
     return (
         <div className="fill-window">
           <div className='main-title-area' >
-            <h1>Admin Panel</h1>
+            <h3 style={{color:'#6e6e6e'}}>Admin Panel</h3>
             <button type="button" className="btn btn-danger" onClick={this.logoutAction}>Logout</button>
           </div>
           <div className='tab-area'>

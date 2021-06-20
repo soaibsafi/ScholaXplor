@@ -1,12 +1,5 @@
 import React from 'react';
 import '../../../App.css';
-// import Dropdown from "react-dropdown";
-
-// import 'react-dropdown/style.css';
-
-// const options = [
-//   'Admin', 'Pupil', 'Teacher'
-// ];
 
 class userpopup extends React.Component {
 
@@ -34,45 +27,43 @@ class userpopup extends React.Component {
     return (
         <div className='popup'>
           <div className='App popup_inner'>
+            <div className="custom_pop">
             <h2>{that.props.popupHeaderText + " " + (that.props.popupHeaderText !== "Update" ? that.props.selectedRole : '')}</h2>
-            <div style={{alignItem: 'left'}}>
-              {/*{console.log(options.indexOf(that.state.selectedRole))}*/}
-              {/*{that.props.popupHeaderText === "Update" ?*/}
-              {/*    <Dropdown classname='style.dropDown'*/}
-              {/*              value={options[options.indexOf(that.state.selectedRole)]}*/}
-              {/*              options={options}*/}
-              {/*              onChange={that.onRoleSelect}*/}
-              {/*              placeholder="Select an option"*/}
-              {/*              placeholderClassName='myPlaceholderClassName'/> : null}*/}
-
-              <label> User name</label><br/>
-              {that.props.popupHeaderText === "Update" ?
-                  <label>{this.state.username}</label> :
+            <br/>
+            <div>
+              <label> <b>Username: </b></label>
+              {that.props.popupHeaderText === "Update" ?      
+                  <input className="form-control" type="text" name="username" value={this.state.username}
+                         onChange={that.oninputChange.bind(this, "username")} disabled/>
+                  :
                   <input className="form-control" type="text" name="username"
-                         onChange={that.oninputChange.bind(this, "username")}
-                  />}
+                         onChange={that.oninputChange.bind(this, "username")} />
+              }
               <br/>
-              <label> First Name:</label>
+              <label><b> First Name:</b></label>
               <input className="form-control" type="text" name="fname" defaultValue={this.state.fname}
                      onChange={that.oninputChange.bind(this, "fname")}
               />
               <br/>
-              <label>Last Name:</label>
+              <label><b>Last Name:</b></label>
               <input className="form-control" type="text" name="lname" defaultValue={this.state.lname}
                      onChange={that.oninputChange.bind(this, "lname")}
               />
               <br/>
               {that.props.popupHeaderText !== "Update" ?
                   <div>
-                    <label>Password:</label>
+                    <label><b>Password:</b></label>
                     <input className="form-control" type="password" name="password"
                            onChange={that.oninputChange.bind(this, "password")}
                     />
                     <br/>
                   </div> : null}
             </div>
-            <button className='btn btn-primary' onClick={that.sendData}>{this.props.popupBtnText}</button>
-            <button className='btn btn-danger' onClick={this.close}>{"Close"}</button>
+            <div className="popup-button-area">
+              <button className='btn btn-primary' onClick={that.sendData}>{this.props.popupBtnText}</button>
+              <button className='btn btn-danger' onClick={this.close}>{"Close"}</button>
+            </div>
+            </div>
           </div>
         </div>
     )
