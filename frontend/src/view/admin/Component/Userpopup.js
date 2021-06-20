@@ -25,56 +25,56 @@ class userpopup extends React.Component {
   render() {
     var that = this;
     return (
-        <div className='popup'>
-          <div className='App popup_inner'>
-            <div className="custom_pop">
+      <div className='popup'>
+        <div className='App popup_inner'>
+          <div className="custom_pop">
             <h2>{that.props.popupHeaderText + " " + (that.props.popupHeaderText !== "Update" ? that.props.selectedRole : '')}</h2>
-            <br/>
+            <br />
             <div>
               <label> <b>Username: </b></label>
-              {that.props.popupHeaderText === "Update" ?      
-                  <input className="form-control" type="text" name="username" value={this.state.username}
-                         onChange={that.oninputChange.bind(this, "username")} disabled/>
-                  :
-                  <input className="form-control" type="text" name="username"
-                         onChange={that.oninputChange.bind(this, "username")} />
+              {that.props.popupHeaderText === "Update" ?
+                <input className="form-control" type="text" name="username" value={this.state.username}
+                  onChange={that.oninputChange.bind(this, "username")} disabled />
+                :
+                <input className="form-control" type="text" name="username"
+                  onChange={that.oninputChange.bind(this, "username")} />
               }
-              <br/>
+              <br />
               <label><b> First Name:</b></label>
               <input className="form-control" type="text" name="fname" defaultValue={this.state.fname}
-                     onChange={that.oninputChange.bind(this, "fname")}
+                onChange={that.oninputChange.bind(this, "fname")}
               />
-              <br/>
+              <br />
               <label><b>Last Name:</b></label>
               <input className="form-control" type="text" name="lname" defaultValue={this.state.lname}
-                     onChange={that.oninputChange.bind(this, "lname")}
+                onChange={that.oninputChange.bind(this, "lname")}
               />
-              <br/>
+              <br />
               {that.props.popupHeaderText !== "Update" ?
-                  <div>
-                    <label><b>Password:</b></label>
-                    <input className="form-control" type="password" name="password"
-                           onChange={that.oninputChange.bind(this, "password")}
-                    />
-                    <br/>
-                  </div> : null}
+                <div>
+                  <label><b>Password:</b></label>
+                  <input className="form-control" type="password" name="password"
+                    onChange={that.oninputChange.bind(this, "password")}
+                  />
+                  <br />
+                </div> : null}
             </div>
             <div className="popup-button-area">
               <button className='btn btn-primary' onClick={that.sendData}>{this.props.popupBtnText}</button>
               <button className='btn btn-danger' onClick={this.close}>{"Close"}</button>
             </div>
-            </div>
           </div>
         </div>
+      </div>
     )
   }
 
-  close(){
+  close() {
     this.resetState();
     this.props.closePopup();
   }
 
-  resetState(){
+  resetState() {
     this.setState({
       fname: "",
       lname: "",
@@ -88,16 +88,16 @@ class userpopup extends React.Component {
   oninputChange(key, e) {
     switch (key) {
       case "username":
-        this.setState({username: e.target.value});
+        this.setState({ username: e.target.value });
         break;
       case "fname":
-        this.setState({fname: e.target.value});
+        this.setState({ fname: e.target.value });
         break;
       case "lname":
-        this.setState({lname: e.target.value});
+        this.setState({ lname: e.target.value });
         break;
       case "password":
-        this.setState({password: e.target.value});
+        this.setState({ password: e.target.value });
         break;
       default:
         break;
@@ -105,10 +105,10 @@ class userpopup extends React.Component {
   }
 
   onRoleSelect(e) {
-    this.setState({selectedRole: e.value})
+    this.setState({ selectedRole: e.value })
   }
 
-  setUserID(){
+  setUserID() {
     return "USRATR" + Date.now()
   }
 
@@ -131,16 +131,16 @@ class userpopup extends React.Component {
     // this.resetState();
     if (this.props.popupBtnText === "Add") {
       if (data.firstname.length &&
-          data.lastname.length &&
-          data.username.length &&
-          data.password.length) {
+        data.lastname.length &&
+        data.username.length &&
+        data.password.length) {
 
         this.props.addUser(data)
       }
       else alert("No name provided");
     } else {
       if (data.firstname.length &&
-          data.lastname.length)
+        data.lastname.length)
         this.props.updateInfo(data);
 
       else alert("Please Provide all information")

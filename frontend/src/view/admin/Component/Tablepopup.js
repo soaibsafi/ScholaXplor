@@ -1,14 +1,5 @@
 import React from "react";
 import "../../../App.css";
-// import Dropdown from "react-dropdown";
-
-// import "react-dropdown/style.css";
-
-// const options = [
-//   { value: "Admin", label: "Admin" },
-//   { value: "Pupil", label: "Pupil" },
-//   { value: "Teacher", label: "Teacher" },
-// ];
 
 class classpopup extends React.Component {
   constructor(props) {
@@ -29,32 +20,27 @@ class classpopup extends React.Component {
     return (
       <div className="popup">
         <div className="App popup_inner">
-          <h2>
-            {that.props.popupHeaderText +
-              " " +
-              (that.props.popupHeaderText !== "Update"
-                ? that.props.selectedRole
-                : "")}
-          </h2>
-          <div style={{ alignItem: "left" }}>
-            {console.log(that.props.popupHeaderText)}
-            <label>Class Name</label>
+          <div className="custom_pop">
+            <h2>
+              {that.props.popupHeaderText +  " " +
+                (that.props.popupHeaderText !== "Update" ? "" : "")}
+            </h2>
             <br />
-
-            <input
-              className="form-control"
-              type="text"
-              name="classname"
-              defaultValue={that.state.classname}
-              onChange={that.oninputChange.bind(this, "classname")}
-            />
+            <div>
+              <label><b>Class Name</b></label>
+              <br />
+              <input className="form-control" type="text" name="classname" defaultValue={that.state.classname}
+                onChange={that.oninputChange.bind(this, "classname")} />
+            </div>
+            <div className="popup-button-area">
+              <button className="btn btn-primary" onClick={that.sendData}>
+                {this.props.popupBtnText}
+              </button>
+              <button className="btn btn-danger" onClick={that.props.closePopup}>
+                {"Close"}
+              </button>
+            </div>
           </div>
-          <button className="btn btn-primary" onClick={that.sendData}>
-            {this.props.popupBtnText}
-          </button>
-          <button className="btn btn-danger" onClick={that.props.closePopup}>
-            {"Close"}
-          </button>
         </div>
       </div>
     );
@@ -82,15 +68,15 @@ class classpopup extends React.Component {
     var data =
       this.props.popupBtnText === "Add"
         ? {
-            classname: this.state.classname,
-            cid: this.setClassID(),
-            selectedClass: this.state.selectedClass,
-          }
+          classname: this.state.classname,
+          cid: this.setClassID(),
+          selectedClass: this.state.selectedClass,
+        }
         : {
-            classname: this.state.classname,
-            cid: this.state.cid,
-            selectedClass: this.state.selectedClass,
-          };
+          classname: this.state.classname,
+          cid: this.state.cid,
+          selectedClass: this.state.selectedClass,
+        };
     this.resetState();
     if (this.props.popupBtnText === "Add") {
       if (data.classname.length) this.props.addClass(data);
