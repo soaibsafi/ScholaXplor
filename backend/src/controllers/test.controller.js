@@ -2,7 +2,7 @@ const Test = require("../model/test.model");
 const Result = require("../model/test.model");
 
 exports.getMarksByTestId = (req, res) => {
-  Test.getAllMarks(req.params.testId, (err, data) => {
+  Test.getAllMarks(req.query.sid, req.query.tid, (err, data) => {
     if (err)
       res.status(200).send({
         status: "FAILED",

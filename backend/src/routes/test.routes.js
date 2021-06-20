@@ -9,7 +9,7 @@ module.exports = app => {
     app.post('/test/', test.createTest)
 
     //Result API
-    app.get("/marks/:testId", test.getMarksByTestId);
+    app.get("/marks/", test.getMarksByTestId);
     app.put("/marks/:resid", test.updateMarksByResid);
   };
   
