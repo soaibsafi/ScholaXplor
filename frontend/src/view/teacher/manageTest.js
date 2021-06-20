@@ -6,8 +6,7 @@ import {
   createNewTest,
   getTestDetails,
   deleteATest, updateResult, checkResultID, uploadResult,
-  deleteATest,
-  updateResult,
+
   updateATest,
 } from "../../api/TeacherAPI";
 
@@ -49,14 +48,14 @@ export default class manageTest extends React.Component {
       testname: "",
       testdate: "",
 
-      studentMarkData: {
-        aid: "",
-        marks: "",
-        name: "",
-        resid: "",
-        uid: "",
-        username: "",
-      },
+      // studentMarkData: {
+      //   aid: "",
+      //   marks: "",
+      //   name: "",
+      //   resid: "",
+      //   uid: "",
+      //   username: "",
+      // },
     };
 
     this.getAllTests = this.getAllTests.bind(this);
@@ -308,12 +307,11 @@ export default class manageTest extends React.Component {
               </thead>
               <tbody>{this.loadFillData()}</tbody>
             </table>
-          </div>
-        ) : (
+          </div> :
           <div>
             <labe>No student is in this class and test</labe>
           </div>
-        )}
+        }
         {that.state.showPopUp ? (
           <ManageTestPopup
             testList={that.state.testList}
