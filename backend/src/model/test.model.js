@@ -7,7 +7,6 @@ const Test = function (test) {
   this.sid = test.sid;
 };
 
-
 Test.getAllMarks = (testId, result) => {
   var query =
     "SELECT resid, name, username, marks, uid, TT.aid FROM result RIGHT JOIN (SELECT CONCAT(firstname, ' ', lastname) as name, username, User.uid, aid FROM User RIGHT JOIN (SELECT aid, uid FROM AssignedSubject WHERE sid = (SELECT sid FROM Test WHERE tid = ?)) AS T ON User.uid=T.uid) as TT ON result.aid=TT.aid and result.tid=?";
@@ -37,7 +36,7 @@ Test.create = (newTest, result) => {
       return;
     }
     console.log("created test: ", { id: res.insertId, ...newTest });
-    result(null, {...newTest });
+    result(null, { ...newTest });
   });
 };
 
@@ -62,12 +61,14 @@ Test.getAllTestInfoBySid = (sid, result) => {
     }
     // console.log("Data: ", res);
     // result(null, res);
+    console.log("found tests: ", res);
+    result(null, res);
 
-    if (res.length) {
-      console.log("found tests: ", res);
-      result(null, res);
-      return;
-    }
+    // if (res.length) {
+    //   console.log("found tests: ", res);
+    //   result(null, res);
+    //   return;
+    // }
   });
 };
 
@@ -169,11 +170,8 @@ Test.removeByTid = (tid, result) => {
   });
 };
 
-
 Test.updateMarks = (resid, test, result) => {
-
-  console.log("Hello There " + resid + " "+
-  test.marks )
+  console.log("Hello There " + resid + " " + test.marks);
   sql.query("SET FOREIGN_KEY_CHECKS=0;", (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -183,7 +181,8 @@ Test.updateMarks = (resid, test, result) => {
   });
 
   sql.query(
-    "UPDATE result SET marks = ? WHERE resid = ?",[ test.marks, resid ],
+    "UPDATE result SET marks = ? WHERE resid = ?",
+    [test.marks, resid],
     (err, res) => {
       if (err) {
         console.log("error: ", err);
