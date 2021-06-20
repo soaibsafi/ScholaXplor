@@ -185,17 +185,23 @@ export default class ClassTable extends React.Component {
   }
 
   openUpdatePopup(data) {
-    this.setState({
-          popupHeaderText: "Update",
-          popupBtnText: "Update",
-          classinfo: {
-            cid: data.cid,
-            classname: data.classname
-          }
-        },
-        () => {
-          this.togglePopup();
-        })
+    if(data.cid === ""){
+      alert("Please select a class.")
+    }
+    else{
+      this.setState({
+        popupHeaderText: "Update",
+        popupBtnText: "Update",
+        classinfo: {
+          cid: data.cid,
+          classname: data.classname
+        }
+      },
+      () => {
+        this.togglePopup();
+      })
+    }
+    
   }
 
   closePopup(){
@@ -216,15 +222,17 @@ export default class ClassTable extends React.Component {
 
   deleteInfo(cid) {
     var that = this;
-
-    if (!window.confirm("Do you really want to delete the class?")) return;
+    if(cid === ""){
+      alert("Please select a class.")
+    }else{
+      if (!window.confirm("Do you really want to delete the class?")) return;
     deleteAClass(cid, that.state.token).then(data => {
       alert(data.message);
       that.getAllClasses(that.state.token);
     })
+
+    } 
   }
-
-
   togglePopup() {
     this.setState({ showPopup: !this.state.showPopup });
   }
