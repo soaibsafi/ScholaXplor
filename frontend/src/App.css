@@ -1,39 +1,4 @@
 
-.fill-window {
-  height: 99vh;
-  width: 100vw;
-  top:0;
-  left: 0;
-  position: absolute;
-  overflow: hidden;
-}
-
-.main-title-area{
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  height: fit-content;
-  padding: 10px 10px 0 10px;
-  text-align: left;
-  /* border: 1px solid blue; */
-}
-
-.main-title-area h1{
-  margin-left: 15px;
-}
-
-.main-title-area button{
-  float: right;
-  margin-right: 5px;
-  height: 40px;
-}
-
-.tab-area{
-  height: 100%;
-}
-
-
-
 .App {
   text-align: center;
 }
@@ -74,6 +39,101 @@
   }
 }
 
+
+/*************** Full Window **************/
+
+.fill-window {
+  height: 99vh;
+  width: 100vw;
+  top:0;
+  left: 0;
+  position: absolute;
+  overflow: hidden;
+}
+
+/*************** Main Title (Above Tab) **************/
+
+.main-title-area{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: fit-content;
+  padding: 10px 10px 0 10px;
+  text-align: left;
+  /* border: 1px solid blue; */
+}
+
+.main-title-area h1{
+  margin-left: 15px;
+}
+
+.main-title-area button{
+  float: right;
+  margin-right: 5px;
+  height: 40px;
+}
+
+.tab-area{
+  height: 100%;
+}
+
+
+/*************** Common for ALL **************/
+
+
+.dropDown {
+  width: 400px
+}
+
+.box-container{
+  width: 75%;
+  height: 80vh;
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.selection-area{
+  width: 15vw;
+  height: auto;
+  padding: 50px 20px;
+  border: 1px solid #dee2e6;
+}
+
+.selection-area button{
+  width: 100%;
+  margin-top: 20px;
+}
+
+.data-table{
+  width: 55vw;
+  height: auto;
+  border: 1px solid #dee2e6;
+}
+
+.table-scroll{
+  width: 100% ;
+  height: 100%;
+  overflow: scroll;
+}
+
+
+/*************** Only for Pupil **************/
+
+.selection-area-pupil{
+  width: 15vw;
+  height: auto;
+  padding: 50px 20px;
+  border: 1px solid #dee2e6;
+}
+
+.selection-area-pupil button{
+  width: 100%;
+}
+
+
+/*************** Common PopUp for ALL **************/
 
 .popup {
   position: fixed;
