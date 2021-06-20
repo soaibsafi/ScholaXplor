@@ -145,7 +145,7 @@ export default class SubjectTab extends React.Component {
     getAllClassWithRemoved(token).then(data => {
       if (data.data != null) {
         data.data.forEach(info => {
-          var obj = { value: info.cid, label: info.classname }
+          var obj = { value: info.cid, label: info.is_removed === "Yes" ? info.classname+ " (Deleted)": info.classname} 
           tList.push(obj);
           var obj2 = { value: info.cid, is_removed: info.is_removed }
           tList2.push(obj2)

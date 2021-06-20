@@ -7,10 +7,16 @@ const Test = function (test) {
   this.sid = test.sid;
 };
 
-Test.getAllMarks = (testId, result) => {
-  var query =
-    "SELECT resid, name, username, marks, uid, TT.aid FROM result RIGHT JOIN (SELECT CONCAT(firstname, ' ', lastname) as name, username, User.uid, aid FROM User RIGHT JOIN (SELECT aid, uid FROM AssignedSubject WHERE sid = (SELECT sid FROM Test WHERE tid = ?)) AS T ON User.uid=T.uid) as TT ON result.aid=TT.aid and result.tid=?";
-  sql.query(query, [testId, testId], (err, res) => {
+Test.getAllMarks = (sid, tid, result) => {
+  var query = "";
+  if(tid){
+    query = "SELECT resid, name, username, marks, uid, TT.aid FROM result RIGHT JOIN (SELECT CONCAT(firstname, ' ', lastname) as name, username, User.uid, aid FROM User RIGHT JOIN (SELECT aid, uid FROM AssignedSubject WHERE sid = '"+sid+"') AS T ON User.uid=T.uid) as TT ON result.aid=TT.aid ";
+  }
+  else{
+    query = "SELECT resid, name, username, marks, uid, TT.aid FROM result RIGHT JOIN (SELECT CONCAT(firstname, ' ', lastname) as name, username, User.uid, aid FROM User RIGHT JOIN (SELECT aid, uid FROM AssignedSubject WHERE sid = '"+sid+"') AS T ON User.uid=T.uid) as TT ON result.aid=TT.aid AND tid='"+tid+"'";
+  }
+    
+  sql.query(query,  (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
