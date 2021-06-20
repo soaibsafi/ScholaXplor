@@ -5,8 +5,10 @@ import {
   getStudentMarkDetails,
   createNewTest,
   getTestDetails,
-  deleteATest, updateResult, checkResultID, uploadResult,
-
+  checkResultID,
+  uploadResult,
+  deleteATest,
+  updateResult,
   updateATest,
 } from "../../api/TeacherAPI";
 
@@ -33,7 +35,7 @@ export default class manageTest extends React.Component {
       testList: [],
       studentList: [],
       selectedTest: this.props.location.state.selectedTest,
-      studentMarkData:[],
+      studentMarkData: [],
 
       showTestPopup: false,
       showStudentGradePopup: false,
@@ -85,7 +87,7 @@ export default class manageTest extends React.Component {
   }
 
   setID() {
-    return "RES" + Date.now()
+    return "RES" + Date.now();
   }
 
   uploadTestResult() {
@@ -93,41 +95,43 @@ export default class manageTest extends React.Component {
     var countRow = 0;
     if (this.state.studentMarkData.length) {
       this.state.studentMarkData.forEach((stdData, idx) => {
-
-        checkResultID(stdData, "Tokenn " + that.state.token).then(response => {
-          if (response.res.length) {
-            stdData.rid = response.res[0].resid
-          } else {
-            stdData.rid = that.setID() + idx;
-          }
-
-          uploadResult(stdData, "Token "+ that.state.token).then(response => {
-            if(response.msg === "Inserted"){
-               that.loadStudentList();
+        checkResultID(stdData, "Tokenn " + that.state.token).then(
+          (response) => {
+            if (response.res.length) {
+              stdData.rid = response.res[0].resid;
+            } else {
+              stdData.rid = that.setID() + idx;
             }
-          })
-        })
-      })
-    } else {
-      alert("Please select a CSV file.")
-    }
 
+            uploadResult(stdData, "Token " + that.state.token).then(
+              (response) => {
+                if (response.msg === "Inserted") {
+                  that.loadStudentList();
+                }
+              }
+            );
+          }
+        );
+      });
+    } else {
+      alert("Please select a CSV file.");
+    }
   }
 
   openUpdatePopup(data) {
     var that = this;
     that.setState(
-        {
-          popupHeaderText:
-              "Update selected Test for " +
-              that.state.classname +
-              " - " +
-              that.state.subjectname,
-          popupBtnText: "Update",
-        },
-        () => {
-          that.toggleNewTestPopup();
-        }
+      {
+        popupHeaderText:
+          "Update selected Test for " +
+          that.state.classname +
+          " - " +
+          that.state.subjectname,
+        popupBtnText: "Update",
+      },
+      () => {
+        that.toggleNewTestPopup();
+      }
     );
   }
 
@@ -137,39 +141,50 @@ export default class manageTest extends React.Component {
 
   closeTestPopup() {
     var that = this;
-    that.setState({
-      popupHeaderText: "",
-      popupBtnText: "",
-
-    }, () => {
-       that.toggleNewTestPopup();
-    })
+    that.setState(
+      {
+        popupHeaderText: "",
+        popupBtnText: "",
+      },
+      () => {
+        that.toggleNewTestPopup();
+      }
+    );
   }
 
   openNewTestPopup() {
     var that = this;
-    that.setState({
-      popupHeaderText: "Add A new Test for " + that.state.classname + " - " + that.state.subjectname,
-      popupBtnText: "Add",
-    }, () => {
-      that.toggleNewTestPopup();
-    })
+    that.setState(
+      {
+        popupHeaderText:
+          "Add A new Test for " +
+          that.state.classname +
+          " - " +
+          that.state.subjectname,
+        popupBtnText: "Add",
+      },
+      () => {
+        that.toggleNewTestPopup();
+      }
+    );
   }
 
   toggleStudentGradePopup() {
-    this.setState({showStudentGradePopup: !this.state.showStudentGradePopup})
+    this.setState({ showStudentGradePopup: !this.state.showStudentGradePopup });
   }
 
   closeStudentGradePopup() {
     var that = this;
-    this.setState({
-          popupHeaderText: '',
-          popupBtnText: "",
-          studentData: '',
-        },
-        () => {
-          that.toggleStudentGradePopup();
-        })
+    this.setState(
+      {
+        popupHeaderText: "",
+        popupBtnText: "",
+        studentData: "",
+      },
+      () => {
+        that.toggleStudentGradePopup();
+      }
+    );
   }
 
   openStudentTestGradeUpdatePopup(data) {
@@ -192,12 +207,15 @@ export default class manageTest extends React.Component {
 
   loadStudentList() {
     var that = this;
-    getStudentMarkDetails(that.state.selectedTest,"Token " + that.state.token).then(response => {
+    getStudentMarkDetails(
+      that.state.selectedTest,
+      "Token " + that.state.token
+    ).then((response) => {
       console.log(response.data);
       if (response.data) {
-        that.setState({studentList: response.data})
+        that.setState({ studentList: response.data });
       }
-    })
+    });
   }
 
   handleOpenDialog = (e) => {
@@ -208,9 +226,9 @@ export default class manageTest extends React.Component {
 
   handleOnRemoveFile = (data) => {
     var that = this;
-    this.setState({studentMarkData: data ? data : []}, () => {
-      console.log(that.state.studentMarkData)
-    })
+    this.setState({ studentMarkData: data ? data : [] }, () => {
+      console.log(that.state.studentMarkData);
+    });
   };
 
   handleRemoveFile = (e) => {
@@ -224,22 +242,22 @@ export default class manageTest extends React.Component {
     var obj = [];
     if (data) {
       data.forEach((dt, idx) => {
-        if (idx !== 0) obj.push({
-          uid: dt.data[0],
-          grade: dt.data[1],
-          sid: that.state.sid,
-          tid: that.state.selectedTest,
-          rid: ''
-        })
-      })
+        if (idx !== 0)
+          obj.push({
+            uid: dt.data[0],
+            grade: dt.data[1],
+            sid: that.state.sid,
+            tid: that.state.selectedTest,
+            rid: "",
+          });
+      });
     }
-    this.setState({studentMarkData: obj}, () => {
-      console.log(that.state.studentMarkData)
-    })
+    this.setState({ studentMarkData: obj }, () => {
+      console.log(that.state.studentMarkData);
+    });
   };
 
-  handleOnError = (err, file, inputElem, reason) => {
-  };
+  handleOnError = (err, file, inputElem, reason) => {};
 
   componentDidMount() {
     this.getAllTests();
@@ -249,69 +267,111 @@ export default class manageTest extends React.Component {
   render() {
     var that = this;
     return (
-        <div className="App">
-          <h2>Test Management for {that.state.classname} - {that.state.subjectname}</h2>
-          <div className="row" style={{width: 520}}>
-            <button className="btn btn-success" onClick={this.gotoBack}>Back</button>
-            <Dropdown
-                classname="style.dropDown"
-                value={that.state.testList[this.getIndex(this.state.testList, this.state.selectedTest)]}
-                options={that.state.testList}
-                onChange={this.onTestChange}
-                placeholder="Select a test"
-                placeholderClassName="myPlaceholderClassName"
-            />
-            <button className="btn btn-success" onClick={this.openNewTestPopup}>Add</button>
-            <button className="btn btn-info" onClick={() => this.openUpdatePopup(that.state.classinfo)}>Update</button>
-            <button className="btn  btn-danger" onClick={() => this.deleteInfo(that.state.classinfo.cid)}>Delete
-            </button>
-          </div>
-          <div className="row" style={{width: 1020}}>
-            <CSVReader noClick noDrag ref={buttonRef}
-                       onFileLoad={this.handleOnFileLoad}
-                       onError={this.handleOnError} onRemoveFile={this.handleOnRemoveFile}>
-              {({file}) => (
-                  <aside style={{display: 'flex', flexDirection: 'row', marginBottom: 10}}>
-                    <button style={{
-                      borderRadius: 0,
-                      marginLeft: 0,
-                      marginRight: 0,
-                      width: '40%',
-                      paddingLeft: 0,
-                      paddingRight: 0
-                    }} type='button' onClick={this.handleOpenDialog}>Browse file
-                    </button>
-                    <div style={{}}>{file && file.name}</div>
-                    <button style={{
-                      borderRadius: 0,
-                      marginLeft: 0,
-                      marginRight: 0,
-                      paddingLeft: 20,
-                      paddingRight: 20
-                    }} onClick={this.handleRemoveFile}>Remove
-                    </button>
-                  </aside>
-              )}
-            </CSVReader>
-            <button className="btn  btn-danger" onClick={this.uploadTestResult}>Upload</button>
-
-          </div>
-          {that.state.studentList.length ? <div className="ag-theme-alpine" style={{height: 400, width: 800}}>
+      <div className="App">
+        <h2>
+          Test Management for {that.state.classname} - {that.state.subjectname}
+        </h2>
+        <div className="row" style={{ width: 520 }}>
+          <button className="btn btn-success" onClick={this.gotoBack}>
+            Back
+          </button>
+          <Dropdown
+            classname="style.dropDown"
+            value={
+              that.state.testList[
+                this.getIndex(this.state.testList, this.state.selectedTest)
+              ]
+            }
+            options={that.state.testList}
+            onChange={this.onTestChange}
+            placeholder="Select a test"
+            placeholderClassName="myPlaceholderClassName"
+          />
+          <button className="btn btn-success" onClick={this.openNewTestPopup}>
+            Add
+          </button>
+          <button
+            className="btn btn-info"
+            onClick={() => this.openUpdatePopup(that.state.classinfo)}
+          >
+            Update
+          </button>
+          <button
+            className="btn  btn-danger"
+            onClick={() => this.deleteInfo(that.state.selectedTest)}
+          >
+            Delete
+          </button>
+        </div>
+        <div className="row" style={{ width: 1020 }}>
+          <CSVReader
+            noClick
+            noDrag
+            ref={buttonRef}
+            onFileLoad={this.handleOnFileLoad}
+            onError={this.handleOnError}
+            onRemoveFile={this.handleOnRemoveFile}
+          >
+            {({ file }) => (
+              <aside
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  marginBottom: 10,
+                }}
+              >
+                <button
+                  style={{
+                    borderRadius: 0,
+                    marginLeft: 0,
+                    marginRight: 0,
+                    width: "40%",
+                    paddingLeft: 0,
+                    paddingRight: 0,
+                  }}
+                  type="button"
+                  onClick={this.handleOpenDialog}
+                >
+                  Browse file
+                </button>
+                <div style={{}}>{file && file.name}</div>
+                <button
+                  style={{
+                    borderRadius: 0,
+                    marginLeft: 0,
+                    marginRight: 0,
+                    paddingLeft: 20,
+                    paddingRight: 20,
+                  }}
+                  onClick={this.handleRemoveFile}
+                >
+                  Remove
+                </button>
+              </aside>
+            )}
+          </CSVReader>
+          <button className="btn  btn-danger" onClick={this.uploadTestResult}>
+            Upload
+          </button>
+        </div>
+        {that.state.studentList.length ? (
+          <div className="ag-theme-alpine" style={{ height: 400, width: 800 }}>
             <table className="table table-hover table-striped">
               <thead className="thead-dark">
-              <tr key={"user_key1"}>
-                <th scope="col">Student Name</th>
-                <th scope="col">Grade</th>
-                <th scope="col">Action</th>
-              </tr>
+                <tr key={"user_key1"}>
+                  <th scope="col">Student Name</th>
+                  <th scope="col">Grade</th>
+                  <th scope="col">Action</th>
+                </tr>
               </thead>
               <tbody>{this.loadFillData()}</tbody>
             </table>
-          </div> :
+          </div>
+        ) : (
           <div>
             <labe>No student is in this class and test</labe>
           </div>
-        }
+        )}
         {that.state.showPopUp ? (
           <ManageTestPopup
             testList={that.state.testList}
@@ -356,24 +416,29 @@ export default class manageTest extends React.Component {
 
   onTestChange(data) {
     var that = this;
-    this.setState({selectedTest: data.value},()=>{
+    this.setState({ selectedTest: data.value }, () => {
       that.loadStudentList();
-    })
+    });
   }
-
-
-
 
   loadFillData() {
     if (this.state.studentList.length) {
       return this.state.studentList.map((data, idx) => {
         return (
-            <tr key={data.username + idx}>
-              <td>{data.name}</td>
-              <td>{data.marks}</td>
-              <td>{<button className="btn btn-info"
-                           onClick={() => this.openStudentTestGradeUpdatePopup(data)}>Change</button>}</td>
-            </tr>
+          <tr key={data.username + idx}>
+            <td>{data.name}</td>
+            <td>{data.marks}</td>
+            <td>
+              {
+                <button
+                  className="btn btn-info"
+                  onClick={() => this.openStudentTestGradeUpdatePopup(data)}
+                >
+                  Change
+                </button>
+              }
+            </td>
+          </tr>
         );
       });
     }
@@ -437,17 +502,18 @@ export default class manageTest extends React.Component {
   deleteInfo(data) {
     var that = this;
     console.log(data);
+    debugger
     if (!window.confirm("Do you really want to delete the class?")) return;
-    deleteATest(data.value, "Token " + that.state.token).then((data) => {
+    deleteATest(data, "Token " + that.state.token).then((data) => {
       alert(data.message);
       if (data.status === "SUCCESS") {
         that.setState({ testList: [] }, () => {
           getTestDetails(that.state.sid, "Token " + that.props.token).then(
-              (response) => {
-                that.setState({ testDetailsList: response.data }, () => {
-                  that.getAllTests();
-                });
-              }
+            (response) => {
+              that.setState({ testDetailsList: response.data }, () => {
+                that.getAllTests();
+              });
+            }
           );
         });
       } else {
@@ -455,8 +521,6 @@ export default class manageTest extends React.Component {
       }
     });
   }
-
-
 
   updateInfo(data) {
     var that = this;
@@ -474,10 +538,10 @@ export default class manageTest extends React.Component {
         that.toggleStudentGradePopup();
         that.setState({}, () => {
           that.loadStudentList();
-        })
+        });
       } else {
-        alert(response.message)
+        alert(response.message);
       }
-    })
+    });
   }
 }

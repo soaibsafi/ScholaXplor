@@ -58,7 +58,7 @@ class ManageTestPopup extends React.Component {
               className="form-control"
               type="text"
               name="testname"
-              defaultValue={that.state.selectedTestName}
+              defaultValue={that.props.popupBtnText=== "Add"? "" : that.state.selectedTestName}
               onChange={that.oninputChange.bind(this, "testname")}
             />
             <label>Test Date</label>
@@ -67,7 +67,7 @@ class ManageTestPopup extends React.Component {
               className="form-control"
               type="date"
               name="testdate"
-              defaultValue={that.state.selectedTestDate.slice(0, 10)}
+              defaultValue={that.props.popupBtnText=== "Add"? "" : that.state.selectedTestDate.slice(0, 10)}
               onChange={that.oninputChange.bind(this, "testdate")}
             />
           </div>

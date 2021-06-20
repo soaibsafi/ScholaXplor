@@ -10,8 +10,8 @@ const Test = function (test) {
 
 Test.getAllMarks = (testId, result) => {
   var query =
-    "SELECT resid, name, username, marks, uid, TT.aid FROM result RIGHT JOIN (SELECT CONCAT(firstname, ' ', lastname) as name, username, User.uid, aid FROM User RIGHT JOIN (SELECT aid, uid FROM AssignedSubject WHERE sid = (SELECT sid FROM Test WHERE tid = ?)) AS T ON User.uid=T.uid) as TT ON result.aid=TT.aid";
-  sql.query(query, testId, (err, res) => {
+    "SELECT resid, name, username, marks, uid, TT.aid FROM result RIGHT JOIN (SELECT CONCAT(firstname, ' ', lastname) as name, username, User.uid, aid FROM User RIGHT JOIN (SELECT aid, uid FROM AssignedSubject WHERE sid = (SELECT sid FROM Test WHERE tid = ?)) AS T ON User.uid=T.uid) as TT ON result.aid=TT.aid and result.tid=?";
+  sql.query(query, [testId, testId], (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
