@@ -372,7 +372,7 @@ export default class manageTest extends React.Component {
           </div>
         ) : (
           <div>
-            <labe>No student is in this class and test</labe>
+            <label>No student is in this class and test</label>
           </div>
         )}
         {that.state.showPopUp ? (
