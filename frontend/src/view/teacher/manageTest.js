@@ -5,7 +5,7 @@ import {
   getStudentMarkDetails,
   createNewTest,
   getTestDetails,
-  deleteATest, updateResult, checkResultID, uploadResult,
+  checkResultID, uploadResult,
   deleteATest,
   updateResult,
   updateATest,
@@ -49,14 +49,14 @@ export default class manageTest extends React.Component {
       testname: "",
       testdate: "",
 
-      studentMarkData: {
-        aid: "",
-        marks: "",
-        name: "",
-        resid: "",
-        uid: "",
-        username: "",
-      },
+      // studentMarkData: {
+      //   aid: "",
+      //   marks: "",
+      //   name: "",
+      //   resid: "",
+      //   uid: "",
+      //   username: "",
+      // },
     };
 
     this.getAllTests = this.getAllTests.bind(this);
@@ -309,7 +309,7 @@ export default class manageTest extends React.Component {
               <tbody>{this.loadFillData()}</tbody>
             </table>
           </div>
-        ) : (
+         : (
           <div>
             <labe>No student is in this class and test</labe>
           </div>
