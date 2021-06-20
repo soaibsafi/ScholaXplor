@@ -184,7 +184,7 @@ export default class pupilPanel extends React.Component {
 
   getLoggedInClassname(pid, token) {
     getClassname(pid, "Token " + token).then((data) => {
-      this.setState({ className: data.classname, classId: data.cid }, () => { console.log(this.state.classId) });
+      this.setState({ className: data.classname, classId:data.cid }, ()=>{console.log(this.state.classId)});
     });
   }
 

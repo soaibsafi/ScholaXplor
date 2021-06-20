@@ -186,9 +186,10 @@ export default class manageTest extends React.Component {
 
   loadStudentList() {
     var that = this;
-    debugger;
     getStudentMarkDetails(that.state.selectedTest, that.state.token).then(response => {
-      console.log(response.data);
+      // console.log(response.data);
+      debugger;
+      if(response)
       if (response.data) {
         that.setState({studentList: response.data})
       }

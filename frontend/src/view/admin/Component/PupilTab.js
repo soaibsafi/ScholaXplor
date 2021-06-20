@@ -1,6 +1,6 @@
 import React from 'react';
 import Dropdown from "react-dropdown";
-import { getAllClass, searchPupil, getPupilByClass, updateAssignedPupil, assignPupil } from "../../../api/AdminAPI";
+import {getAllClass, searchPupil, getPupilByClass, updateAssignedPupil, assignPupil} from "../../../api/AdminAPI";
 import SearchField from 'react-search-field';
 import './UserTab.css'
 
@@ -132,10 +132,10 @@ class PupilTab extends React.Component {
     var that = this;
     getAllClass(that.state.token).then((data) => {
       data.data.forEach((info) => {
-        var obj = { value: info.cid, label: info.classname };
+        var obj = {value: info.cid, label: info.classname};
         tempList.push(obj);
       });
-      this.setState({ classList: tempList }, () => {
+      this.setState({classList: tempList}, () => {
         // console.log(that.state.classList)
       });
     });
@@ -184,15 +184,15 @@ class PupilTab extends React.Component {
       return this.state.pupilList.map(data => {
         if (data.isAssigned === 'Y' || data.isAssigned === null)
           return (
-            <tr key={data.uid}>
-              {that.state.classByList ? null :
-                <td>{<input id={data.uid} name={data.uid} type="checkbox"
-                  onChange={(e) => this.handleCheckBox(e, data)} />}</td>}
-              <th>{data.username}</th>
-              <th>{data.firstname}</th>
-              <td>{data.lastname}</td>
-              {that.state.classByList ? null : <td>{data.classname}</td>}
-            </tr>
+              <tr key={data.uid}>
+                {that.state.classByList ? null :
+                    <td>{<input id={data.uid} name={data.uid} type="checkbox"
+                                onChange={(e) => this.handleCheckBox(e, data)}/>}</td>}
+                <th>{data.username}</th>
+                <th>{data.firstname}</th>
+                <td>{data.lastname}</td>
+                {that.state.classByList ? null : <td>{data.classname}</td>}
+              </tr>
           )
       })
     }
