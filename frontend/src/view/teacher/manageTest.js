@@ -462,7 +462,7 @@ export default class manageTest extends React.Component {
   addTest(data) {
     var that = this;
     console.log(that.state.token);
-     if(this.state.selectedTest)
+
     createNewTest(data, "Token " + that.state.token).then((data) => {
       if (data.status === "SUCCESS") {
         that.toggleNewTestPopup();
@@ -479,9 +479,7 @@ export default class manageTest extends React.Component {
         // alert("Error!!");
       }
     });
-    else{
-      alert("Please select A")
-    }
+
   }
 
   updateTest(data) {

@@ -86,12 +86,13 @@ export default class teacherPanel extends React.Component {
     console.log(data);
     var that = this;
     getTestDetails(data.sid, that.state.token).then(response => {
+      // debugger;
       that.props.history.push({pathname:redirectpath,
         state:{info : data,
           token:that.state.token,
           uid:that.state.tid,
           testList: response.data,
-           selectedTest:response.data[0].tid,
+           selectedTest:response.data.length ? response.data[0].tid : null,
       }})
     })
 
