@@ -1,6 +1,6 @@
 import React from "react";
 import { checkUserType } from "../../api/APIUtils";
-import {  getSubjectDetails, getTestDetails } from "../../api/TeacherAPI";
+import { getSubjectDetails, getTestDetails } from "../../api/TeacherAPI";
 import "react-tabs/style/react-tabs.css";
 
 var redirectpath = '/manageTestpanel';
@@ -32,7 +32,7 @@ export default class teacherPanel extends React.Component {
       };
     }
     checkUserType("token " + token).then((res) => {
-      if(res) {
+      if (res) {
         if (res.status === "FAILED") that.props.history.push("/");
         return;
       }
@@ -46,22 +46,36 @@ export default class teacherPanel extends React.Component {
 
   render() {
     return (
-        <div style={{width: "1024px"}}>
-          <div className="row">
-            <h1>Teacher Panel</h1>
-            <button type="button" className="btn btn-danger" onClick={this.logoutAction}> Logout</button>
+      <div>
+        <div className="fill-window">
+          <div className='main-title-area' style={{ paddingBottom: '20px', borderBottom: '3px solid rgb(95, 0, 124)' }}>
+            <h3 style={{ color: '#6e6e6e' }}>Teacher Panel</h3>
+            <button type="button" className="btn btn-danger" onClick={this.logoutAction}>Logout</button>
           </div>
-          <div className="ag-theme-alpine" style={{height: 400, width: 800}}>
-            <table className="table table-hover table-striped">
-              <thead className="thead-dark">
-              <tr key={"user_key1"}>
-                <th scope="col">Class</th>
-                <th scope="col">Subjects</th>
-                <th scope="col">Manage Test</th>
-              </tr>
-            </thead>
-            <tbody>{this.loadFillData()}</tbody>
-          </table>
+          <div className='tab-area'>
+            <h4 style={{ color: '#0275d8', textAlign: 'center', margin: '20px auto' }}>Manage Test</h4>
+            <div className="box-container" style={{ justifyContent: 'center' }}>
+              <div className='selection-area' style={{ width: '0px', borderColor: 'transparent' }}>
+                {/* Empty */}
+              </div>
+              <div className="ag-theme-alpine data-table">
+                <div className="table-scroll">
+                  <table className="table table-hover table-striped">
+                    <thead className="thead-dark">
+                      <tr key={"user_key1"}>
+                        <th scope="col">Class</th>
+                        <th scope="col">Subjects</th>
+                        <th scope="col">Manage Test</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {this.loadFillData()}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -82,18 +96,21 @@ export default class teacherPanel extends React.Component {
     }
   }
 
-  openTestManager(data){
+  openTestManager(data) {
     console.log(data);
     var that = this;
     getTestDetails(data.sid, that.state.token).then(response => {
       // debugger;
-      that.props.history.push({pathname:redirectpath,
-        state:{info : data,
-          token:that.state.token,
-          uid:that.state.tid,
+      that.props.history.push({
+        pathname: redirectpath,
+        state: {
+          info: data,
+          token: that.state.token,
+          uid: that.state.tid,
           testList: response.data,
-           selectedTest:response.data.length ? response.data[0].tid : null,
-      }})
+          selectedTest: response.data.length ? response.data[0].tid : null,
+        }
+      })
     })
 
 
@@ -112,7 +129,7 @@ export default class teacherPanel extends React.Component {
 
   getAllSUbjectsOfTeacher(tid, token) {
     getSubjectDetails(tid, "Token " + token).then((data) => {
-      this.setState({ subjectsDetails: data.data});
+      this.setState({ subjectsDetails: data.data });
     });
   }
 }
