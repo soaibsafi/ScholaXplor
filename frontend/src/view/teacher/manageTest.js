@@ -84,7 +84,7 @@ export default class manageTest extends React.Component {
   showAvgMarks() {
     var that = this;
     getAvgMark(that.state.sid, that.state.cid, "Token "+ that.state.token).then(response => {
-      that.setState({isAvgMarks: true, studentList: response.data})
+      that.setState({isAvgMarks: true, studentList: response.data, selectedTest: ""})
     })
   }
 
@@ -338,7 +338,7 @@ export default class manageTest extends React.Component {
                           <tr key={"user_key1"}>
                             <th scope="col">Student Name</th>
                             <th scope="col">{that.state.isAvgMarks ? "Avg.Marks" : "Grade"}</th>
-                            <th scope="col">Action</th>
+                            {that.state.isAvgMarks ? "" : <th scope="col">Action</th>}
                           </tr>
                           </thead>
                           <tbody>{this.loadFillData()}</tbody>
@@ -410,16 +410,10 @@ export default class manageTest extends React.Component {
             <tr key={data.username + idx}>
               <td>{data.name}</td>
               <td>{ this.state.isAvgMarks ? data.avgGrade : data.marks}</td>
-              <td>
-                {
-                  <button
-                      className="btn btn-info"
-                      onClick={() => this.openStudentTestGradeUpdatePopup(data)}
-                  >
-                    Change
-                  </button>
-                }
-              </td>
+              {this.state.isAvgMarks ? "" : <td>
+                {<button className="btn btn-info"
+                         onClick={() => this.openStudentTestGradeUpdatePopup(data)}>Change</button>}
+              </td>}
             </tr>
         );
       });
