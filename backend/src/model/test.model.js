@@ -10,10 +10,10 @@ const Test = function (test) {
 Test.getAllMarks = (sid, tid, result) => {
   var query = "";
   if(tid){
-    query = "SELECT resid, name, username, marks, uid, TT.aid FROM result RIGHT JOIN (SELECT CONCAT(firstname, ' ', lastname) as name, username, User.uid, aid FROM User RIGHT JOIN (SELECT aid, uid FROM AssignedSubject WHERE sid = '"+sid+"') AS T ON User.uid=T.uid) as TT ON result.aid=TT.aid ";
+    query = "SELECT resid, name, username, marks, uid, TT.aid FROM result RIGHT JOIN (SELECT CONCAT(firstname, ' ', lastname) as name, username, User.uid, aid FROM User RIGHT JOIN (SELECT aid, uid FROM AssignedSubject WHERE sid = '"+sid+"') AS T ON User.uid=T.uid) as TT ON result.aid=TT.aid AND tid='"+tid+"'";
   }
   else{
-    query = "SELECT resid, name, username, marks, uid, TT.aid FROM result RIGHT JOIN (SELECT CONCAT(firstname, ' ', lastname) as name, username, User.uid, aid FROM User RIGHT JOIN (SELECT aid, uid FROM AssignedSubject WHERE sid = '"+sid+"') AS T ON User.uid=T.uid) as TT ON result.aid=TT.aid AND tid='"+tid+"'";
+    query = "SELECT resid, name, username, marks, uid, TT.aid FROM result RIGHT JOIN (SELECT CONCAT(firstname, ' ', lastname) as name, username, User.uid, aid FROM User RIGHT JOIN (SELECT aid, uid FROM AssignedSubject WHERE sid = '"+sid+"') AS T ON User.uid=T.uid) as TT ON result.aid=TT.aid ";
   }
     
   sql.query(query,  (err, res) => {
