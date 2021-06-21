@@ -226,7 +226,8 @@ Subject.getAvgGradeByPupilId = (pid, cid, result) => {
     ON Subject.sid = S_AS.sid AND Subject.cid=?) as T_S_AS
     ON Test.sid = T_S_AS.sid
     )as R_T_S_AS
-    ON result.tid=R_T_S_AS.tid AND result.aid=R_T_S_AS.aid`;
+    ON result.tid=R_T_S_AS.tid AND result.aid=R_T_S_AS.aid
+    GROUP BY sid`;
   sql.query(query, [pid, cid], (err, res) => {
     if (err) {
       console.log("error: ", err);
