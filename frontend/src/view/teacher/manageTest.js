@@ -257,7 +257,8 @@ export default class manageTest extends React.Component {
               <h4 style={{ color: '#0275d8', textAlign: 'center', margin: '20px auto' }}>Test Management for {that.state.classname} - {that.state.subjectname}</h4>
             </div>
             <div className="box-container" >
-              <div className='selection-area'>
+              <div className='selection-area' style={{display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
+                <div>
                 <Dropdown
                   classname="style.dropDown"
                   value={
@@ -285,7 +286,7 @@ export default class manageTest extends React.Component {
                 >
                   Delete
                 </button>
-
+                </div>
                 <div className="upload-area">
                   <CSVReader
                     noClick
