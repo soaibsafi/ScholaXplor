@@ -152,8 +152,34 @@ Subject.create = (newSubject, result) => {
       return;
     }
 
-    console.log("Created Class: ", { ...newSubject });
-    result(null, { ...newSubject });
+    console.log("Created Class ###: ", { ...newSubject });
+
+    sql.query("SELECT uid FROM ClassStudent WHERE cid = ?", newSubject.cid, (
+      err, studentsUid) => {
+        if (err) {
+          console.log("error: ", err);
+          result(null, err);
+          return;
+        }
+        console.log("class: ", res);
+ 
+        studentsUid.forEach((stu_uid, idx) => {
+          var aid = "AI" + Date.now() + "A" + idx;
+          sql.query(
+            "INSERT INTO AssignedSubject VALUES (?, ?, ?, 'Not Archived')",
+            [aid, stu_uid.uid, newSubject.sid],
+            (err, res) => {
+              if (err) {
+                console.log("error in inserting AssignSubject: ", err);
+                result(err, null);
+                return;
+              }
+            }
+          );
+        })
+
+        result(null, { ...newSubject });
+    });
   });
 };
 
