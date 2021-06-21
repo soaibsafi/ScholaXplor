@@ -184,6 +184,7 @@
 .popup_inner {
   width: 35%;
   height: fit-content;
+  min-width: 650px;
   padding: 0;
   position: absolute;
   left: 25%;
