@@ -217,7 +217,7 @@ Subject.getSubjectClassTeacherByCid = (cid, result) => {
 };
 
 Subject.getAvgGradeByPupilId = (pid, cid, result) => {
-  var query = `SELECT R_T_S_AS.sid as sid, R_T_S_AS.subjectname as subjectname,  AVG(marks) as avgGrade FROM result RIGHT JOIN (SELECT Test.tid, T_S_AS.*
+  var query = `SELECT R_T_S_AS.sid as sid, R_T_S_AS.subjectname as subjectname, CAST(AVG(marks) AS DECIMAL (10,1)) AS avgGrade FROM result RIGHT JOIN (SELECT Test.tid, T_S_AS.*
     FROM Test
     RIGHT JOIN (
     SELECT Subject.subjectname, Subject.sid, S_AS.aid
@@ -226,7 +226,8 @@ Subject.getAvgGradeByPupilId = (pid, cid, result) => {
     ON Subject.sid = S_AS.sid AND Subject.cid=?) as T_S_AS
     ON Test.sid = T_S_AS.sid
     )as R_T_S_AS
-    ON result.tid=R_T_S_AS.tid AND result.aid=R_T_S_AS.aid`;
+    ON result.tid=R_T_S_AS.tid AND result.aid=R_T_S_AS.aid
+    GROUP BY sid`;
   sql.query(query, [pid, cid], (err, res) => {
     if (err) {
       console.log("error: ", err);

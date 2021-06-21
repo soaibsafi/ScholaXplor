@@ -10,10 +10,10 @@ const Test = function (test) {
 Test.getAllMarks = (sid, tid, result) => {
   var query = "";
   if(tid){
-    query = "SELECT resid, name, username, marks, uid, TT.aid FROM result RIGHT JOIN (SELECT CONCAT(firstname, ' ', lastname) as name, username, User.uid, aid FROM User RIGHT JOIN (SELECT aid, uid FROM AssignedSubject WHERE sid = '"+sid+"') AS T ON User.uid=T.uid) as TT ON result.aid=TT.aid ";
+    query = "SELECT resid, name, username, marks, uid, TT.aid FROM result RIGHT JOIN (SELECT CONCAT(firstname, ' ', lastname) as name, username, User.uid, aid FROM User RIGHT JOIN (SELECT aid, uid FROM AssignedSubject WHERE sid = '"+sid+"') AS T ON User.uid=T.uid) as TT ON result.aid=TT.aid AND tid='"+tid+"'";
   }
   else{
-    query = "SELECT resid, name, username, marks, uid, TT.aid FROM result RIGHT JOIN (SELECT CONCAT(firstname, ' ', lastname) as name, username, User.uid, aid FROM User RIGHT JOIN (SELECT aid, uid FROM AssignedSubject WHERE sid = '"+sid+"') AS T ON User.uid=T.uid) as TT ON result.aid=TT.aid AND tid='"+tid+"'";
+    query = "SELECT resid, name, username, marks, uid, TT.aid FROM result RIGHT JOIN (SELECT CONCAT(firstname, ' ', lastname) as name, username, User.uid, aid FROM User RIGHT JOIN (SELECT aid, uid FROM AssignedSubject WHERE sid = '"+sid+"') AS T ON User.uid=T.uid) as TT ON result.aid=TT.aid ";
   }
     
   sql.query(query,  (err, res) => {
@@ -48,6 +48,18 @@ Test.create = (newTest, result) => {
 
 Test.getAllTestsBySid = (sid, result) => {
   sql.query("SELECT * FROM Test WHERE sid ='" + sid + "'", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    console.log("Data: ", res);
+    result(null, res);
+  });
+};
+
+Test.getAvgGrade = (sid, result) => {
+  sql.query("SELECT resid, name, username, CAST(AVG(marks) AS DECIMAL (10,2)) AS avgGrade, uid, TT.aid FROM result RIGHT JOIN (SELECT CONCAT(firstname, ' ', lastname) as name, username, User.uid, aid FROM User RIGHT JOIN (SELECT aid, uid FROM AssignedSubject WHERE sid = ?) AS T ON User.uid=T.uid) as TT ON result.aid=TT.aid GROUP BY uid", sid, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);

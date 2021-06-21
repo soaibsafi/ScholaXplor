@@ -20,6 +20,8 @@ export default class ManageStudentTestPopup extends React.Component {
     this.oninputChange = this.oninputChange.bind(this);
     this.sendData = this.sendData.bind(this);
     this.close = this.close.bind(this);
+    this.setID = this.setID.bind(this);
+
   }
 
   componentDidMount() {}
@@ -105,11 +107,15 @@ export default class ManageStudentTestPopup extends React.Component {
 
   //******************* Send Data to Subject Tab Component ********************/
 
-  sendData() {
-    console.log(this.state.studentMarkData);
-    var data = this.state.studentMarkData
+  setID() {
+    return "RES" + Date.now();
+  }
 
-    console.log(data);
+  sendData() {
+    var data = this.state.studentMarkData
+    if(data.resid ===  null){
+      data.resid = this.setID();
+    }
     if (data.marks.length) this.props.updateInfo(data);
     else alert("Please provide all info");
   }
