@@ -26,22 +26,22 @@ class ManageTestPopup extends React.Component {
   }
 
   componentDidMount() {
-    if(this.props.popupBtnText === "Update"){
+    if (this.props.popupBtnText === "Update") {
       var x =
-          this.state.testList[
-              this.getIndex(this.state.testList, this.state.selectedTest)
-              ];
+        this.state.testList[
+        this.getIndex(this.state.testList, this.state.selectedTest)
+        ];
 
       var dt = this.state.testDetailsList.findIndex((obj) => obj.tid === x.value);
       this.setState(
-          {
-            selectedTestName: x.label,
-            selectedTestDate: this.state.testDetailsList[dt].testdate,
-            selectedTestId: this.state.testDetailsList[dt].tid,
-          },
-          () => {
-            console.log(this.state.selectedTestDate);
-          }
+        {
+          selectedTestName: x.label,
+          selectedTestDate: this.state.testDetailsList[dt].testdate,
+          selectedTestId: this.state.testDetailsList[dt].tid,
+        },
+        () => {
+          console.log(this.state.selectedTestDate);
+        }
       );
     }
   }
@@ -51,34 +51,41 @@ class ManageTestPopup extends React.Component {
     return (
       <div className="popup">
         <div className="App popup_inner">
-          <h2>{that.props.popupHeaderText}</h2>
-          <div style={{ alignItem: "left" }}>
-            {console.log(that.props.popupHeaderText)}
-            <label>Test Name</label>
+          <div className="custom_pop">
+            <h4>{that.props.popupHeaderText}</h4>
             <br />
-            <input
-              className="form-control"
-              type="text"
-              name="testname"
-              defaultValue={that.props.popupBtnText=== "Add"? "" : that.state.selectedTestName}
-              onChange={that.oninputChange.bind(this, "testname")}
-            />
-            <label>Test Date</label>
+            <div style={{ alignItem: "left" }}>
+              {console.log(that.props.popupHeaderText)}
+              <label><b>Test Name</b></label>
+              <br />
+              <input
+                className="form-control"
+                type="text"
+                name="testname"
+                defaultValue={that.props.popupBtnText === "Add" ? "" : that.state.selectedTestName}
+                onChange={that.oninputChange.bind(this, "testname")}
+              />
+              <br />
+              <label><b>Test Date</b></label>
+              <br />
+              <input
+                className="form-control"
+                type="date"
+                name="testdate"
+                defaultValue={that.props.popupBtnText === "Add" ? "" : that.state.selectedTestDate.slice(0, 10)}
+                onChange={that.oninputChange.bind(this, "testdate")}
+              />
+            </div>
             <br />
-            <input
-              className="form-control"
-              type="date"
-              name="testdate"
-              defaultValue={that.props.popupBtnText=== "Add"? "" : that.state.selectedTestDate.slice(0, 10)}
-              onChange={that.oninputChange.bind(this, "testdate")}
-            />
+            <div className="popup-button-area">
+              <button className="btn btn-primary" onClick={that.sendData}>
+                {this.props.popupBtnText}
+              </button>
+              <button className="btn btn-danger" onClick={this.close}>
+                {"Close"}
+              </button>
+            </div>
           </div>
-          <button className="btn btn-primary" onClick={that.sendData}>
-            {this.props.popupBtnText}
-          </button>
-          <button className="btn btn-danger" onClick={this.close}>
-            {"Close"}
-          </button>
         </div>
       </div>
     );
@@ -119,17 +126,17 @@ class ManageTestPopup extends React.Component {
     var data =
       this.props.popupBtnText === "Add"
         ? {
-            tid: this.setUserID(),
-            testname: this.state.selectedTestName,
-            testdate: this.state.selectedTestDate,
-            sid: this.state.sid,
-          }
+          tid: this.setUserID(),
+          testname: this.state.selectedTestName,
+          testdate: this.state.selectedTestDate,
+          sid: this.state.sid,
+        }
         : {
-            tid: this.state.selectedTestId,
-            testname: this.state.selectedTestName,
-            testdate: this.state.selectedTestDate,
-            sid: this.state.sid,
-          };
+          tid: this.state.selectedTestId,
+          testname: this.state.selectedTestName,
+          testdate: this.state.selectedTestDate,
+          sid: this.state.sid,
+        };
     // debugger;
     this.resetState();
     if (this.props.popupBtnText === "Add") {

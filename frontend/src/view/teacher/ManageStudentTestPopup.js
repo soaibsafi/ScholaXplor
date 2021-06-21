@@ -29,7 +29,9 @@ export default class ManageStudentTestPopup extends React.Component {
     return (
       <div className="popup">
         <div className="App popup_inner">
+        <div className="custom_pop">
           <h2>{that.props.popupHeaderText}</h2>
+          <br />
           <div style={{ alignItem: "left" }}>
             <Dropdown
               classname="style.dropDown"
@@ -43,7 +45,8 @@ export default class ManageStudentTestPopup extends React.Component {
               placeholder="Select an option"
               placeholderClassName="myPlaceholderClassName"
             />
-            <label> Marks</label>
+            <br/>
+            <label> <b>Marks </b></label>
             <br />
             <input
               className="form-control"
@@ -54,12 +57,11 @@ export default class ManageStudentTestPopup extends React.Component {
             />
             <br />
           </div>
-          <button className="btn btn-primary" onClick={that.sendData}>
-            Change
-          </button>
-          <button className="btn btn-danger" onClick={this.close}>
-            {"Close"}
-          </button>
+          <div className="popup-button-area">
+            <button className="btn btn-primary" onClick={that.sendData}>Change</button>
+            <button className="btn btn-danger" onClick={this.close}>{"Close"}</button>
+          </div>
+          </div>
         </div>
       </div>
     );
