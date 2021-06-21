@@ -19,7 +19,7 @@ exports.getMarksByTestId = (req, res) => {
 };
 
 exports.getAvgGradeOfSubjects = (req, res) => {
-  Test.getAvgGrade(req.params.sid, (err, data) => {
+  Test.getAvgGrade(req.params.sid, req.params.cid, (err, data) => {
     if (err)
       res.status(200).send({
         status: "FAILED",
