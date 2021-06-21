@@ -112,7 +112,6 @@ class PupilTab extends React.Component {
 
   oninputChange(e) {
     var that = this;
-    debugger;
     if(e.length)
     searchPupil(e, that.state.token).then((response) => {
       that.setState({

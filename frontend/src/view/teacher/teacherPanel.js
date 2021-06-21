@@ -55,7 +55,7 @@ export default class teacherPanel extends React.Component {
           <div className='tab-area'>
             <h4 style={{ color: '#0275d8', textAlign: 'center', margin: '20px auto' }}>Manage Test</h4>
             <div className="box-container" style={{justifyContent: 'center' }}>
-           
+
               <div className="ag-theme-alpine data-table">
                 <div className="table-scroll">
                   <table className="table table-hover table-striped">
@@ -95,10 +95,8 @@ export default class teacherPanel extends React.Component {
   }
 
   openTestManager(data) {
-    console.log(data);
     var that = this;
     getTestDetails(data.sid, that.state.token).then(response => {
-      // debugger;
       that.props.history.push({
         pathname: redirectpath,
         state: {

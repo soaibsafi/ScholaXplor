@@ -259,7 +259,7 @@ Subject.checkSubExists = (subname, uid, cid, result) => {
 }
 
 Subject.getSubjectDetailsForTeacher = (tid, result) => {
-  var query = "Select T.sid, Class.classname, T.subjectname FROM Class INNER JOIN (SELECT * FROM Subject WHERE Subject.uid='"+tid+"' AND status ='Not Archived') as T ON Class.cid = T.cid"
+  var query = "Select T.sid, Class.classname, T.subjectname, Class.cid FROM Class INNER JOIN (SELECT * FROM Subject WHERE Subject.uid='"+tid+"' AND status ='Not Archived') as T ON Class.cid = T.cid"
   console.log(query)
   sql.query(query, (err, res) => {
     if (err) {

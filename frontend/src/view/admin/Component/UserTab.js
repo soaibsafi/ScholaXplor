@@ -242,7 +242,6 @@ export default class UserTab extends React.Component {
 
   deleteInfo(uid) {
     var that = this;
-    debugger;
     if (uid !== that.state.uid) {
       if (!window.confirm("Do you really want to delete it?")) return;
       deleteAUser(uid, that.state.token).then(data => {
