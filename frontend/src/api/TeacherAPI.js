@@ -35,9 +35,9 @@ export async function getTestDetails(sid, token){
   }
 }
 
-export async function getStudentMarkDetails(tid, token){
-  url = host + "marks/" + tid;
-  // debugger
+export async function getStudentMarkDetails(tid, sid, token){
+  url = host + "marks/?sid=" + sid +"&tid=" +tid;
+   debugger
   try{
     const response = await  axios.get(url,{
       headers: {

@@ -186,7 +186,8 @@ export default class manageTest extends React.Component {
 
   loadStudentList() {
     var that = this;
-    getStudentMarkDetails(that.state.selectedTest, that.state.token).then(response => {
+    getStudentMarkDetails(that.state.selectedTest, that.state.sid, that.state.token).then(response => {
+      // debugger;
       // console.log(response.data);
       debugger;
       if(response)
