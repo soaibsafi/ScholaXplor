@@ -54,10 +54,8 @@ export default class teacherPanel extends React.Component {
           </div>
           <div className='tab-area'>
             <h4 style={{ color: '#0275d8', textAlign: 'center', margin: '20px auto' }}>Manage Test</h4>
-            <div className="box-container" style={{ justifyContent: 'center' }}>
-              <div className='selection-area' style={{ width: '0px', borderColor: 'transparent' }}>
-                {/* Empty */}
-              </div>
+            <div className="box-container" style={{justifyContent: 'center' }}>
+           
               <div className="ag-theme-alpine data-table">
                 <div className="table-scroll">
                   <table className="table table-hover table-striped">

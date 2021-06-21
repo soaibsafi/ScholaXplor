@@ -97,6 +97,7 @@
 .selection-area{
   width: 15vw;
   height: auto;
+  min-width: 250px;
   padding: 50px 20px;
   border: 1px solid #dee2e6;
 }
@@ -124,6 +125,7 @@
 .selection-area-pupil{
   width: 15vw;
   height: auto;
+  min-width: 250px;
   padding: 50px 20px;
   border: 1px solid #dee2e6;
 }
@@ -132,6 +134,38 @@
   width: 100%;
 }
 
+
+/*************** Only for ManageTest ****************/
+
+.tab-area .subtitle-area{
+  width: 75%;
+  display: flex;
+  flex-direction: row;
+  margin: auto;
+}
+
+.tab-area .subtitle-area button{
+  width: 150px;
+  height:fit-content;
+  margin-top: 20px;
+}
+
+.tab-area .upload-area{
+  width: 100%;
+  margin-top: 30vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.tab-area .upload-area #browse{
+  width: 50%;
+  height: fit-content;
+}
+
+.tab-area .upload-area #delete{
+  width: 50%;
+  height: fit-content;
+}
 
 /*************** Common PopUp for ALL **************/
 

@@ -33,13 +33,13 @@ export default class manageTest extends React.Component {
       classname: this.props.location.state.info.classname,
       testDetailsList: this.props.location.state.testList,
       testList: [],
-      studentList: [{name: 'abc', marks: 1.2, username: 'abc1'}],
+      studentList: [{ name: 'abc', marks: 1.2, username: 'abc1' }],
       selectedTest: this.props.location.state.selectedTest,
       studentMarkData: [],
 
       showTestPopup: false,
       showStudentGradePopup: false,
-      showPopUp:false,
+      showPopUp: false,
 
       popupHeaderText: '',
       popupBtnText: '',
@@ -112,21 +112,21 @@ export default class manageTest extends React.Component {
   openUpdatePopup(data) {
     var that = this;
     debugger;
-    if(this.state.selectedTest)
-    that.setState(
-      {
-        popupHeaderText:
-          "Update selected Test for " +
-          that.state.classname +
-          " - " +
-          that.state.subjectname,
-        popupBtnText: "Update",
-      },
-      () => {
-        that.toggleNewTestPopup();
-      }
-    );
-    else{alert("Please select a test")}
+    if (this.state.selectedTest)
+      that.setState(
+        {
+          popupHeaderText:
+            "Update selected Test for " +
+            that.state.classname +
+            " - " +
+            that.state.subjectname,
+          popupBtnText: "Update",
+        },
+        () => {
+          that.toggleNewTestPopup();
+        }
+      );
+    else { alert("Please select a test") }
   }
 
   toggleNewTestPopup() {
@@ -157,19 +157,19 @@ export default class manageTest extends React.Component {
   }
 
   toggleStudentGradePopup() {
-    this.setState({showStudentGradePopup: !this.state.showStudentGradePopup})
+    this.setState({ showStudentGradePopup: !this.state.showStudentGradePopup })
   }
 
   closeStudentGradePopup() {
     var that = this;
     this.setState({
-          popupHeaderText: '',
-          popupBtnText: "",
-          studentData: '',
-        },
-        () => {
-          that.toggleStudentGradePopup();
-        })
+      popupHeaderText: '',
+      popupBtnText: "",
+      studentData: '',
+    },
+      () => {
+        that.toggleStudentGradePopup();
+      })
   }
 
   openStudentTestGradeUpdatePopup(data) {
@@ -189,10 +189,10 @@ export default class manageTest extends React.Component {
     getStudentMarkDetails(that.state.selectedTest, that.state.token).then(response => {
       // console.log(response.data);
       debugger;
-      if(response)
-      if (response.data) {
-        that.setState({studentList: response.data})
-      }
+      if (response)
+        if (response.data) {
+          that.setState({ studentList: response.data })
+        }
     })
   }
 
@@ -235,7 +235,7 @@ export default class manageTest extends React.Component {
     });
   };
 
-  handleOnError = (err, file, inputElem, reason) => {};
+  handleOnError = (err, file, inputElem, reason) => { };
 
   componentDidMount() {
     this.getAllTests();
@@ -245,138 +245,122 @@ export default class manageTest extends React.Component {
   render() {
     var that = this;
     return (
-      <div className="App">
-        <h2>
-          Test Management for {that.state.classname} - {that.state.subjectname}
-        </h2>
-        <div className="row" style={{ width: 520 }}>
-          <button className="btn btn-success" onClick={this.gotoBack}>
-            Back
-          </button>
-          <Dropdown
-            classname="style.dropDown"
-            value={
-              that.state.testList[
-                this.getIndex(this.state.testList, this.state.selectedTest)
-              ]
-            }
-            options={that.state.testList}
-            onChange={this.onTestChange}
-            placeholder="Select a test"
-            placeholderClassName="myPlaceholderClassName"
-          />
-          <button className="btn btn-success" onClick={this.openNewTestPopup}>
-            Add
-          </button>
-          <button
-            className="btn btn-info"
-            onClick={() => this.openUpdatePopup(that.state.classinfo)}
-          >
-            Update
-          </button>
-          <button
-            className="btn  btn-danger"
-            onClick={() => this.deleteInfo(that.state.selectedTest)}
-          >
-            Delete
-          </button>
-        </div>
-        <div className="row" style={{ width: 1020 }}>
-          <CSVReader
-            noClick
-            noDrag
-            ref={buttonRef}
-            onFileLoad={this.handleOnFileLoad}
-            onError={this.handleOnError}
-            onRemoveFile={this.handleOnRemoveFile}
-          >
-            {({ file }) => (
-              <aside
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  marginBottom: 10,
-                }}
-              >
-                <button
-                  style={{
-                    borderRadius: 0,
-                    marginLeft: 0,
-                    marginRight: 0,
-                    width: "40%",
-                    paddingLeft: 0,
-                    paddingRight: 0,
-                  }}
-                  type="button"
-                  onClick={this.handleOpenDialog}
-                >
-                  Browse file
-                </button>
-                <div style={{}}>{file && file.name}</div>
-                <button
-                  style={{
-                    borderRadius: 0,
-                    marginLeft: 0,
-                    marginRight: 0,
-                    paddingLeft: 20,
-                    paddingRight: 20,
-                  }}
-                  onClick={this.handleRemoveFile}
-                >
-                  Remove
-                </button>
-              </aside>
-            )}
-          </CSVReader>
-          <button className="btn  btn-danger" onClick={this.uploadTestResult}>
-            Upload
-          </button>
-        </div>
-        {that.state.studentList.length ? (
-          <div className="ag-theme-alpine" style={{ height: 400, width: 800 }}>
-            <table className="table table-hover table-striped">
-              <thead className="thead-dark">
-                <tr key={"user_key1"}>
-                  <th scope="col">Student Name</th>
-                  <th scope="col">Grade</th>
-                  <th scope="col">Action</th>
-                </tr>
-              </thead>
-              <tbody>{this.loadFillData()}</tbody>
-            </table>
+      <div>
+        <div className="fill-window">
+          <div className='main-title-area' style={{ paddingBottom: '20px', borderBottom: '3px solid rgb(95, 0, 124)' }}>
+            <h3 style={{ color: '#6e6e6e' }}>Teacher Panel</h3>
           </div>
-        ) : (
-          <div>
-            <label>No student is in this class and test</label>
-          </div>
-        )}
-        {that.state.showPopUp ? (
-          <ManageTestPopup
-            testList={that.state.testList}
-            selectedTest={that.state.selectedTest}
-            popupHeaderText={that.state.popupHeaderText}
-            testDetailsList={that.state.testDetailsList}
-            sid={that.state.sid}
-            popupBtnText={that.state.popupBtnText}
-            updateTest={that.updateTest}
-            addTest={that.addTest}
-            closePopup={that.closeTestPopup}
-          />
-        ) : null}
+          <div className='tab-area'>
+            <div className="subtitle-area">
+              <button className="btn btn-outline-success" onClick={this.gotoBack}>Back</button>
+              <h4 style={{ color: '#0275d8', textAlign: 'center', margin: '20px auto' }}>Test Management for {that.state.classname} - {that.state.subjectname}</h4>
+            </div>
+            <div className="box-container" >
+              <div className='selection-area'>
+                <Dropdown
+                  classname="style.dropDown"
+                  value={
+                    that.state.testList[
+                    this.getIndex(this.state.testList, this.state.selectedTest)
+                    ]
+                  }
+                  options={that.state.testList}
+                  onChange={this.onTestChange}
+                  placeholder="Select a test"
+                  placeholderClassName="myPlaceholderClassName"
+                />
+                <br/>
+                <br/>
+                <button className="btn btn-success" onClick={this.openNewTestPopup}> Add </button>
+                <button
+                  className="btn btn-info"
+                  onClick={() => this.openUpdatePopup(that.state.classinfo)}
+                >
+                  Update
+                </button>
+                <button
+                  className="btn  btn-danger"
+                  onClick={() => this.deleteInfo(that.state.selectedTest)}
+                >
+                  Delete
+                </button>
 
-        {that.state.showStudentGradePopup ? (
-          <ManageStudentTestPopup
-            testList={that.state.testList}
-            selectedTest={that.state.selectedTest}
-            popupHeaderText={that.state.popupHeaderText}
-            studentData={that.state.studentData}
-            popupBtnText={that.state.popupBtnText}
-            studentMarkData={that.state.studentMarkData}
-            //        addUser={that.addUser}
-            updateInfo={that.updateInfo}
-            closePopup={that.closeStudentGradePopup}
-          />
-        ) : null}
+                <div className="upload-area">
+                  <CSVReader
+                    noClick
+                    noDrag
+                    ref={buttonRef}
+                    onFileLoad={this.handleOnFileLoad}
+                    onError={this.handleOnError}
+                    onRemoveFile={this.handleOnRemoveFile}
+                  >
+                    {({ file }) => (
+                      <aside
+                        style={{  
+                        }}
+                      >
+                        <button id="browse"  type="button" onClick={this.handleOpenDialog}> Browse file </button>
+                        <div style={{}}>{file && file.name}</div>
+                        <button  id="delete" onClick={this.handleRemoveFile} > Remove </button>
+                      </aside>
+                    )}
+                  </CSVReader>
+                  <button className="btn btn-danger" onClick={this.uploadTestResult}>
+                    Upload
+                  </button>
+                </div>
+              </div>
+
+              {that.state.studentList.length ? (
+                <div className="ag-theme-alpine data-table">
+                  <div className="table-scroll">
+                    <table className="table table-hover table-striped">
+                      <thead className="thead-dark">
+                        <tr key={"user_key1"}>
+                          <th scope="col">Student Name</th>
+                          <th scope="col">Grade</th>
+                          <th scope="col">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>{this.loadFillData()}</tbody>
+                    </table>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <label>No student is in this class and test</label>
+                </div>
+              )}
+              {that.state.showPopUp ? (
+                <ManageTestPopup
+                  testList={that.state.testList}
+                  selectedTest={that.state.selectedTest}
+                  popupHeaderText={that.state.popupHeaderText}
+                  testDetailsList={that.state.testDetailsList}
+                  sid={that.state.sid}
+                  popupBtnText={that.state.popupBtnText}
+                  updateTest={that.updateTest}
+                  addTest={that.addTest}
+                  closePopup={that.closeTestPopup}
+                />
+              ) : null}
+
+              {that.state.showStudentGradePopup ? (
+                <ManageStudentTestPopup
+                  testList={that.state.testList}
+                  selectedTest={that.state.selectedTest}
+                  popupHeaderText={that.state.popupHeaderText}
+                  studentData={that.state.studentData}
+                  popupBtnText={that.state.popupBtnText}
+                  studentMarkData={that.state.studentMarkData}
+                  //        addUser={that.addUser}
+                  updateInfo={that.updateInfo}
+                  closePopup={that.closeStudentGradePopup}
+                />
+              ) : null}
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -431,7 +415,7 @@ export default class manageTest extends React.Component {
       tempList.push(obj);
     });
 
-    that.setState({ testList: tempList }, () => {});
+    that.setState({ testList: tempList }, () => { });
   }
 
   addTest(data) {
@@ -483,18 +467,18 @@ export default class manageTest extends React.Component {
     var that = this;
     console.log(data);
     debugger
-    if(this.state.selectedTest){
+    if (this.state.selectedTest) {
       if (!window.confirm("Do you really want to delete the class?")) return;
       deleteATest(data, "Token " + that.state.token).then((data) => {
         alert(data.message);
         if (data.status === "SUCCESS") {
-          that.setState({testList: []}, () => {
+          that.setState({ testList: [] }, () => {
             getTestDetails(that.state.sid, "Token " + that.props.token).then(
-                (response) => {
-                  that.setState({testDetailsList: response.data, selectedTest: null}, () => {
-                    that.getAllTests();
-                  });
-                }
+              (response) => {
+                that.setState({ testDetailsList: response.data, selectedTest: null }, () => {
+                  that.getAllTests();
+                });
+              }
             );
           });
         } else {
@@ -502,7 +486,7 @@ export default class manageTest extends React.Component {
         }
       });
     }
-    else{alert("Please select a test to delete")}
+    else { alert("Please select a test to delete") }
   }
 
 
