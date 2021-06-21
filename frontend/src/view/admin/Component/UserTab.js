@@ -38,7 +38,8 @@ export default class UserTab extends React.Component {
         username: '',
         uid: ''
       },
-      token: "token " + this.props.token
+      token: "token " + this.props.token,
+      uid: this.props.uid
     }
     this.loadFillData = this.loadFillData.bind(this);
     this.getAllUser = this.getAllUser.bind(this);
@@ -63,47 +64,47 @@ export default class UserTab extends React.Component {
     var that = this;
     return (
         <div>
-          <h4 style={{color:'#0275d8',textAlign:'left', margin:'50px 0 10px 12.5%'}}>User Management</h4>
+          <h4 style={{color: '#0275d8', textAlign: 'left', margin: '50px 0 10px 12.5%'}}>User Management</h4>
           <div className="box-container">
-          <div className='selection-area'>
-            <Dropdown classname='style.dropDown'
-                      options={options}
-                      onChange={this.onRoleSelect}
-                      value={options[0]}
-                      placeholderClassName='myPlaceholderClassName'/>
-             <br/>         
-            <button className="btn btn-success" onClick={this.openNewUserPopup}>Add</button>
-          </div>
-          {that.state.list.length ? 
-          <div className="ag-theme-alpine data-table">
-            <div className="table-scroll">
-            <table className="table table-hover table-striped">
-              <thead className="thead-dark">
-              <tr key={"user_key1"}>
-                <th scope="col">Username</th>
-                <th scope="col">First Name</th>
-                <th scope="col">Last Name</th>
-                <th scope="col">Role</th>
-                <th scope="col"></th>
-                <th scope="col"></th>
-              </tr>
-              </thead>
-              <tbody>
-              {this.loadFillData()}
-              </tbody>
-            </table>
+            <div className='selection-area'>
+              <Dropdown classname='style.dropDown'
+                        options={options}
+                        onChange={this.onRoleSelect}
+                        value={options[0]}
+                        placeholderClassName='myPlaceholderClassName'/>
+              <br/>
+              <button className="btn btn-success" onClick={this.openNewUserPopup}>Add</button>
             </div>
-          </div> : <label>No data</label>}
-          {that.state.showPopup ?
-              <Userpopup userinfo={that.state.userinfo}
-                         selectedRole={that.state.selectedRole}
-                         popupHeaderText={that.state.popupHeaderText}
-                         popupBtnText={that.state.popupBtnText}
-                         updateInfo={that.updateInfo}
-                         addUser={that.addUser}
-                         closePopup={that.closePopup}
-              /> : null}
-              </div>
+            {that.state.list.length ?
+                <div className="ag-theme-alpine data-table">
+                  <div className="table-scroll">
+                    <table className="table table-hover table-striped">
+                      <thead className="thead-dark">
+                      <tr key={"user_key1"}>
+                        <th scope="col">Username</th>
+                        <th scope="col">First Name</th>
+                        <th scope="col">Last Name</th>
+                        <th scope="col">Role</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      {this.loadFillData()}
+                      </tbody>
+                    </table>
+                  </div>
+                </div> : <label>No data</label>}
+            {that.state.showPopup ?
+                <Userpopup userinfo={that.state.userinfo}
+                           selectedRole={that.state.selectedRole}
+                           popupHeaderText={that.state.popupHeaderText}
+                           popupBtnText={that.state.popupBtnText}
+                           updateInfo={that.updateInfo}
+                           addUser={that.addUser}
+                           closePopup={that.closePopup}
+                /> : null}
+          </div>
         </div>
     )
   }
@@ -147,8 +148,7 @@ export default class UserTab extends React.Component {
           () => {
             this.togglePopup();
           })
-    }
-    else alert("Please select a role.");
+    } else alert("Please select a role.");
 
   }
 
@@ -167,7 +167,6 @@ export default class UserTab extends React.Component {
       }
     })
   }
-
 
 
   openUpdatePopup(data) {
@@ -233,7 +232,8 @@ export default class UserTab extends React.Component {
             uid: "",
             username: ""
           },
-          selectedRole: ""}, () => {
+          selectedRole: ""
+        }, () => {
           that.getAllUser(that.state.token)
         })
       }
@@ -242,15 +242,17 @@ export default class UserTab extends React.Component {
 
   deleteInfo(uid) {
     var that = this;
-
-    if (!window.confirm("Do you really want to delete it?")) return;
-    deleteAUser(uid, that.state.token).then(data => {
-      alert(data.message);
-      that.getAllUser(that.state.token);
-    })
+    debugger;
+    if (uid !== that.state.uid) {
+      if (!window.confirm("Do you really want to delete it?")) return;
+      deleteAUser(uid, that.state.token).then(data => {
+        alert(data.message);
+        that.getAllUser(that.state.token);
+      })
+    }else{alert("You can not delete yourself.")}
   }
 
-  closePopup(){
+  closePopup() {
     this.setState({
           popupHeaderText: "",
           popupBtnText: "",

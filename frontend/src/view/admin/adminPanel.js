@@ -18,6 +18,7 @@ export default class adminPanel extends React.Component {
 
     this.state = {
       token: this.props.location.state ? this.props.location.state.token : '',
+      uid: this.props.location.state ? this.props.location.state.uid : '',
       selectedTab: 0
     };
 
@@ -57,7 +58,7 @@ export default class adminPanel extends React.Component {
                 <Tab>Pupil</Tab>
               </TabList>
               <TabPanel>
-                <UserTab token={state.token}/>
+                <UserTab token={state.token} uid={state.uid}/>
               </TabPanel>
               <TabPanel>
                 <ClassTable token={state.token}/>
