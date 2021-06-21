@@ -217,7 +217,7 @@ Subject.getSubjectClassTeacherByCid = (cid, result) => {
 };
 
 Subject.getAvgGradeByPupilId = (pid, cid, result) => {
-  var query = `SELECT R_T_S_AS.sid as sid, R_T_S_AS.subjectname as subjectname,  AVG(marks) as avgGrade FROM result RIGHT JOIN (SELECT Test.tid, T_S_AS.*
+  var query = `SELECT R_T_S_AS.sid as sid, R_T_S_AS.subjectname as subjectname, CAST(AVG(marks) AS DECIMAL (10,1)) AS avgGrade FROM result RIGHT JOIN (SELECT Test.tid, T_S_AS.*
     FROM Test
     RIGHT JOIN (
     SELECT Subject.subjectname, Subject.sid, S_AS.aid
