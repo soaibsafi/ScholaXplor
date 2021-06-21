@@ -7,13 +7,13 @@ const Test = function (test) {
   this.sid = test.sid;
 };
 
-Test.getAllMarks = (sid, tid, result) => {
+Test.getAllMarks = (sid, tid, cid, result) => {
   var query = "";
   if(tid){
-    query = "SELECT resid, name, username, marks, uid, TT.aid FROM result RIGHT JOIN (SELECT CONCAT(firstname, ' ', lastname) as name, username, User.uid, aid FROM User RIGHT JOIN (SELECT aid, uid FROM AssignedSubject WHERE sid = '"+sid+"') AS T ON User.uid=T.uid) as TT ON result.aid=TT.aid AND tid='"+tid+"'";
+    query = "SELECT resid, name, username, marks, uid, TT.aid FROM result RIGHT JOIN (SELECT CONCAT(firstname, ' ', lastname) as name, username, User.uid, aid FROM User  RIGHT JOIN (SELECT aid, AssignedSubject.uid FROM AssignedSubject INNER JOIN (SELECT uid from ClassStudent where cid = '"+cid+"' and isAssigned='Y') as TQ ON AssignedSubject.uid=TQ.uid and AssignedSubject.sid='"+sid+"') AS T ON User.uid=T.uid) as TT ON result.aid=TT.aid AND tid='"+tid+"'";
   }
   else{
-    query = "SELECT resid, name, username, marks, uid, TT.aid FROM result RIGHT JOIN (SELECT CONCAT(firstname, ' ', lastname) as name, username, User.uid, aid FROM User RIGHT JOIN (SELECT aid, uid FROM AssignedSubject WHERE sid = '"+sid+"') AS T ON User.uid=T.uid) as TT ON result.aid=TT.aid ";
+    query = "SELECT resid, name, username, marks, uid, TT.aid FROM result RIGHT JOIN (SELECT CONCAT(firstname, ' ', lastname) as name, username, User.uid, aid FROM User  RIGHT JOIN (SELECT aid, AssignedSubject.uid FROM AssignedSubject INNER JOIN (SELECT uid from ClassStudent where cid = '"+cid+"' and isAssigned='Y') as TQ ON AssignedSubject.uid=TQ.uid and AssignedSubject.sid='"+sid+"') AS T ON User.uid=T.uid) as TT ON result.aid=TT.aid";
   }
     
   sql.query(query,  (err, res) => {
