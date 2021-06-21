@@ -35,8 +35,8 @@ export async function getTestDetails(sid, token) {
   }
 }
 
-export async function getStudentMarkDetails(tid, sid, token) {
-  url = host + "marks/?sid=" + sid + "&tid=" + tid;
+export async function getStudentMarkDetails(tid, sid, cid, token) {
+  url = host + "marks/?sid=" + sid + "&tid=" + tid +"&cid="+cid;
   try {
     const response = await axios.get(url, {
       headers: {
@@ -146,8 +146,8 @@ export async function uploadResult(data, token) {
   }
 }
 
-export async function getAvgMark(sid, token) {
-  url = host + "subjects/avgGrade/" + sid;
+export async function getAvgMark(sid, cid, token) {
+  url = host + "subjects/avgGrade/" + sid +"/"+cid;
   try {
     const response = await axios.get(url, {
       headers: {

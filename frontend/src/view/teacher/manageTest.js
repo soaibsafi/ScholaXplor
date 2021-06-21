@@ -83,13 +83,9 @@ export default class manageTest extends React.Component {
 
   showAvgMarks() {
     var that = this;
-    debugger;
-    getAvgMark(that.state.sid, "Token "+ that.state.token).then(response => {
-      // debugger;
-      that.setState({isAvgMarks: true, studentMarkData: response.data})
+    getAvgMark(that.state.sid, that.state.cid, "Token "+ that.state.token).then(response => {
+      that.setState({isAvgMarks: true, studentList: response.data})
     })
-
-
   }
 
   setID() {
@@ -126,7 +122,6 @@ export default class manageTest extends React.Component {
 
   openUpdatePopup(data) {
     var that = this;
-    // debugger;
     if (this.state.selectedTest)
       that.setState(
           {
@@ -203,8 +198,7 @@ export default class manageTest extends React.Component {
 
   loadStudentList() {
     var that = this;
-    getStudentMarkDetails(that.state.selectedTest, that.state.sid, that.state.token).then(response => {
-
+    getStudentMarkDetails(that.state.selectedTest, that.state.sid, that.state.cid , that.state.token).then(response => {
       if (response)
         if (response.data) {
           that.setState({studentList: response.data})
@@ -255,7 +249,6 @@ export default class manageTest extends React.Component {
   };
 
   componentDidMount() {
-    debugger;
     this.getAllTests();
     this.loadStudentList();
   }
@@ -412,10 +405,11 @@ export default class manageTest extends React.Component {
   loadFillData() {
     if (this.state.studentList.length) {
       return this.state.studentList.map((data, idx) => {
+        debugger;
         return (
             <tr key={data.username + idx}>
               <td>{data.name}</td>
-              <td>{data.marks}</td>
+              <td>{ this.state.isAvgMarks ? data.avgGrade : data.marks}</td>
               <td>
                 {
                   <button
