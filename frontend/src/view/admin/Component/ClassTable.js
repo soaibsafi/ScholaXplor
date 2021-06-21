@@ -144,16 +144,24 @@ export default class ClassTable extends React.Component {
 
   addClass(data) {
     var that = this;
-    createNewClass(data, "token " + that.props.token).then((data) => {
-      if (data.status === "SUCCESS") {
-        that.togglePopup();
-        that.setState({ allClasses: [] }, () => {
-          that.getAllClasses("Token " + that.props.token);
+    console.log(data)
+    getAllClass("Token " + that.props.token).then((cinfo)=>{
+      console.log(cinfo.data)
+      if((cinfo.data.filter(e => e.classname === data.classname).length > 0))
+        alert("The class already exists!")
+      else{
+        createNewClass(data, "token " + that.props.token).then((data) => {
+          if (data.status === "SUCCESS") {
+            that.togglePopup();
+            that.setState({ allClasses: [] }, () => {
+              that.getAllClasses("Token " + that.props.token);
+            });
+          } else {
+            alert("Error!!");
+          }
         });
-      } else {
-        alert("Error!!");
       }
-    });
+    })
   }
 
   updateInfo(data) {
