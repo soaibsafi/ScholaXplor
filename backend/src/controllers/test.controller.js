@@ -18,6 +18,23 @@ exports.getMarksByTestId = (req, res) => {
   });
 };
 
+exports.getAvgGradeOfSubjects = (req, res) => {
+  Test.getAvgGrade(req.params.sid, (err, data) => {
+    if (err)
+      res.status(200).send({
+        status: "FAILED",
+        statusCode: 500,
+        message: err.message || "Some error occurred while retrieving Marks.",
+      });
+    else
+      res.status(200).send({
+        status: "SUCCESS",
+        statusCode: 200,
+        data: data,
+      });
+  });
+};
+
 //Create a test
 exports.createTest = (req, res) => {
   // Validate request

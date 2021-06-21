@@ -11,6 +11,7 @@ module.exports = app => {
     //Result API
     app.get("/marks/", test.getMarksByTestId);
     app.put("/marks/:resid", test.updateMarksByResid);
+    app.get('/subjects/avgGrade/:sid', test.getAvgGradeOfSubjects)
   };
   
   
