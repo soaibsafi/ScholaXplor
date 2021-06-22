@@ -107,7 +107,7 @@ export default class manageTest extends React.Component {
 
               uploadResult(stdData, "Token " + that.state.token).then(
                   (response) => {
-                    if (response.msg === "Inserted") {
+                    if (response.status === "SUCCESS") {
                       that.loadStudentList();
                     }
                   }
@@ -502,7 +502,6 @@ export default class manageTest extends React.Component {
       alert("Please select a test to delete")
     }
   }
-
 
   updateInfo(data) {
     var that = this;
