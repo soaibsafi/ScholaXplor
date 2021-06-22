@@ -405,7 +405,6 @@ export default class manageTest extends React.Component {
   loadFillData() {
     if (this.state.studentList.length) {
       return this.state.studentList.map((data, idx) => {
-        debugger;
         return (
             <tr key={data.username + idx}>
               <td>{data.name}</td>
